@@ -1,0 +1,26 @@
+# Deployment
+FROM php:8.2-fpm
+
+# Set final workdir
+WORKDIR /var/www/app
+
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+RUN apt-get update && apt-get --fix-broken install -y \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libssl-dev \
+    libpq-dev \
+    zip \
+    unzip
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-configure ftp --with-openssl-dir=/usr
+RUN docker-php-ext-install pgsql pdo_pgsql mbstring exif pcntl bcmath gd zip ftp
+
+CMD docker-php-entrypoint php-fpm

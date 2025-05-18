@@ -1,0 +1,38 @@
+services:
+  api:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: castorsoft/app
+    container_name: ec.api
+    tty: true
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./api:/var/www/app
+    restart: unless-stopped
+    networks:
+      ec:
+  db:
+    image: postgres
+    container_name: ec.db
+    tty: true
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5436:5432"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      ec:
+networks:
+  ec:
+    driver: bridge
+volumes:
+  db:
+    driver: local

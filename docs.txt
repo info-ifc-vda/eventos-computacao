@@ -1,0 +1,142 @@
+tabela address
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- deleted_at (timestamp)
+- state (char(2))
+- city (varchar (127))
+- neighborhood (varchar (127))
+- zip_code (char(8))
+- street (varchar (127))
+- number (varchar (20))
+- complement (varchar (127))
+
+tabela users:
+
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- email (varchar (127))
+- fullname (varchar (127))
+- password (varchar (255))
+
+tabela user_bank_details
+- id (int4) pk
+- created_at (timestamp)
+- updated_at (timestamp)
+- user_id (int4) fk
+- bank_code (int2) // código do banco febraban para detectar qual API será utilizada
+- pix_key (varchar (255))
+
+tabela user_roles:
+- id (int4) pk
+- user_id (int4) fk
+- role (varchar (31)) // Permissões do usuário na plataforma
+
+tabela events:
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- deleted_at (timestamp)
+- event_date (timestamp)
+- cancellation_date (timestamp)
+- cancellation_description (text)
+- confirmation_deadline (timestamp)
+- payment_deadline (timestamp)
+- title (varchar (127))
+- description (text)
+- banner_url (varchar (255))
+- estimated_value (decimal (10,2)) // Valor estimado para os usuários pagarem
+
+tabela event_organizers:
+- id (int4)
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- event_id (int4) fk
+- user_id (int4) fk
+- user_role (varchar (31)) // Permissões do usuário no evento
+
+tabela event_details
+- id (int4) pk
+- event_id (int4) fk
+// - financial_responsible (int4) fk // Usuário que será o responsável financeiro do evento
+
+tabela event_location
+- id (int4) pk
+- event_id (int4) fk unique
+- address_id (int4) fk
+- maps_link (text) // Link do Google Maps
+
+tabela event_participants
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- deleted_at (timestamp)
+- user_id (int4) fk
+- event_id (int4) fk
+- verification_code (varchar (255)) //  para o usuário exibir na entrada do evento
+- arrival_date (timestamp) // Data da leitura do verification_code (quando o usuário chegou)
+
+tabela event_pending_transactions
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- payer_id (int4) fk // id usuário pagador
+- receiver_id (int4) fk //id do usuário receptor
+- event_id (int4) fk // id do evento
+- payment_method (char(20)) //Tipo de pagamento (por enquanto só pix e manual_pix)
+- payment_date (timestamp) // Se preenchido, foi pago
+
+tabela pix_transactions
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- event_pending_transaction_id (int4) fk
+- value (decimal(10,2))
+- tx_id (varchar (255)) // txid do pix pro banco
+- payment_date (timestamp)
+- expiration_date (timestamp)
+
+tabela manual_pix_transactions
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- payment_date (timestamp)
+
+tabela event_expenses
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- deleted_at (timestamp)
+- event_id (int4) fk
+- user_id (int4) fk
+- proof_access_key (varchar (55)) // Chave de acesso do documento fiscal
+- items_total (decimal (10,2))
+
+tabela event_expense_items
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- updated_at (timestamp)
+- deleted_at (timestamp)
+- event_expense_id (int4) fk
+- description (text)
+- unit_value (decimal (10,2))
+- quantity (int4)
+- discount (decimal (10,2))
+- total_value (decimal (10,2))
+
+tabela event_transactions
+- id (int4) pk
+- uuid (uuid) unique
+- created_at (timestamp)
+- event_id (int4) fk
+- event_pending_transaction_id (int4) fk // transações que o evento recebeu
+- event_expense_id (int4) fk // Despesa que originou o débito
+- credit (decimal(10,2)) // Valor que o evento recebeu
+- debit (decimal()10, 2) // Valor que o evento pagou
