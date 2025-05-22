@@ -17,19 +17,18 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->timestamps();
-            $table->softDeletes();
+            $table->foreignId('user_id');
             $table->string('title');
             $table->text('description');
             $table->timestamp('cancellation_date')->nullable();
             $table->text('cancellation_description')->nullable();
-            $table->timestamp('confirmation_deadline');
+            $table->timestamp('subscription_deadline');
             $table->timestamp('payment_deadline')->nullable();
             $table->string('banner_url', 255);
             $table->decimal('estimated_value');
-            $table->smallInteger('public_event');
-            $table->timestamp('event_completion_date')->nullable();
 
             $table->unique('uuid');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

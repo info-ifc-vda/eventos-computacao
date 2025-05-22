@@ -1,15 +1,31 @@
 services:
+  reverse-proxy:
+    depends_on:
+      - api
+      # - front
+    image: nginx:latest
+    container_name: ec.reverse-proxy
+    tty: true
+    ports:
+      - "80:80"
+    env_file: .env
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/templates
+      - ./api:/var/www/app
+      - ./web:/var/www/web
+    restart: unless-stopped
+    networks:
+      - ec
   api:
     depends_on:
       - db
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: castorsoft/app
     container_name: ec.api
     tty: true
     volumes:
-      - ./app:/var/www/app
+      - ./api:/var/www/app
     restart: unless-stopped
     networks:
       ec:
@@ -22,10 +38,19 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - "5436:5432"
+      - "5432:5432"
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      ec:
+  front:
+    image: node:20.15.0
+    container_name: ec.front
+    tty: true
+    volumes:
+      - ./web:/var/www/web
+    command: "npm run serve"
     networks:
       ec:
 networks:

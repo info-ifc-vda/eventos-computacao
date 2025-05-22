@@ -19,7 +19,6 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('event_id');
             $table->foreignId('user_id');
-            $table->string('user_role', 31);
 
             $table->foreign('event_id')->references('id')->on('events');
             $table->foreign('user_id')->references('id')->on('users');

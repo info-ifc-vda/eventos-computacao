@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventSummaryResource extends JsonResource
+class AddressResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,11 +14,6 @@ class EventSummaryResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->uuid,
-            'title' => $this->title,
-            'cancelled' => $this->cancelled,
-            'event_initial_date' => $this->event_opening_hours->orderBy('date', 'asc')->first()?->date,
-        ];
+        return parent::toArray($request);
     }
 }

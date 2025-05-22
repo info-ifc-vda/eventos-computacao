@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model
 {
-    use SoftDeletes;
-
     public $table = 'events';
-    public $primaryKey = 'id';
+    public $primaryKey = 'uuid';
 
     /******************************************
      *                                        *
@@ -30,9 +27,9 @@ class Event extends Model
      *               RELATIONS                *
      *                                        *
      ******************************************/
-    public function event_opening_hours()
+    public function event_periods()
     {
-        return $this->hasMany('event_opening_hours', 'event_id', 'id');
+        return $this->hasMany('event_periods', 'event_id', 'id');
     }
 
     /******************************************

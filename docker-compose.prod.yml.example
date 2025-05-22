@@ -5,11 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: castorsoft/app
     container_name: ec.api
     tty: true
-    ports:
-      - "9001:9001"
     volumes:
       - ./api:/var/www/app
     restart: unless-stopped
@@ -28,6 +25,15 @@ services:
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      ec:
+  front:
+    image: node:20.15.0
+    container_name: ec.front
+    tty: true
+    volumes:
+      - ./web:/var/www/web
+    command: "npm run serve"
     networks:
       ec:
 networks:

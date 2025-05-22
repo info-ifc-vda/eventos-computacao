@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Services\Users;
 
 use App\Http\Repositories\Contracts\EventRepositoryInterface;
 use App\Http\Repositories\EventRepository;
-use App\Http\Resources\EventSummaryResource;
-use App\Http\Services\Contracts\EventServiceInterface;
+use App\Http\Services\Contracts\Users\EventServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -18,8 +17,8 @@ class EventService implements EventServiceInterface
         $this->eventRepository = $eventRepository;
     }
 
-    public function index(Request $request): AnonymousResourceCollection
+    public function join(Request $request): AnonymousResourceCollection
     {
-        return EventSummaryResource::collection($this->eventRepository->index($request));
+        return $this->eventRepository->addParticipant($request->route('event_id'), $this->userRepository->find());
     }
 }
