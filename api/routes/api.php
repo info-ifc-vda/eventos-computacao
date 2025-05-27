@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Organizers\EventController as OrganizersEventController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Users\EventController as UsersEventController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +18,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
 
 Route::group(['prefix' => 'v1'], function() {
+    Route::group(['prefix' => 'auth'], function() {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
+        Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    });
+
+    Route::post('users', [UserController::class, 'store']); // Rota que não necessita autenticação
+
+    Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
+        Route::get('', [UserController::class, 'index']);
+
+        Route::get('me', [UserController::class, 'showMe']);
+        Route::group(['prefix' => '{user_id}'], function() {
+            Route::get('', [UserController::class, 'show']);
+            Route::put('', [UserController::class, 'update']);
+        });
+    });
 
     Route::group(['prefix' => 'events'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);

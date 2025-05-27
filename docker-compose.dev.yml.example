@@ -16,9 +16,11 @@ services:
     restart: unless-stopped
     networks:
       - ec
+        ipv4_address: "172.16.0.2"
   api:
     depends_on:
       - db
+    working_dir: /var/www/app
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -29,6 +31,9 @@ services:
     restart: unless-stopped
     networks:
       ec:
+        ipv4_address: "172.16.0.10"
+    extra_hosts:
+      - "auth.eventos:172.16.0.2"
   db:
     image: postgres
     container_name: ec.db
@@ -38,24 +43,31 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - "5432:5432"
+      - "5436:5432"
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
     networks:
       ec:
+        ipv4_address: "172.16.0.3"
   front:
+    working_dir: /var/www/web
     image: node:20.15.0
     container_name: ec.front
     tty: true
     volumes:
       - ./web:/var/www/web
-    command: "npm run serve"
+    command: ["npm", "ci && npm", "run", "serve"]
     networks:
       ec:
+        ipv4_address: "172.16.0.11"
 networks:
   ec:
     driver: bridge
+    ipam:
+      config:
+        - subnet: "172.16.0.0/24"
+          gateway: "172.16.0.1"
 volumes:
   db:
     driver: local

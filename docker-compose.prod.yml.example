@@ -2,6 +2,7 @@ services:
   api:
     depends_on:
       - db
+    working_dir: /var/www/app
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -28,12 +29,13 @@ services:
     networks:
       ec:
   front:
+    working_dir: /var/www/web
     image: node:20.15.0
     container_name: ec.front
     tty: true
     volumes:
       - ./web:/var/www/web
-    command: "npm run serve"
+    command: ["npm", "ci && npm", "run", "serve"]
     networks:
       ec:
 networks:

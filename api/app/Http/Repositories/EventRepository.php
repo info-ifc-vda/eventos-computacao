@@ -11,12 +11,13 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class EventRepository implements EventRepositoryInterface
 {
-    public function getAll(Request $request): Collection
+    public function getAll(Request $request): LengthAwarePaginator
     {
-        return Event::all()->paginate($request->query('per_page'));
+        return Event::paginate($request->query('per_page'));
     }
 
     public function store(StoreEventRequest $request): Event
@@ -56,6 +57,11 @@ class EventRepository implements EventRepositoryInterface
         return $event;
     }
 
+    public function indexParticipants(string $eventId, Request $request)
+    {
+        return $this->findOrFail($eventId)->participants()->paginate($request->query('per_page'));
+    }
+
     public function addParticipant(string $eventId, StoreEventParticipantDTO $dto)
     {
         $event = $this->findOrFail($eventId);
@@ -65,7 +71,17 @@ class EventRepository implements EventRepositoryInterface
         return $event;
     }
 
+    public function indexOrganizers(string $eventId, Request $request)
+    {
+
+    }
+
     public function addOrganizer(string $eventId, User $user)
+    {
+
+    }
+
+    public function removeOrganizer(string $eventId, string $organizerId)
     {
 
     }

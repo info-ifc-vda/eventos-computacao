@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+
+    /******************************************
+     *                                        *
+     *              PROPERTIES                *
+     *                                        *
+     ******************************************/
+
     public $table = 'events';
     public $primaryKey = 'uuid';
 
@@ -15,6 +22,7 @@ class Event extends Model
      *              ATTRIBUTES                *
      *                                        *
      ******************************************/
+
     protected function cancelled(): Attribute
     {
         return Attribute::make(
@@ -27,6 +35,7 @@ class Event extends Model
      *               RELATIONS                *
      *                                        *
      ******************************************/
+
     public function event_periods()
     {
         return $this->hasMany('event_periods', 'event_id', 'id');
@@ -37,8 +46,6 @@ class Event extends Model
      *                 SCOPES                 *
      *                                        *
      ******************************************/
-
-
 
     /******************************************
      *                                        *

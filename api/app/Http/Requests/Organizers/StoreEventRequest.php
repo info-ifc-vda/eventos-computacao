@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Organizers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class StoreEventRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreEventRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

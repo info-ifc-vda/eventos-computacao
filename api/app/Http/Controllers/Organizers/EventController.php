@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Organizers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\Contracts\EventRepositoryInterface;
+use App\Http\Repositories\EventRepository;
 use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\StoreParticipantArrivalRequest;
@@ -15,11 +17,11 @@ use OpenApi\Attributes as OA;
 
 class EventController extends Controller
 {
-    public EventService $eventService;
+    public EventRepository $eventRepository;
 
-    public function __construct(EventServiceInterface $eventService)
+    public function __construct(EventRepositoryInterface $eventRepository)
     {
-        $this->eventService = $eventService;
+        $this->eventRepository = $eventRepository;
     }
 
     #[OA\Get(
@@ -52,32 +54,32 @@ class EventController extends Controller
     )]
     public function index(Request $request)
     {
-        return $this->eventService->index($request);
+        return $this->eventRepository->getAll($request);
     }
 
     public function store(StoreEventRequest $request)
     {
-        return $this->eventService->store($request);
+        return $this->eventRepository->store($request);
     }
 
     public function show(Request $request)
     {
-        return $this->eventService->show($request);
+        return $this->eventRepository->findOrFail($request);
     }
 
     public function update(UpdateEventRequest $request)
     {
-        return $this->eventService->update($request);
+        return $this->eventRepository->update($request->route('event_id'), $request);
     }
 
     public function cancel(CancelEventRequest $request)
     {
-        return $this->eventService->cancel($request);
+        return $this->eventRepository->cancel($request->route('event_id'), $request);
     }
 
     public function indexParticipants(Request $request)
     {
-        return $this->eventService->indexParticipants($request);
+        return $this->eventRepository->indexParticipants($request->route('event_id'), $request);
     }
 
     public function storeParticipant(StoreParticipantRequest $request)
@@ -87,11 +89,11 @@ class EventController extends Controller
 
     public function storeParticipantArrival(StoreParticipantArrivalRequest $request)
     {
-        return $this->eventService->storeParticipantArrival($request);
+        // return $this->eventService->storeParticipantArrival($request);
     }
 
     public function indexOrganizers(Request $request)
     {
-        return $this->eventService->indexOrganizers($request);
+        // return $this->eventService->indexOrganizers($request);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EventOpeningHour extends Model
+class EventPeriod extends Model
 {
     public $table = 'event_periods';
     public $primaryKey = 'id';

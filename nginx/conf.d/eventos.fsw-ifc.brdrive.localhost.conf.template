@@ -7,7 +7,7 @@ server {
     error_log  /var/log/nginx/error.log debug;
     access_log /var/log/nginx/access.log;
     root /var/www/app/public;
-    server_name ${APP_URL};
+    server_name ${APP_URL} auth.eventos;
 
     location / {
         alias     /var/www/web;
@@ -17,19 +17,30 @@ server {
     location /api/ {
         alias     /var/www/app/public;
         try_files /index.php =404;
-
         set $path $request_uri;
         if ($request_uri ~ ^/api/(.*)$ ) {
             set $path /api/$1;
         }
-
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass            api:9000;
         fastcgi_index           index.php;
-
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
         fastcgi_param REQUEST_URI     $path;
     }
 
+    location /oauth/ {
+        alias     /var/www/app/public;
+        try_files /index.php =404;
+        set $path $request_uri;
+        if ($request_uri ~ ^/oauth/(.*)$ ) {
+            set $path /oauth/$1;
+        }
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass            api:9000;
+        fastcgi_index           index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_param REQUEST_URI     $path;
+    }
 }
