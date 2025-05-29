@@ -12,6 +12,7 @@ class UserSummaryResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    // TODO: Documentação
     public function toArray($request)
     {
         return [

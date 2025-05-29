@@ -22,22 +22,7 @@ class StoreParticipantRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[OA\Schema(
-        schema: 'UsersStoreParticipant',
-        type: 'object',
-        properties: [
-            new OA\Property(
-                property: 'event_id',
-                type: 'string',
-                format: 'uuid',
-            ),
-            new OA\Property(
-                property: 'user_id',
-                type: 'string',
-                format: 'uuid'
-            ),
-        ]
-    )]
+    // TODO: Documentação
     public function rules()
     {
         return [

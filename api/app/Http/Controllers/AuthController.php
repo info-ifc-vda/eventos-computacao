@@ -23,6 +23,7 @@ class AuthController extends Controller
         $this->refreshTokenRepository = app(RefreshTokenRepository::class);
     }
 
+    // TODO: Documentação
     public function login(LoginRequest $request)
     {
         $client = Client::where('password_client', 1)->first();
@@ -40,6 +41,7 @@ class AuthController extends Controller
 
     }
 
+    // TODO: Documentação
     public function refresh(RefreshTokenRequest $request)
     {
         $client = Client::where('password_client', 1)->first();
@@ -55,6 +57,7 @@ class AuthController extends Controller
         return response()->json($http->json(), $http->status());
     }
 
+    // TODO: Documentação
     public function logout(LogoutRequest $request)
     {
         $tokenId = Auth::user()->token()->id;

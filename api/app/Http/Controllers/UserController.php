@@ -18,13 +18,18 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    // TODO: Documentação
     public function index(Request $request)
     {
         return UserSummaryResource::collection($this->userRepository->getAll($request));
     }
 
+    // TODO: Documentação
     public function store(StoreUserRequest $request)
     {
         return new UserResource($this->userRepository->store($request));
     }
+
+    // TODO: Atualização do usuário
+    // TODO: E-mail para recuperação de senha
 }

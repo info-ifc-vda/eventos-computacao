@@ -13,21 +13,7 @@ class EventParticipantResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-        #[OA\Schema(
-        schema: 'UsersEventParticipant',
-        type: 'object',
-        properties: [
-            new OA\Property(
-                property: 'id',
-                type: 'string',
-                format: 'uuid',
-            ),
-            new OA\Property(
-                property: 'verification_code',
-                type: 'string'
-            ),
-        ]
-    )]
+    // TODO: Documentação
     public function toArray($request)
     {
         return parent::toArray($request);

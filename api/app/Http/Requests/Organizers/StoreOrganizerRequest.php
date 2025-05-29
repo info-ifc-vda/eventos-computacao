@@ -21,6 +21,7 @@ class StoreOrganizerRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
+    // TODO: Documentação
     public function rules()
     {
         return [

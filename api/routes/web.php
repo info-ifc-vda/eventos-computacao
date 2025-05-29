@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('openapi.json', function () {
-    return response()->file('openapi.json');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });

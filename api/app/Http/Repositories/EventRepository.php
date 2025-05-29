@@ -24,7 +24,7 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = new Event();
 
-        // Fazer aqui
+        // TODO: Criar evento
 
         return $event->refresh();
     }
@@ -43,7 +43,7 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        // Fazer aqui
+        // TODO: Atualizar envento
 
         return $event;
     }
@@ -52,7 +52,7 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        // Fazer aqui
+        // TODO: Cancelar evento
 
         return $event;
     }
@@ -66,23 +66,25 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        // Fazer aqui
+        // TODO: Adicionar participante ao evento
 
         return $event;
     }
 
     public function indexOrganizers(string $eventId, Request $request)
     {
-
+        // TODO: Listar organizadores do evento
     }
 
     public function addOrganizer(string $eventId, User $user)
     {
-
+        // TODO: Adicionar organizador ao evento
     }
 
     public function removeOrganizer(string $eventId, string $organizerId)
     {
-
+        // TODO: Remover organizador do evento
     }
+
+    // TODO: Registrar chegada do participante ao evento (leitura do QR Code)
 }
