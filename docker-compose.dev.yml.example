@@ -15,7 +15,7 @@ services:
       - ./web:/var/www/web
     restart: unless-stopped
     networks:
-      - ec
+      ec:
         ipv4_address: "172.16.0.2"
   api:
     depends_on:
