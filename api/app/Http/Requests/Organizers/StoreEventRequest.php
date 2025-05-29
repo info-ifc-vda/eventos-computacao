@@ -34,8 +34,8 @@ class StoreEventRequest extends FormRequest
             'estimated_value' =>                ['nullable', 'decimal:2'],
             'public_event' =>                   ['required', 'boolean'],
             'event_periods.*.date' =>           ['required', 'date_format:Y-m-d', /* Criar regra para validar se data é maior que hoje */],
-            'event_periods.*.opening_time' =>   ['required', 'date_format:H:i:s', 'lt:event_periods.*.closing_time'],
             'event_periods.*.opening_time' =>   ['required', 'date_format:H:i:s', 'gt:event_periods.*.opening_time'],
+            'event_periods.*.closing_time' =>   ['required', 'date_format:H:i:s', 'lt:event_periods.*.closing_time'],
         ];
     }
 }
