@@ -76,7 +76,7 @@ class GenerateDocs extends Command
             __DIR__.'/../../Http/Requests',
             __DIR__.'/../../Http/Resources',
             __DIR__.'/../../../routes'
-        ])->saveAs(__DIR__.'/../../../public/openapi.json');
+        ])->saveAs(__DIR__.'/../../../resources/swagger/openapi.json');
 
         return Command::SUCCESS;
     }

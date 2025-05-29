@@ -14,33 +14,15 @@ server {
         try_files $uri $uri/ /index.html =404;
     }
 
-    location /api/ {
+    location ~ \/(oauth|api|swagger)\/? {
         alias     /var/www/app/public;
         try_files /index.php =404;
-        set $path $request_uri;
-        if ($request_uri ~ ^/api/(.*)$ ) {
-            set $path /api/$1;
-        }
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass            api:9000;
-        fastcgi_index           index.php;
-        include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
-        fastcgi_param REQUEST_URI     $path;
-    }
 
-    location /oauth/ {
-        alias     /var/www/app/public;
-        try_files /index.php =404;
-        set $path $request_uri;
-        if ($request_uri ~ ^/oauth/(.*)$ ) {
-            set $path /oauth/$1;
-        }
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass            api:9000;
         fastcgi_index           index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
-        fastcgi_param REQUEST_URI     $path;
+        fastcgi_param REQUEST_URI     $request_uri;
     }
 }
