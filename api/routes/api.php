@@ -57,6 +57,8 @@ Route::group(['prefix' => 'v1'], function() {
 
                 Route::get('', [OrganizersEventController::class, 'indexParticipants']);
                 Route::post('', [OrganizersEventController::class, 'storeParticipant']);
+
+                Route::get('payments', [OrganizersEventController::class, 'indexParticipantsPayments']);
             });
 
             Route::group(['prefix' => 'organizers'], function() {
@@ -65,6 +67,10 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::group(['prefix' => '{organizer_id}'], function() {
                     Route::delete('', [OrganizersEventController::class, 'deleteOrganizer']);
                 });
+            });
+
+            Route::group(['prefix' => 'payments'], function() {
+
             });
         });
     });

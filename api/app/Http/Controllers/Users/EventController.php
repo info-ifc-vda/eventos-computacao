@@ -23,35 +23,34 @@ class EventController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    #[OA\Post(
-        path: '/events/join',
-        tags: ['Events'],
-        operationId: 'Events@join',
-        requestBody: new OA\RequestBody(
-            content: new OA\JsonContent(
-                ref: "#/components/schemas/UsersStoreParticipant"
-            )
-        ),
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Listagem com {per_page} registros",
-                content: new OA\JsonContent(
-                    type: 'object',
-                    properties: [
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(
-                                ref: "#/components/schemas/UsersEventParticipant"
-                            )
-                        ),
-
-                    ]
-                )
-            )
-        ]
-    )]
+    // #[OA\Post(
+    //     path: '/events/join',
+    //     tags: ['Events'],
+    //     operationId: 'Events@join',
+    //     requestBody: new OA\RequestBody(
+    //         content: new OA\JsonContent(
+    //             ref: "#/components/schemas/UsersStoreParticipant"
+    //         )
+    //     ),
+    //     responses: [
+    //         new OA\Response(
+    //             response: 200,
+    //             description: "Listagem com {per_page} registros",
+    //             content: new OA\JsonContent(
+    //                 type: 'object',
+    //                 properties: [
+    //                     new OA\Property(
+    //                         property: 'data',
+    //                         type: 'array',
+    //                         items: new OA\Items(
+    //                             ref: "#/components/schemas/UsersEventParticipant"
+    //                         )
+    //                     ),
+    //                 ]
+    //             )
+    //         )
+    //     ]
+    // )]
     public function join(StoreParticipantRequest $request)
     {
         $this->eventRepository->addParticipant(

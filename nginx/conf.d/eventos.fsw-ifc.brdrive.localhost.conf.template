@@ -9,11 +9,6 @@ server {
     root /var/www/app/public;
     server_name ${APP_URL} auth.eventos;
 
-    location / {
-        alias     /var/www/web;
-        try_files $uri $uri/ /index.html =404;
-    }
-
     location ~ \/(oauth|api|swagger)\/? {
         alias     /var/www/app/public;
         try_files /index.php =404;
@@ -24,5 +19,9 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
         fastcgi_param REQUEST_URI     $request_uri;
+    }
+
+    location / {
+        proxy_pass http://front:8081;
     }
 }

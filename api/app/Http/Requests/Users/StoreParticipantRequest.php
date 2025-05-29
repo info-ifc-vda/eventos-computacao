@@ -17,12 +17,22 @@ class StoreParticipantRequest extends FormRequest
         return false;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'UsersStoreParticipant',
+        type: 'object',
+        properties: [
+            new OA\Property(
+                property: 'event_id',
+                type: 'string',
+                format: 'uuid',
+            ),
+            new OA\Property(
+                property: 'user_id',
+                type: 'string',
+                format: 'uuid'
+            ),
+        ]
+    )]
     public function rules()
     {
         return [
