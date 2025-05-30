@@ -22,7 +22,97 @@ class StoreEventRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'OrganizersStoreEvent',
+        type: 'object',
+        required: [
+            'title',
+            'description',
+            'subscription_deadline',
+            'public_event',
+            'event_periods'
+        ],
+        properties: [
+            new OA\Property(
+                property: 'title',
+                type: 'string',
+                maxLength: 255,
+                example: 'Festa de Inverno'
+            ),
+            new OA\Property(
+                property: 'description',
+                type: 'string',
+                example: 'Evento anual aberto ao público com diversas atrações.'
+            ),
+            new OA\Property(
+                property: 'subscription_deadline',
+                type: 'string',
+                format: 'date',
+                example: '2025-07-01'
+            ),
+            new OA\Property(
+                property: 'payment_deadline',
+                type: 'string',
+                format: 'date',
+                nullable: true,
+                example: '2025-07-10'
+            ),
+            new OA\Property(
+                property: 'banner',
+                type: 'object',
+                nullable: true,
+                properties: [
+                    new OA\Property(
+                        property: 'data',
+                        type: 'string',
+                        nullable: true,
+                        example: 'base64encodedimage...'
+                    )
+                ]
+            ),
+            new OA\Property(
+                property: 'estimated_value',
+                type: 'number',
+                format: 'float',
+                nullable: true,
+                example: 1500.75
+            ),
+            new OA\Property(
+                property: 'public_event',
+                type: 'boolean',
+                example: true
+            ),
+            new OA\Property(
+                property: 'event_periods',
+                type: 'array',
+                items: new OA\Items(
+                    type: 'object',
+                    required: ['date', 'opening_time', 'closing_time'],
+                    properties: [
+                        new OA\Property(
+                            property: 'date',
+                            type: 'string',
+                            format: 'date',
+                            example: '2025-08-01',
+                            description: 'Data do evento (deve ser no futuro)'
+                        ),
+                        new OA\Property(
+                            property: 'opening_time',
+                            type: 'string',
+                            format: 'time',
+                            example: '18:00:00'
+                        ),
+                        new OA\Property(
+                            property: 'closing_time',
+                            type: 'string',
+                            format: 'time',
+                            example: '23:00:00'
+                        )
+                    ]
+                )
+            )
+        ]
+    )]
     public function rules()
     {
         return [
@@ -34,7 +124,7 @@ class StoreEventRequest extends FormRequest
             'estimated_value' =>                ['nullable', 'decimal:2'],
             'public_event' =>                   ['required', 'boolean'],
             'event_periods.*.date' =>           ['required', 'date_format:Y-m-d', /* Criar regra para validar se data é maior que hoje */],
-            'event_periods.*.opening_time' =>   ['required', 'date_format:H:i:s', 'lt:event_periods.*.closing_time'],
+            'event_periods.*.closing_time' =>   ['required', 'date_format:H:i:s', 'lt:event_periods.*.closing_time'],
             'event_periods.*.opening_time' =>   ['required', 'date_format:H:i:s', 'gt:event_periods.*.opening_time'],
         ];
     }
