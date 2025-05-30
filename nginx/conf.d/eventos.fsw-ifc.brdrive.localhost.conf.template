@@ -21,7 +21,7 @@ server {
         fastcgi_param REQUEST_URI     $request_uri;
     }
 
-    location / {
-        proxy_pass http://front:8081;
-    }
+    # location / {
+    #     proxy_pass http://front:8081;
+    # }
 }

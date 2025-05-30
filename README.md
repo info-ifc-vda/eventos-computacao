@@ -18,7 +18,7 @@ docker compose exec api php artisan passport:keys
 docker compose exec api php artisan passport:client --password -q
 ```
 
-A aplicação estará disponível na rota http://http://eventos.fsw-ifc.brdrive.localhost
+A aplicação estará disponível na rota http://eventos.fsw-ifc.brdrive.localhost
 
 
 
