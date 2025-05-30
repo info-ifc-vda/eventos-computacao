@@ -45,8 +45,7 @@ class EventController extends Controller
                             items: new OA\Items(
                                 ref: "#/components/schemas/OrganizersEventSummary"
                             )
-                        ),
-
+                        )
                     ]
                 )
             )
@@ -57,6 +56,22 @@ class EventController extends Controller
         return $this->eventRepository->getAll($request);
     }
 
+    #[OA\Post(
+        path: '/events/store',
+        tags: ['Events'],
+        operationId: 'Events@store',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: 'Evento criado com sucesso',
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEvent')
+            )
+        ]
+    )]
     public function store(StoreEventRequest $request)
     {
         return $this->eventRepository->store($request);
