@@ -41,7 +41,7 @@ Route::group(['prefix' => 'v1'], function() {
         });
     });
 
-    Route::group(['prefix' => 'events'], function() {
+    Route::group(['prefix' => 'events', 'middleware' => 'auth:api'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);
         Route::post('', [OrganizersEventController::class, 'store']);
 
