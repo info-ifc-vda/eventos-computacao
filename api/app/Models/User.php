@@ -36,16 +36,27 @@ class User extends Authenticatable
     ];
 
     /******************************************
-     *                                        *
-     *              ATTRIBUTES                *
-     *                                        *
-     ******************************************/
+    *                                         *
+    *               ATTRIBUTES                *
+    *                                         *
+    ******************************************/
 
     /******************************************
-     *                                        *
-     *                 SCOPES                 *
-     *                                        *
-     ******************************************/
+    *                                         *
+    *                RELATIONS                *
+    *                                         *
+    ******************************************/
+
+    public function permissions()
+    {
+        return $this->hasMany(UserPermission::class, 'user_id', 'id');
+    }
+
+    /******************************************
+    *                                         *
+    *                  SCOPES                 *
+    *                                         *
+    ******************************************/
 
     public function scopeSearch(Builder $query, $q) {
         if ($q) {
@@ -56,8 +67,16 @@ class User extends Authenticatable
     }
 
     /******************************************
-     *                                        *
-     *                METHODS                 *
-     *                                        *
-     ******************************************/
+    *                                         *
+    *                 METHODS                 *
+    *                                         *
+    ******************************************/
+
+    public function can($abilities, $arguments = [])
+    {
+        $can = $this->permissions->where('permission', $abilities)->first() ? true : false;
+
+        // TODO: (Backlog) verificar se o cara é um admin da plataforma
+        return $can;
+    }
 }

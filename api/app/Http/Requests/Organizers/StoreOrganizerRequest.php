@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Organizers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class StoreOrganizerRequest extends FormRequest
 {
@@ -21,7 +22,11 @@ class StoreOrganizerRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'OrganizersStoreOrganizerRequest',
+        type: 'object',
+        description: 'Nenhum campo definido.'
+    )]
     public function rules()
     {
         return [

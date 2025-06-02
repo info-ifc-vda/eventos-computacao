@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Organizers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -21,7 +22,11 @@ class UpdateEventRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'OrganizersUpdateEventRequest',
+        type: 'object',
+        description: 'Schema da requisição para atualização de evento. Ainda não definido.'
+    )]
     public function rules()
     {
         return [
