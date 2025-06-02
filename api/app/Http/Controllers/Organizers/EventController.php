@@ -25,7 +25,7 @@ class EventController extends Controller
     }
 
     #[OA\Get(
-        path: '/events/index',
+        path: '/api/v1/events/index',
         tags: ['Events'],
         operationId: 'Events@index',
         parameters: [
@@ -57,7 +57,7 @@ class EventController extends Controller
     }
 
     #[OA\Post(
-        path: '/events/store',
+        path: '/api/v1/events/store',
         tags: ['Events'],
         operationId: 'Events@store',
         requestBody: new OA\RequestBody(

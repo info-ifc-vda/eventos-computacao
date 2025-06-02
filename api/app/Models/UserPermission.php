@@ -15,7 +15,6 @@ class UserPermission extends Model
     ******************************************/
 
     public $table = 'user_permissions';
-    public $primaryKey = 'uuid';
 
     /******************************************
     *                                         *

@@ -25,7 +25,7 @@ class AuthController extends Controller
     }
 
     #[OA\Post(
-        path: '/auth/login',
+        path: '/api/v1/auth/login',
         tags: ['Auth'],
         summary: 'Autenticação do usuário',
         description: 'Gera um token de acesso com base nas credenciais do usuário.',
@@ -84,7 +84,7 @@ class AuthController extends Controller
     }
 
     #[OA\Get(
-        path: '/auth/logout',
+        path: '/api/v1/auth/logout',
         tags: ['Auth'],
         summary: 'desautenticação do usuário autenticado',
         description: 'Revoga o token de acesso atual e todos os tokens de atualização associados.',

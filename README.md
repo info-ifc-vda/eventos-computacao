@@ -34,3 +34,11 @@ docker compose exec api php artisan generate:docs
 ```
 É recomendado rodar o comando a cada pull, pois a documentação é gerada somente ao executar o comando.
 A documentação estará disponível na rota http://eventos.fsw-ifc.brdrive.localhost/swagger
+
+## Seeder
+
+Para seedar a base de dados rode:
+
+```bash
+docker compose exec api php artisan migrate:fresh --seed
+```
