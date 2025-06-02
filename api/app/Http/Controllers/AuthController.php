@@ -93,8 +93,13 @@ class AuthController extends Controller
         responses: [
             new OA\Response(
                 response: 204,
-                description: 'Logout realizado com sucesso!'
-            ),
+                description: 'Logout realizado com sucesso!',
+                content: [
+                    'application/json' => new OA\MediaType(
+                        mediaType: 'application/json'
+                    )
+                ]
+            )
         ]
     )]
     public function logout(LogoutRequest $request)

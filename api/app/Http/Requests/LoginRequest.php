@@ -31,13 +31,13 @@ class LoginRequest extends FormRequest
                 property: 'username',
                 type: 'string',
                 format: 'email',
-                example: 'usuario@email.com'
+                example: 'admin@gmail.com'
             ),
             new OA\Property(
                 property: 'password',
                 type: 'string',
                 format: 'password',
-                example: 'senha123'
+                example: 'Yametekudas@1'
             )
         ]
     )]

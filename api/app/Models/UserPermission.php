@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class UserPermission extends Model
 {
-
+    use HasUuids;
     /******************************************
     *                                         *
     *              PROPERTIES                 *
@@ -15,6 +16,7 @@ class UserPermission extends Model
     ******************************************/
 
     public $table = 'user_permissions';
+    public $primaryKey = 'uuid';
 
     /******************************************
     *                                         *
