@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserSummaryResource;
 use Illuminate\Http\Request;
@@ -31,5 +32,8 @@ class UserController extends Controller
     }
 
     // TODO: Atualização do usuário
+    public function update(UpdateUserRequest $request) {
+        return new UserResource($this->userRepository->update($request));
+    }
     // TODO: E-mail para recuperação de senha
 }

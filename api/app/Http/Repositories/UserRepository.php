@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -32,6 +33,11 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return $user->refresh();
+    }
+
+    public function update(UpdateUserRequest $request)
+    {
+        dd($request);
     }
 
     public function findOrFail($userId): User
