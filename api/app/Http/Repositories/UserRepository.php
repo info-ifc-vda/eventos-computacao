@@ -22,6 +22,11 @@ class UserRepository implements UserRepositoryInterface
 
         $user->name = $request->get('name');
         $user->email = $request->get('email');
+        
+        // código para remover a mascara do telefone
+        // "(49) 91234-5678" 15 chars que contém '(', ')', ' ', '-' que devem ser removidos
+        $user->phone = preg_replace('/\D/', '', $request->get('phone'));
+        
         $user->password = Hash::make($request->get('password'));
 
         $user->save();
