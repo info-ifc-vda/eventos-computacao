@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class UserPermission extends Model
 {
-    use HasUuids;
+    // use HasUuids;
     /******************************************
     *                                         *
     *              PROPERTIES                 *
@@ -16,7 +16,7 @@ class UserPermission extends Model
     ******************************************/
 
     public $table = 'user_permissions';
-    public $primaryKey = 'uuid';
+    // public $primaryKey = 'uuid';
 
     /******************************************
     *                                         *
