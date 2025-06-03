@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script de deploy para aplicação Laravel + Vue.js, executando tudo dentro de contêineres
-# Uso: ./deploy.sh [--api | --front | --all]
+# Uso: ./deploy.sh [--api [--build] | --front | --all]
 
 # Definir cores para mensagens
 RED='\033[0;31m'
@@ -36,6 +36,7 @@ WEB_DIR="${PROJECT_DIR}/web"
 PUBLIC_DIR="${PROJECT_DIR}/web/public"
 DOCKER_COMPOSE_FILE="${PROJECT_DIR}/docker-compose.yml"
 DEPLOY_MODE="all"
+BUILD_FLAG="no"
 
 # Processar argumentos
 while [ $# -gt 0 ]; do
@@ -52,8 +53,12 @@ while [ $# -gt 0 ]; do
             DEPLOY_MODE="all"
             shift
             ;;
+        --build)
+            BUILD_FLAG="yes"
+            shift
+            ;;
         *)
-            error_exit "Argumento inválido: $1. Use --api, --front ou --all"
+            error_exit "Argumento inválido: $1. Use --api [--build], --front ou --all"
             ;;
     esac
 done
@@ -64,9 +69,6 @@ done
 [ -d "$PUBLIC_DIR" ] || error_exit "Diretório public/ não encontrado"
 [ -f "$PUBLIC_DIR/50x.html" ] || error_exit "Arquivo public/50x.html não encontrado"
 [ -f "$DOCKER_COMPOSE_FILE" ] || error_exit "Arquivo docker-compose.yml não encontrado"
-if [ "$DEPLOY_MODE" = "front" ] || [ "$DEPLOY_MODE" = "all" ]; then
-    [ -f "$WEB_DIR/src/views/NotFound.vue" ] || error_exit "Arquivo src/views/NotFound.vue não encontrado"
-fi
 
 # Passo 1: Atualizar o repositório (no host)
 info "Atualizando o repositório..."
@@ -98,7 +100,15 @@ fi
 info "Reiniciando contêineres..."
 cd "$PROJECT_DIR" || error_exit "Falha ao acessar diretório do projeto"
 docker compose -f "$DOCKER_COMPOSE_FILE" down || error_exit "Falha ao parar contêineres"
-docker compose -f "$DOCKER_COMPOSE_FILE" up -d --build || error_exit "Falha ao iniciar contêineres"
+
+if [ "$DEPLOY_MODE" = "api" ] && [ "$BUILD_FLAG" = "yes" ]; then
+    info "Iniciando contêineres com --build..."
+    docker compose -f "$DOCKER_COMPOSE_FILE" up -d --build || error_exit "Falha ao iniciar contêineres com build"
+else
+    info "Iniciando contêineres sem --build..."
+    docker compose -f "$DOCKER_COMPOSE_FILE" up -d || error_exit "Falha ao iniciar contêineres"
+fi
+
 success "Contêineres reiniciados com sucesso"
 
 # Passo 7: Verificar status dos contêineres
