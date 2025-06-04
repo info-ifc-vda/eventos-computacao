@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class LoginRequest extends FormRequest
 {
@@ -21,7 +22,25 @@ class LoginRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'AuthLoginRequest',
+        type: 'object',
+        required: ['username', 'password'],
+        properties: [
+            new OA\Property(
+                property: 'username',
+                type: 'string',
+                format: 'email',
+                example: 'admin@gmail.com'
+            ),
+            new OA\Property(
+                property: 'password',
+                type: 'string',
+                format: 'password',
+                example: 'Yametekudas@1'
+            )
+        ]
+    )]
     public function rules()
     {
         return [

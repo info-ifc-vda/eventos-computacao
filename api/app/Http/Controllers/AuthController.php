@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Client;
 use Laravel\Passport\RefreshTokenRepository;
 use Laravel\Passport\TokenRepository;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,32 @@ class AuthController extends Controller
         $this->refreshTokenRepository = app(RefreshTokenRepository::class);
     }
 
-    // TODO: Documentação
+    #[OA\Post(
+        path: '/api/v1/auth/login',
+        tags: ['Auth'],
+        summary: 'Autenticação do usuário',
+        description: 'Gera um token de acesso com base nas credenciais do usuário.',
+        operationId: 'Auth@login',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AuthLoginRequest')
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Token gerado com sucesso',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'token_type', type: 'string', example: 'Bearer'),
+                        new OA\Property(property: 'expires_in', type: 'integer', example: 31536000),
+                        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1Qi...'),
+                        new OA\Property(property: 'refresh_token', type: 'string', example: 'def50200acb123...')
+                    ]
+                )
+            ),
+        ]
+    )]
     public function login(LoginRequest $request)
     {
         $client = Client::where('password_client', 1)->first();
@@ -57,7 +83,25 @@ class AuthController extends Controller
         return response()->json($http->json(), $http->status());
     }
 
-    // TODO: Documentação
+    #[OA\Get(
+        path: '/api/v1/auth/logout',
+        tags: ['Auth'],
+        summary: 'desautenticação do usuário autenticado',
+        description: 'Revoga o token de acesso atual e todos os tokens de atualização associados.',
+        operationId: 'Auth@logout',
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(
+                response: 204,
+                description: 'Logout realizado com sucesso!',
+                content: [
+                    'application/json' => new OA\MediaType(
+                        mediaType: 'application/json'
+                    )
+                ]
+            )
+        ]
+    )]
     public function logout(LogoutRequest $request)
     {
         $tokenId = Auth::user()->token()->id;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class LogoutRequest extends FormRequest
 {
@@ -16,12 +17,16 @@ class LogoutRequest extends FormRequest
         return true;
     }
 
-    /**
+        /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'AuthLogoutRequest',
+        type: 'object',
+        description: 'Nenhum campo necessário no corpo.'
+    )]
     public function rules()
     {
         return [

@@ -21,7 +21,20 @@ use OpenApi\Generator;
     //     "https://eventos.fsw-ifc.brdrive.cloud/api/v1",
     //     "https://eventos.fsw-ifc.brdrive.localhost/api/v1"
     // ],
-    )]
+
+    components: new OA\Components(
+        securitySchemes: [
+            new OA\SecurityScheme(
+                securityScheme: "bearerAuth",
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT"
+            )
+        ]
+    ),
+    security: [["bearerAuth" => []]]
+)]
+
 class GenerateDocs extends Command
 {
     /**
