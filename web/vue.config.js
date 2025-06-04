@@ -1,18 +1,28 @@
 const { defineConfig } = require("@vue/cli-service");
 const path = require('path');
 
+// Carrega variáveis de ambiente
+require('dotenv').config();
+
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
-    allowedHosts: "all",  // Permite hosts de qualquer origem
+    host: '0.0.0.0',  // Necessário para Docker
+    port: 9001,
+    allowedHosts: "all",
     proxy: {
-      '/api': {  // Substitua '/api' pela URL do seu endpoint
-        target: 'http://localhost:8082',  // URL do seu servidor backend
-        changeOrigin: true,  // Altera a origem da requisição para o target
-        secure: false,  // Desativa a verificação SSL para requisições HTTP
+      '/api': {
+        // Usa variável de ambiente ou fallback para desenvolvimento local
+        target: process.env.VUE_APP_API_URL || 'http://localhost:8082',
+        changeOrigin: true,
+        secure: false,
         pathRewrite: {
-          '^/api': '',  // Opcional: Reescreve a URL, por exemplo, removendo "/api"
+          '^/api': '',
         },
+        // Logs para debug
+        onProxyReq: (proxyReq, req, res) => {
+          console.log(`Proxying ${req.method} ${req.url} to ${proxyReq.path}`);
+        }
       },
     },
   },
