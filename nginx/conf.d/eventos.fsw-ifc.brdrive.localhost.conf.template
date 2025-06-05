@@ -20,8 +20,9 @@ server {
 
     # Frontend static files
     location / {
-        root /var/www/web/dist;
-        try_files $uri $uri/ /index.html;
+        proxy_pass http://front:9001;
+        # root /var/www/web/dist;
+        # try_files $uri $uri/ /index.html;
     }
 
     error_page 404 /index.html;  # SPA já redireciona para index.html

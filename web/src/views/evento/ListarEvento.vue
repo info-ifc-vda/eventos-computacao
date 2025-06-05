@@ -1,3 +1,4 @@
+<!--
 <template>
   <v-container>
     <h2 class="title">Lista de Produtos</h2>
@@ -101,3 +102,4 @@ export default {
   text-align: center;
 }
 </style>
+-->

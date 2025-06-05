@@ -1,22 +1,22 @@
 services:
   reverse-proxy:
-    depends_on:
-      - api
-      # - front
-    image: nginx:latest
-    container_name: ec.reverse-proxy
-    tty: true
-    ports:
-      - "80:80"
-    env_file: .env
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/templates
-      - ./api:/var/www/app
-      - ./web:/var/www/web
-    restart: unless-stopped
-    networks:
-      ec:
-        ipv4_address: "172.16.0.2"
+      depends_on:
+        - api
+        - front
+      image: nginx:latest
+      container_name: ec.reverse-proxy
+      tty: true
+      ports:
+        - "80:80"
+      env_file: .env
+      volumes:
+        - ./nginx/conf.d:/etc/nginx/templates
+        - ./api:/var/www/app
+        - ./web/dist:/var/www/web/dist  # Monta o diretório dist
+      restart: unless-stopped
+      networks:
+        - ec
+
   api:
     depends_on:
       - db
@@ -30,10 +30,8 @@ services:
       - ./api:/var/www/app
     restart: unless-stopped
     networks:
-      ec:
-        ipv4_address: "172.16.0.10"
-    extra_hosts:
-      - "auth.eventos:172.16.0.2"
+      - ec
+
   db:
     image: postgres
     container_name: ec.db
@@ -48,8 +46,8 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     networks:
-      ec:
-        ipv4_address: "172.16.0.3"
+      - ec
+
   front:
     working_dir: /var/www/web
     image: node:20.15.0
@@ -57,17 +55,14 @@ services:
     tty: true
     volumes:
       - ./web:/var/www/web
-    command: ["npm", "ci && npm", "run", "serve"]
+    command: sh -c "npm ci && npm run serve:dev -- --host 0.0.0.0 --port 9001"
+    # command: sh -c "npm ci && npm run build:prod && npx serve -s dist -l 0.0.0.0:9001"
     networks:
-      ec:
-        ipv4_address: "172.16.0.11"
+      - ec
+
 networks:
   ec:
     driver: bridge
-    ipam:
-      config:
-        - subnet: "172.16.0.0/24"
-          gateway: "172.16.0.1"
 volumes:
   db:
     driver: local
