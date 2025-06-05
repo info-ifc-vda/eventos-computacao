@@ -53,9 +53,9 @@ Route::group(['prefix' => 'v1'], function() {
 
             //Rotas de despesas de eventos
             Route::group(['prefix' => 'expenses'], function() {
-                Route::get('', [EventController::class, 'indexExpenses']);
-                Route::post('', [EventController::class, 'storeExpense']);
-                Route::get('{expense_uuid}', [EventController::class, 'showExpense']);
+                Route::get('', [OrganizersEventController::class, 'indexExpenses']);
+                Route::post('', [OrganizersEventController::class, 'storeExpense']);
+                Route::get('{expense_uuid}', [OrganizersEventController::class, 'showExpense']);
             });
 
             Route::group(['prefix' => 'participants'], function() {

@@ -14,6 +14,8 @@ use App\Models\EventExpenseItem;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EventRepository implements EventRepositoryInterface
 {
@@ -88,6 +90,11 @@ class EventRepository implements EventRepositoryInterface
         // TODO: Remover organizador do evento
     }
 
+    public function getAllExpenses(int $internalEventId, Request $request): LengthAwarePaginator
+    {
+        return EventExpense::fromEvent($internalEventId)->paginate($request->query('per_page'));
+    }
+
     // Métodos para despesas
     public function getEventExpenses(string $eventId, int $perPage = 15): LengthAwarePaginator
     {
@@ -103,7 +110,7 @@ class EventRepository implements EventRepositoryInterface
             // Criar a despesa
             $expense = EventExpense::create([
                 'event_id' => $eventId,
-                'user_id' => auth()->id(),
+                'user_id' => Auth::user()->id,
                 'proof_access_key' => $data['proof_access_key'],
                 'items_total' => 0, // Será calculado após criar os itens
             ]);

@@ -19,8 +19,8 @@ class EventExpenseSummaryResource extends JsonResource
             'user_name' => $this->whenLoaded('user', fn() => $this->user->name),
             'proof_access_key' => $this->proof_access_key,
             'total_value' => $this->items_total,
-            'items_count' => $this->whenLoaded('items', fn() => $this->items->count()),
-            'created_at' => $this->created_at?->toISOString(),
+            'items_count' => $this->items->count(),
+            'created_at' => $this->created_at,
         ];
     }
 }

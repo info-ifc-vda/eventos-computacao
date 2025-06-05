@@ -29,6 +29,8 @@ interface EventRepositoryInterface
     public function addOrganizer(string $eventId, User $user);
     public function removeOrganizer(string $eventId, string $organizerId);
 
+    public function getAllExpenses(int $internalEventId, Request $request): LengthAwarePaginator;
+
      // Novos métodos para despesas
     public function getEventExpenses(string $eventId, int $perPage = 15): LengthAwarePaginator;
     public function createEventExpense(string $eventId, array $data): EventExpense;

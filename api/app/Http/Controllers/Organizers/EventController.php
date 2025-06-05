@@ -106,36 +106,9 @@ class EventController extends Controller
     /**
      * Lista todas as despesas de um evento
      */
-    public function indexExpenses(Request $request, string $eventId): JsonResponse
+    public function indexExpenses(Request $request)
     {
-        try {
-            // Verificar se o evento existe
-            $event = $this->eventRepository->find($eventId);
-            if (!$event) {
-                return response()->json([
-                    'message' => 'Evento não encontrado.'
-                ], 404);
-            }
-
-            $perPage = $request->get('per_page', 15);
-            $expenses = $this->eventRepository->getEventExpenses($eventId, $perPage);
-
-            return response()->json([
-                'data' => EventExpenseSummaryResource::collection($expenses->items()),
-                'meta' => [
-                    'current_page' => $expenses->currentPage(),
-                    'last_page' => $expenses->lastPage(),
-                    'per_page' => $expenses->perPage(),
-                    'total' => $expenses->total(),
-                ]
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao buscar despesas do evento.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return EventExpenseSummaryResource::collection($this->eventRepository->getAllExpenses($request->route('event_id'), $request));
     }
 
     //Métodos para despesas de eventos
