@@ -7,9 +7,11 @@ use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\EventExpense;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface EventRepositoryInterface
 {
@@ -26,4 +28,10 @@ interface EventRepositoryInterface
     public function indexOrganizers(string $eventId, Request $request);
     public function addOrganizer(string $eventId, User $user);
     public function removeOrganizer(string $eventId, string $organizerId);
+
+     // Novos métodos para despesas
+    public function getEventExpenses(string $eventId, int $perPage = 15): LengthAwarePaginator;
+    public function createEventExpense(string $eventId, array $data): EventExpense;
+    public function findEventExpense(string $eventId, string $expenseId): ?EventExpense;
+    public function getUserEventExpenses(string $eventId, string $userId): Collection;
 }
