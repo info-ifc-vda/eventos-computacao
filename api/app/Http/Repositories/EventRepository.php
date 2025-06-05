@@ -7,11 +7,18 @@ use App\Http\Repositories\Contracts\EventRepositoryInterface;
 use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
+use App\Models\Address;
 use App\Models\Event;
+use App\Models\EventBankDetails;
+use App\Models\EventLocation;
+use App\Models\EventPeriod;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventRepository implements EventRepositoryInterface
 {
@@ -23,10 +30,60 @@ class EventRepository implements EventRepositoryInterface
     public function store(StoreEventRequest $request): Event
     {
         $event = new Event();
+        $event->user_id = Auth::user()->id;
 
-        // TODO: Criar evento
+        $event->title = $request->get('title');
+        $event->description = $request->get('description');
+        $event->subscription_deadline = $request->get('subscription_deadline');
+        $event->payment_deadline = $request->get('payment_deadline');
+        $event->estimated_value = $request->get('estimated_value');
 
-        return $event->refresh();
+        $file = Str::random(32).'.png';
+
+        Storage::put($file, base64_decode($request->get('banner')['data']));
+        $event->banner_url = $file;
+        $event->save();
+        $event->refresh();
+
+        $requestEventPeriods = $request->get('event_periods');
+        foreach ($requestEventPeriods as $requestEventPeriod) {
+            $eventPeriod = new EventPeriod();
+            $eventPeriod->event_id = $event->id;
+
+            $eventPeriod->date = $requestEventPeriod['date'];
+            $eventPeriod->opening_time = $requestEventPeriod['opening_time'];
+            $eventPeriod->closing_time = $requestEventPeriod['closing_time'];
+            $eventPeriod->save();
+        }
+
+        $eventLocationAddress = $request->get('location')['address'];
+
+        $address = new Address();
+        $address->state = $eventLocationAddress['state'];
+        $address->city = $eventLocationAddress['city'];
+        $address->neighborhood = $eventLocationAddress['neighborhood'];
+        $address->zip_code = preg_replace('/\D/', '', $eventLocationAddress['zip_code']);
+        $address->street = $eventLocationAddress['street'];
+        $address->number = $eventLocationAddress['number'];
+        $address->complement = $eventLocationAddress['complement'];
+        $address->save();
+        $address->refresh();
+
+        $eventLocation = new EventLocation();
+        $eventLocation->event_id = $event->id;
+        $eventLocation->address_id = $address->id;
+        $eventLocation->maps_link = 'sem uso';
+        $eventLocation->save();
+
+        $requestBankDetails = $request->get('bank_details');
+        $eventBankDetails = new EventBankDetails();
+        $eventBankDetails->event_id = $event->id;
+        $eventBankDetails->bank = $requestBankDetails['bank'];
+        $eventBankDetails->holder = $requestBankDetails['holder'];
+        $eventBankDetails->pix_key = $requestBankDetails['pix_key'];
+        $eventBankDetails->save();
+
+        return $event->with('location')->refresh();
     }
 
     public function find(string $eventId): Event

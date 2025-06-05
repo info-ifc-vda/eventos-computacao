@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Organizers;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventPeriods extends JsonResource
+class EventBankDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -12,13 +12,12 @@ class EventPeriods extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    // TODO: Documentação
     public function toArray($request)
     {
         return [
-            'date' => $this->date,
-            'opening_time' => $this->opening_time,
-            'closing_time' => $this->closing_time
+            'bank' => $this->bank,
+            'holder' => $this->holder,
+            'pix_key' => $this->pix_key
         ];
     }
 }

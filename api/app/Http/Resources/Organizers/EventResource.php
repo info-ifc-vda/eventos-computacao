@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Organizers;
 
 use App\Http\Resources\AddressResource;
+use App\Http\Resources\EventBankDetailsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EventResource extends JsonResource
@@ -16,6 +17,7 @@ class EventResource extends JsonResource
     // TODO: Documentação
     public function toArray($request)
     {
+        dd($this->location());
         return [
             'id' => $this->uuid,
             'created_at' => $this->created_at,
@@ -28,14 +30,15 @@ class EventResource extends JsonResource
             'subscription_deadline' => $this->subscription_deadline,
             'payment_deadline' => $this->payment_deadline,
             'banner' => [
-                'url' => $this->banner_url,
+                'url' => $this->getBannerUrl(),
             ],
             'estimated_value' => $this->estimated_value,
-            'event_periods' => EventPeriods::collection($this->event_periods),
+            'event_periods' => EventPeriodsResource::collection($this->event_periods),
             'location' => [
                 'address' => new AddressResource($this->location->address),
                 'maps_link' => $this->location->maps_link
             ],
+            'bank_details' => new EventBankDetailsResource($this->bank_details)
         ];
     }
 }
