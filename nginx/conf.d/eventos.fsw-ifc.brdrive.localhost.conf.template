@@ -1,14 +1,11 @@
-server_tokens off;
-
 server {
     listen 80;
-    index index.php index.html;
     client_max_body_size 20M;
     error_log  /var/log/nginx/error.log debug;
     access_log /var/log/nginx/access.log;
-    root /var/www/app/public;
-    server_name ${APP_URL} auth.eventos;
+    server_name ${APP_URL} reverse-proxy;
 
+    # API routes
     location ~ \/(oauth|api|swagger)\/? {
         alias     /var/www/app/public;
         try_files /index.php =404;
@@ -21,7 +18,19 @@ server {
         fastcgi_param REQUEST_URI     $request_uri;
     }
 
-    # location / {
-    #     proxy_pass http://front:8081;
-    # }
+    # Frontend static files
+    location / {
+        proxy_pass http://front:9001;
+        # root /var/www/web/dist;
+        # try_files $uri $uri/ /index.html;
+    }
+
+    error_page 404 /index.html;  # SPA já redireciona para index.html
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /var/www/web/dist;
+    }
+
+    # TODO: implementar erro personalizado no Vue.js primeiro
+    # error_page 500 502 503 504 /error; # Redireciona para a rota /error do Vue.js
 }
