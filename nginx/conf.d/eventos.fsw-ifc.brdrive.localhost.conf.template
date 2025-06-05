@@ -3,7 +3,7 @@ server {
     client_max_body_size 20M;
     error_log  /var/log/nginx/error.log debug;
     access_log /var/log/nginx/access.log;
-    server_name ${APP_URL} auth.eventos;
+    server_name ${APP_URL} reverse-proxy;
 
     # API routes
     location ~ \/(oauth|api|swagger)\/? {
