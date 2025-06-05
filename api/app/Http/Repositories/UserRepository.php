@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserPassword;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,9 +36,23 @@ class UserRepository implements UserRepositoryInterface
         return $user->refresh();
     }
 
-    public function update(UpdateUserRequest $request)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        dd($request);
+        $user->name = $request->get('name');
+        $user->phone = preg_replace('/\D/', '', $request->get('phone'));
+        
+        $user->save();
+
+        return $user->refresh();
+    }
+
+    public function updatePassword(UpdateUserPassword $request, User $user): User
+    {        
+        $user->password = Hash::make($request->get('password'));
+        
+        $user->save();
+
+        return $user->refresh();
     }
 
     public function findOrFail($userId): User
