@@ -28,12 +28,14 @@ class UserController extends Controller
 
     }
 
-    public function show(Request $request, $user_uuid)
+    public function show(Request $request, $user_id)
     {
-        if ($user_uuid == 'me' ){
+        if ($user_id == 'me' ){
             $user = Auth::user();
+        } else {
+            $user = $this->userRepository->findOrFail($user_id);
         }
-        return UserSummaryResource::collection(($user));
+        return new UserResource($user);
     }
 
     // TODO: Documentação

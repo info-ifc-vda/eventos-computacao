@@ -33,9 +33,9 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {    
         Route::get('', [UserController::class, 'index']);
-        Route::post('password', [UserController::class, 'updatePassword']);
+        Route::put('password', [UserController::class, 'updatePassword']);
 
-        Route::get('me', [UserController::class, 'showMe']);
+        // Route::get('me', [UserController::class, 'showMe']);
         Route::group(['prefix' => '{user_id}'], function() {
             Route::get('', [UserController::class, 'show']);
             Route::put('', [UserController::class, 'update']);

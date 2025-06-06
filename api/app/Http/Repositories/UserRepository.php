@@ -57,7 +57,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function findOrFail($userId): User
     {
-        return User::findOrFail($userId);
+        return User::where('uuid', $userId)->firstOrFail();
     }
 
     public function findByEmail($email): ?User
