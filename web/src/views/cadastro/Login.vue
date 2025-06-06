@@ -32,8 +32,8 @@ export default {
   directives: { mask: VueMask.VueMaskDirective },
   data() {
     return {
-      email: "fabricio.bizotto@ifc.edu.br",
-      senha: "ifc@videira123",
+      email: "",
+      senha: "",
     };
   },
   methods: {

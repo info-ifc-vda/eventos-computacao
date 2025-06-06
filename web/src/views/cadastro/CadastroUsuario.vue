@@ -56,11 +56,11 @@ export default {
   data() {
     return {
       usuario: {
-        nome: "Fabricio",
-        email: "fabricio.bizotto@ifc.edu.br",
-        telefone: "4999125446",
-        senha: "ifc@videira123",
-        confirmarSenha: "ifc@videira123",
+        nome: "",
+        email: "",
+        telefone: "",
+        senha: "",
+        confirmarSenha: "",
         // cpf: "",
         // endereco: "",
         // sexo: "",
