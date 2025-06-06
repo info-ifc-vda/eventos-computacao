@@ -15,6 +15,12 @@ use App\Http\Services\Organizers\EventService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
+use App\Http\Requests\StoreEventExpenseRequest;
+use App\Http\Resources\Organizers\EventExpenseResource;
+use App\Http\Resources\Organizers\EventExpenseSummaryResource;
+use Illuminate\Http\JsonResponse;
+
+
 class EventController extends Controller
 {
     public EventRepository $eventRepository;
@@ -110,5 +116,57 @@ class EventController extends Controller
     public function indexOrganizers(Request $request)
     {
         // return $this->eventService->indexOrganizers($request);
+    }
+
+    /**
+     * Lista todas as despesas de um evento
+     */
+    public function indexExpenses(Request $request)
+    {
+        return EventExpenseSummaryResource::collection($this->eventRepository->getAllExpenses($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    //Métodos para despesas de eventos
+    /**
+     * Registra uma nova despesa para o evento
+     */
+    public function storeExpense(StoreEventExpenseRequest $request)
+    {
+        return new EventExpenseResource($this->eventRepository->storeExpense($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    /**
+     * Exibe uma despesa específica
+     */
+    public function showExpense(Request $request)
+    {
+        return new EventExpenseResource($this->eventRepository->findEventExpenseOrFail($this->eventRepository->findOrFail($request->route('event_id'))->id, $request->route('event_expense_id')));
+        // try {
+        //     $expense = $this->eventRepository->findEventExpense($eventId, $expenseUuid);
+            
+        //     if (!$expense) {
+        //         return response()->json([
+        //             'message' => 'Despesa não encontrada.'
+        //         ], 404);
+        //     }
+
+        //     // Verificar se o usuário pode visualizar esta despesa
+        //     // (pode ser o próprio usuário ou ter permissões especiais)
+        //     if ($expense->user_id !== auth()->id() && !$this->canViewExpense($expense)) {
+        //         return response()->json([
+        //             'message' => 'Não autorizado a visualizar esta despesa.'
+        //         ], 403);
+        //     }
+
+        //     return response()->json([
+        //         'data' => new EventExpenseResource($expense)
+        //     ]);
+
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'message' => 'Erro ao buscar despesa.',
+        //         'error' => $e->getMessage()
+        //     ], 500);
+        // }
     }
 }

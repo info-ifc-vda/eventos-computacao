@@ -15,14 +15,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('event_expenses', function (Blueprint $table) {
-            $table->id();
+            $table->id();//
             $table->uuid()->default(DB::raw('gen_random_uuid()'));
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('event_id');
-            $table->foreignId('user_id');
+            $table->foreignId('event_id');//
+            $table->foreignId('user_id');//
             $table->string('proof_access_key', 55);
-            $table->decimal('items_total');
+            $table->decimal('items_total');//
 
             $table->foreign('event_id')->references('id')->on('events');
             $table->foreign('user_id')->references('id')->on('users');
