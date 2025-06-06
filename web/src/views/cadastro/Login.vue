@@ -32,7 +32,7 @@ export default {
   directives: { mask: VueMask.VueMaskDirective },
   data() {
     return {
-      email: "",
+      email: "456",
       senha: "",
     };
   },
@@ -43,6 +43,8 @@ export default {
         return;
       }
       try {
+        console.log(`Tentando login com email: ${this.email} e senha: ${this.senha}`);
+        
         await UsuarioService.login(this.email, this.senha);
         alert("Login realizado com sucesso!");
         this.$router.push("/eventos");

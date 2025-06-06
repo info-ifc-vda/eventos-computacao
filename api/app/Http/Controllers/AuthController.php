@@ -50,22 +50,30 @@ class AuthController extends Controller
             ),
         ]
     )]
-    public function login(LoginRequest $request)
-    {
-        $client = Client::where('password_client', 1)->first();
+public function login(LoginRequest $request)
+{
+    $client = Client::where('password_client', 1)->first();
 
-        $http = Http::asForm()->post((env('APP_ENV') == 'production' ? 'http' : 'http') .'://reverse-proxy/oauth/token', [
-            'grant_type' => 'password',
-            'client_id' => $client->id,
-            'client_secret' => $client->secret,
-            'username' => $request->get('username'),
-            'password' => $request->get('password'),
-            'scope' => '*',
-        ]);
+    // Condiciona a URL da API de acordo com o ambiente
+    $apiUrl = (env('APP_ENV') == 'production') 
+              ? 'http://eventos.fsw-ifc.brdrive.localhost/oauth/token' 
+              : 'http://eventos.fsw-ifc.brdrive.localhost/oauth/token'; // Ajuste aqui para o URL correto de desenvolvimento, se necessário.
 
-        return response()->json($http->json(), $http->status());
+    // Imprime no log (apenas no servidor ou em desenvolvimento)
+    \Log::info('URL da API de Login: ' . $apiUrl); 
 
-    }
+    $http = Http::asForm()->post($apiUrl, [
+        'grant_type' => 'password',
+        'client_id' => $client->id,
+        'client_secret' => $client->secret,
+        'username' => $request->get('username'),
+        'password' => $request->get('password'),
+        'scope' => '*',
+    ]);
+
+    return response()->json($http->json(), $http->status());
+}
+
 
     // TODO: Documentação
     public function refresh(RefreshTokenRequest $request)

@@ -1,13 +1,15 @@
 // src/services/UsuarioService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/usuario';
+const API_URL = 'http://eventos.fsw-ifc.brdrive.localhost/';
 
 export default {
 
 async login(cpf, senha) {
     try {
-      const response = await axios.post(`${API_URL}/login`, { cpf, senha });
+      console.log(`Tentando fazer login com CPF: ${cpf} e Senha: ${senha}`);
+      
+      const response = await axios.post(`${API_URL}/api/v1/auth/login`, { cpf, senha });
       return response.data;
     } catch (error) {
       console.error('Erro ao fazer login:', error);
