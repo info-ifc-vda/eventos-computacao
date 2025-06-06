@@ -55,7 +55,7 @@ Route::group(['prefix' => 'v1'], function() {
             Route::group(['prefix' => 'expenses'], function() {
                 Route::get('', [OrganizersEventController::class, 'indexExpenses']);
                 Route::post('', [OrganizersEventController::class, 'storeExpense']);
-                Route::get('{expense_uuid}', [OrganizersEventController::class, 'showExpense']);
+                Route::get('{event_expense_id}', [OrganizersEventController::class, 'showExpense']);
             });
 
             Route::group(['prefix' => 'participants'], function() {
