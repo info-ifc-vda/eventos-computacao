@@ -100,7 +100,63 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        // TODO: Atualizar envento
+        $event->title = $request->get('title');
+        $event->description = $request->get('description');
+        $event->subscription_deadline = $request->get('subscription_deadline');
+        $event->payment_deadline = $request->get('payment_deadline');
+        $event->estimated_value = $request->get('estimated_value');
+        if ($request->has('banner.data')) {
+            $newFile = Str::random(32).'.png';
+
+            Storage::delete($event->banner_url);
+            Storage::put($newFile, base64_encode($request->get('banner')['data']));
+            $event->banner_url = $newFile;
+        }
+        $event->save();
+
+        $requestEventPeriods = $request->get('event_periods');
+        foreach ($event->event_periods as $eventPeriod)
+        {
+
+        }
+        foreach ($requestEventPeriods as $requestEventPeriod) {
+            $eventPeriod = new EventPeriod();
+            $eventPeriod->event_id = $event->id;
+
+            $eventPeriod->date = $requestEventPeriod['date'];
+            $eventPeriod->opening_time = $requestEventPeriod['opening_time'];
+            $eventPeriod->closing_time = $requestEventPeriod['closing_time'];
+            $eventPeriod->save();
+        }
+
+        $eventLocationAddress = $request->get('location')['address'];
+
+        $address = new Address();
+        $address->state = $eventLocationAddress['state'];
+        $address->city = $eventLocationAddress['city'];
+        $address->neighborhood = $eventLocationAddress['neighborhood'];
+        $address->zip_code = preg_replace('/\D/', '', $eventLocationAddress['zip_code']);
+        $address->street = $eventLocationAddress['street'];
+        $address->number = $eventLocationAddress['number'];
+        $address->complement = $eventLocationAddress['complement'];
+        $address->save();
+        $address->refresh();
+
+        $eventLocation = new EventLocation();
+        $eventLocation->event_id = $event->id;
+        $eventLocation->address_id = $address->id;
+        $eventLocation->maps_link = 'sem uso';
+        $eventLocation->save();
+
+        $requestBankDetails = $request->get('bank_details');
+        $eventBankDetails = new EventBankDetails();
+        $eventBankDetails->event_id = $event->id;
+        $eventBankDetails->bank = $requestBankDetails['bank'];
+        $eventBankDetails->holder = $requestBankDetails['holder'];
+        $eventBankDetails->pix_key = $requestBankDetails['pix_key'];
+        $eventBankDetails->save();
+
+        return $event->refresh();
 
         return $event;
     }
