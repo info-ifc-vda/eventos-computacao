@@ -16,7 +16,7 @@ export default {
   async listarEventos() {
     try {
       const response = await api.get(`${API_URL}/events`);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.error('Erro ao listar eventos:', error);
       return [];

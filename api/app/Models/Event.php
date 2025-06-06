@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Event extends Model
 {
-    use HasUuids;
+    // use HasUuids;
     /******************************************
      *                                        *
      *              PROPERTIES                *
@@ -23,6 +22,23 @@ class Event extends Model
      *              ATTRIBUTES                *
      *                                        *
      ******************************************/
+
+    protected $primaryKey = 'id'; // Default, can omit
+    public $incrementing = true;   // Default, ensures auto-increment
+    protected $keyType = 'int';   // Default, for bigint
+
+    protected $fillable = [
+        'uuid',
+        'user_id',
+        'title',
+        'description',
+        'subscription_deadline',
+        'payment_deadline',
+        'banner_url',
+        'estimated_value',
+        'created_at',
+        'updated_at',
+    ];
 
     protected function cancelled(): Attribute
     {

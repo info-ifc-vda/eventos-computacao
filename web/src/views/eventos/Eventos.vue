@@ -14,7 +14,7 @@
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
             <v-img
-            :src="evento.bannerUrl"
+            :src="evento.banner_url"
             width="100%"
             cover
             class="flex-shrink-0"
@@ -22,7 +22,7 @@
             />
 
           <v-card-text class="flex-grow-1">
-            <div class="text-h6 mb-2">{{ evento.nome }}</div>
+            <div class="text-h6 mb-2">{{ evento.title }}</div>
 
             <div v-if="evento.sessoes && evento.sessoes.length">
               <span>{{ formatarData(evento.sessoes[0].data) }}</span>
@@ -85,17 +85,22 @@ export default {
         });
     },
 
-    inscricoesAbertas(evento) {
-      if (!evento.dataInscricoes) return false;
+  inscricoesAbertas(evento) {
+    console.log('Verificando inscrições para o evento:', evento.subscription_deadline);
+    if (!evento.subscription_deadline) return false;
 
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
-      const [ano, mes, dia] = evento.dataInscricoes.split('-').map(Number);
-      const limite = new Date(ano, mes - 1, dia, 0, 0, 0, 0);
+    // Cria objeto Date a partir da string completa com data e hora
+    const limite = new Date(evento.subscription_deadline);
 
-      return limite >= hoje;
-    },
+    // Ajusta limite para 23:59:59 do dia, pra permitir inscrição até o final do dia
+    limite.setHours(23, 59, 59, 999);
+
+    return limite >= hoje;
+  },
+
 
     formatarData(isoDate) {
       if (!isoDate) return '';
