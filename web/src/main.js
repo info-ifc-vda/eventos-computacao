@@ -8,6 +8,12 @@ import MaskField from "@/components/inputs/MaskField.vue";
 Vue.config.productionTip = false;
 Vue.component("mask-field", MaskField);
 
+// 
+router.afterEach((to) => {
+  const defaultTitle = 'EventIF';
+  document.title = to.meta.title ? `${to.meta.title} - ${defaultTitle}` : defaultTitle;
+});
+
 new Vue({
   render: h => h(App),
   router,

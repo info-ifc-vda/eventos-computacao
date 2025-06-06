@@ -1,11 +1,11 @@
-import axios from 'axios';
+import api from './api'
 
-const API_URL = 'http://localhost:8080/evento';
+const API_URL = '/api/v1';
 
 export default {
   async criarEvento(evento) {
     try {
-      const response = await axios.post(API_URL, evento);
+      const response = await api.post(`${API_URL}/events`, evento);
       return response.data;
     } catch (error) {
       console.error('Erro ao criar evento:', error);
@@ -15,7 +15,7 @@ export default {
 
   async listarEventos() {
     try {
-      const response = await axios.get(API_URL);
+      const response = await api.get(`${API_URL}/events`);
       return response.data;
     } catch (error) {
       console.error('Erro ao listar eventos:', error);
@@ -25,7 +25,7 @@ export default {
 
   async deletarEvento(id) {
     try {
-      const response = await axios.put(`${API_URL}/${id}`);
+      const response = await api.put(`${API_URL}/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Erro ao deletar evento (ID: ${id}):`, error);
@@ -39,7 +39,7 @@ export default {
       if (nome) params.nome = nome;
       if (preco) params.preco = preco;
 
-      const response = await axios.get(`${API_URL}/filtro`, { params });
+      const response = await api.get(`${API_URL}/filtro`, { params });
       return response.data;
     } catch (error) {
       console.error('Erro ao listar eventos por filtro:', error);
@@ -49,7 +49,7 @@ export default {
 
   async obterEventoPorId(id) {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await api.get(`${API_URL}/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Erro ao obter evento (ID: ${id}):`, error);
@@ -60,7 +60,7 @@ export default {
 
   async atualizarEvento(id, evento) {
     try {
-      const response = await axios.put(`${API_URL}/${id}`, evento);
+      const response = await api.put(`${API_URL}/${id}`, evento);
       return response.data;
     } catch (error) {
       console.error(`Erro ao atualizar evento (ID: ${id}):`, error);

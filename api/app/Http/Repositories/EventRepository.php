@@ -156,7 +156,7 @@ class EventRepository implements EventRepositoryInterface
     //         foreach ($data['items'] as $itemData) {
     //             $discount = $itemData['discount'] ?? 0;
     //             $itemTotal = ($itemData['unit_value'] * $itemData['quantity']) - $discount;
-                
+
     //             EventExpenseItem::create([
     //                 'event_expense_id' => $expense->id,
     //                 'description' => $itemData['description'],
@@ -165,7 +165,7 @@ class EventRepository implements EventRepositoryInterface
     //                 'discount' => $discount,
     //                 'total_value' => $itemTotal,
     //             ]);
-                
+
     //             $totalValue += $itemTotal;
     //         }
 

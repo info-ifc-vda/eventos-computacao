@@ -59,6 +59,7 @@ class EventController extends Controller
     )]
     public function index(Request $request)
     {
+        \Log::info('Fetching all events with parameters: ', $request->all());
         return $this->eventRepository->getAll($request);
     }
 
@@ -143,7 +144,7 @@ class EventController extends Controller
         return new EventExpenseResource($this->eventRepository->findEventExpenseOrFail($this->eventRepository->findOrFail($request->route('event_id'))->id, $request->route('event_expense_id')));
         // try {
         //     $expense = $this->eventRepository->findEventExpense($eventId, $expenseUuid);
-            
+
         //     if (!$expense) {
         //         return response()->json([
         //             'message' => 'Despesa não encontrada.'

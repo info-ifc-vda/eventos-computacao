@@ -32,7 +32,7 @@ const routes = [
     path: '/',
     component: Home,
     children: [
-      { path: "/", component: Login },
+      { path: "/", component: Login, meta: { title: 'Login' } },
       { path: '/home', name: 'Home', component: Home },
       { path: '/cadastro-evento', name: 'CadastroEventos', component: CadastroEvento },
       { path: '/eventos', name: 'ListaEventos', component: ListaEventos },

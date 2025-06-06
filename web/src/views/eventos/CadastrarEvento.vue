@@ -238,7 +238,7 @@
 </template>
 
 <script>
-import ProdutoService from '@/services/ProdutoService.js';
+import EventoService from '@/services/EventoService';
 
 export default {
   name: "CadastroEvento",
@@ -246,7 +246,7 @@ export default {
     return {
       valid: false,
       evento: {
-        nome: "",
+        nome: "Evento de Teste",
         banner: null,
         tipo: null,
         sessoes: [
@@ -316,7 +316,7 @@ export default {
       this.evento.sessoes.push({ data: null, inicio: null, fim: null });
     },
 
-    async adicionarProduto() {            // MUDAR PARA EVENTO
+    async adicionarEvento() {
       if (!this.$refs.form.validate()) {
         this.mensagemErro = "Preencha todos os campos obrigatórios!";
         this.snackbarErro = true;
@@ -325,10 +325,10 @@ export default {
 
       this.buttonLoading = true;
       try {
-        await ProdutoService.criarProduto(this.produto);
-        this.mensagemSucesso = "Produto cadastrado com sucesso!";
+        await EventoService.criarEvento(this.evento);
+        this.mensagemSucesso = "Evento cadastrado com sucesso!";
         this.snackbarSucesso = true;
-        this.limparFormulario();
+        // this.limparFormulario();
       } catch (error) {
         console.error("Erro ao cadastrar produto", error);
         this.mensagemErro = "Erro ao cadastrar produto! Tente novamente.";

@@ -206,7 +206,8 @@ export default {
 }
 
 img {
-  width: 6%;
+  /* width: 6%; */
+  width: 100px;
   height: auto;
 }
 

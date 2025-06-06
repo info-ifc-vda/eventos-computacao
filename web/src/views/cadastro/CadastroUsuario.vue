@@ -5,19 +5,19 @@
       <v-card-text>
         <v-form ref="form">
           <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field label="Nome" v-model="usuario.nome" />
+            <v-col cols="12" md="4">
+              <v-text-field label="Nome" v-model="usuario.nome" autofocus />
             </v-col>
-            <v-col cols="12" md="6">
+            <!-- <v-col cols="12" md="6">
               <v-text-field label="CPF" v-model="usuario.cpf" v-mask="'###.###.###-##'" />
-            </v-col>
-            <v-col cols="12" md="6">
+            </v-col> -->
+            <v-col cols="12" md="4">
               <v-text-field label="Email" v-model="usuario.email" />
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col cols="12" md="4">
               <v-text-field label="Telefone" v-model="usuario.telefone" v-mask="'(##) #####-####'" />
             </v-col>
-            <v-col cols="12" md="6">
+            <!-- <v-col cols="12" md="6">
               <v-text-field label="Endereço" v-model="usuario.endereco" />
             </v-col>
             <v-col cols="12" md="6">
@@ -25,7 +25,7 @@
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field label="Data de Nascimento" v-model="usuario.dataNascimento" type="date" />
-            </v-col>
+            </v-col> -->
           </v-row>
           <v-row>
             <v-col cols="12" md="6">
@@ -56,15 +56,15 @@ export default {
   data() {
     return {
       usuario: {
-        nome: "",
-        cpf: "",
-        email: "",
-        telefone: "",
-        endereco: "",
-        sexo: "",
-        dataNascimento: "",
-        senha: "",
-        confirmarSenha: "",
+        nome: "Fabricio",
+        email: "fabricio.bizotto@ifc.edu.br",
+        telefone: "4999125446",
+        senha: "ifc@videira123",
+        confirmarSenha: "ifc@videira123",
+        // cpf: "",
+        // endereco: "",
+        // sexo: "",
+        // dataNascimento: "",
       },
     };
   },
@@ -86,9 +86,10 @@ export default {
         delete usuarioParaEnviar.confirmarSenha;
 
         await UsuarioService.cadastrarUsuario(usuarioParaEnviar);
-        alert("Usuário cadastrado com sucesso!");
+        // alert("Usuário cadastrado com sucesso!");
+        this.$router.push("/");
       } catch (error) {
-        alert("Erro ao cadastrar usuário.");
+        alert("Erro ao cadastrar usuário: " + error.response.data.message);
       }
     },
   },

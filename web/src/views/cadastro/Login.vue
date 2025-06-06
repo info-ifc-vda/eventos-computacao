@@ -32,8 +32,8 @@ export default {
   directives: { mask: VueMask.VueMaskDirective },
   data() {
     return {
-      email: "",
-      senha: "",
+      email: "fabricio.bizotto@ifc.edu.br",
+      senha: "ifc@videira123",
     };
   },
   methods: {
@@ -44,10 +44,10 @@ export default {
       }
       try {
         await UsuarioService.login(this.email, this.senha);
-        alert("Login realizado com sucesso!");
+        // alert("Login realizado com sucesso!");
         this.$router.push("/eventos");
       } catch (error) {
-        alert("email ou senha inválidos.");
+        alert("Erro ao realizar login: " + error.response.data.message);
       }
     },
   },
