@@ -6,7 +6,7 @@ server {
     server_name ${APP_URL} auth.eventos;
 
     # API routes
-    location ~ \/(oauth|api|swagger)\/? {
+    location ~ \/(oauth|api|swagger|storage)\/? {
         alias     /var/www/app/public;
         try_files /index.php =404;
 

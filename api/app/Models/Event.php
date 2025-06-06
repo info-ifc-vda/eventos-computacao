@@ -61,6 +61,6 @@ class Event extends Model
 
     public function getBannerUrl()
     {
-        return env('APP_URL').'/storage/'.$this->banner_url;
+        return env('APP_URL').'storage/'.$this->banner_url;
     }
 }

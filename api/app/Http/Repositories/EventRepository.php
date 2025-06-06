@@ -83,7 +83,7 @@ class EventRepository implements EventRepositoryInterface
         $eventBankDetails->pix_key = $requestBankDetails['pix_key'];
         $eventBankDetails->save();
 
-        return $event->with('location')->refresh();
+        return $event->refresh();
     }
 
     public function find(string $eventId): Event

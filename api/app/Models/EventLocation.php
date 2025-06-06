@@ -14,6 +14,7 @@ class EventLocation extends Model
 
     public $table = 'event_location';
     public $timestamps = false;
+    public $primaryKey = 'id';
 
     /******************************************
     *                                         *
@@ -29,7 +30,7 @@ class EventLocation extends Model
 
     public function address()
     {
-        return $this->belongsTo(Address::class, 'id', 'address_id');
+        return $this->belongsTo(Address::class, 'address_id', 'id');
     }
 
     /******************************************
