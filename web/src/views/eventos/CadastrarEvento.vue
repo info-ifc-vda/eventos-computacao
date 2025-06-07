@@ -6,7 +6,7 @@
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field 
-            v-model="evento.nome" 
+            v-model="evento.title" 
             label="Nome do Produto" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -25,7 +25,7 @@
         </v-col>
         <v-col cols="12" md="3">
           <v-select
-            v-model="evento.tipo"
+            v-model="evento.public_event"
             :items="tipoOptions"
             label="Tipo"
             :rules="[v => !!v || 'Selecione o tipo do evento']"
@@ -33,46 +33,56 @@
           />
         </v-col>
       </v-row>
-      <div v-for="(sessao, i) in evento.sessoes" :key="i">
-        <v-row>
-          <v-col cols="12" md="4">
-            <v-text-field 
-              v-model="sessao.data" 
-              label="Data" 
-              type="date"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
-              required
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field 
-              v-model="sessao.inicio" 
-              label="Horário de início" 
-              type="time"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
-              required
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field 
-              v-model="sessao.fim" 
-              label="Horário de fim" 
-              type="time"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
-              required
-            />
-          </v-col>
-          <v-col cols="12" md="2" class="d-flex align-center align-items-center">
-            <v-btn icon @click="addSessao" v-if="i === evento.sessoes.length - 1" style="margin: 0 auto;">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
+      <div v-for="(periodo, i) in evento.event_periods" :key="i">
+  <v-row>
+    <v-col cols="12" md="4">
+      <v-text-field 
+        v-model="periodo.date" 
+        label="Data" 
+        type="date"
+        :rules="[v => !!v || 'Este campo é obrigatório']" 
+        required
+      />
+    </v-col>
+   <v-col cols="12" md="3">
+    <v-text-field 
+      v-model="periodo.opening_time" 
+      label="Horário de início"
+      type="text"
+      placeholder="00:00:00"
+      v-mask="'##:##:##'"
+      :rules="[
+        v => !!v || 'Este campo é obrigatório',
+        v => /^\d{2}:\d{2}:\d{2}$/.test(v) || 'Formato inválido (HH:mm:ss)'
+      ]"
+      required
+    />
+  </v-col>
+  <v-col cols="12" md="3">
+    <v-text-field 
+      v-model="periodo.closing_time" 
+      label="Horário de fim"
+      type="text"
+      placeholder="00:00:00"
+      v-mask="'##:##:##'"
+      :rules="[
+        v => !!v || 'Este campo é obrigatório',
+        v => /^\d{2}:\d{2}:\d{2}$/.test(v) || 'Formato inválido (HH:mm:ss)'
+      ]"
+      required
+    />
+  </v-col>
+    <v-col cols="12" md="2" class="d-flex align-center align-items-center">
+      <v-btn icon @click="addSessao" v-if="i === evento.event_periods.length - 1" style="margin: 0 auto;">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </v-col>
+  </v-row>
+</div>
       <v-row>
         <v-col cols="12" md="12">
           <v-textarea 
-            v-model="evento.descricao" 
+            v-model="evento.description" 
             label="Descrição" 
             :rows="1" 
             auto-grow
@@ -85,7 +95,7 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.localizacaoCidade" 
+            v-model="evento.location.address.city" 
             label="Cidade" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -93,7 +103,7 @@
         </v-col>
         <v-col cols="12" md="2">
           <v-select
-            v-model="evento.localizacaoEstado"
+            v-model="evento.location.address.state"
             :items="localizacaoEstadoOptions"
             label="Estado"
             :rules="[v => !!v || 'Este campo é obrigatório']"
@@ -102,7 +112,7 @@
         </v-col>
         <v-col cols="12" md="3">
           <v-text-field
-            v-model="evento.localizacaoCep"
+            v-model="evento.location.address.zip_code"
             label="CEP"
             maxlength="9"
             placeholder="00000-000"
@@ -115,7 +125,7 @@
         </v-col>
         <v-col cols="12" md="3">
           <v-text-field 
-            v-model="evento.localizacaoBairro" 
+            v-model="evento.location.address.neighborhood" 
             label="Bairro" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -125,7 +135,7 @@
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field 
-            v-model="evento.localizacaoRua" 
+            v-model="evento.location.address.street" 
             label="Rua" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -133,7 +143,7 @@
         </v-col>
         <v-col cols="12" md="2">
           <v-text-field 
-            v-model="evento.localizacaoNumero" 
+            v-model="evento.location.address.number" 
             label="Número"
             type="number" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
@@ -142,7 +152,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.localizacaoComplemento" 
+            v-model="evento.location.address.complement" 
             label="Complemento" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -150,7 +160,7 @@
         </v-col>
         <v-col cols="12" md="12">
           <v-text-field 
-            v-model="evento.localizacaoMaps" 
+            v-model="evento.maps_link" 
             label="Link do Google Maps" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -161,7 +171,7 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.dataInscricoes" 
+            v-model="evento.subscription_deadline" 
             label="Data limite para inscrições" 
             type="date"
             :rules="[v => !!v || 'Este campo é obrigatório']" 
@@ -170,7 +180,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.dataPagamento" 
+            v-model="evento.payment_deadline" 
             label="Data limite para pagamento (após o evento)" 
             type="date"
             :rules="[v => !!v || 'Este campo é obrigatório']" 
@@ -179,7 +189,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.valor" 
+            v-model="evento.estimated_value" 
             label="Valor estimado de gastos" 
             type="number"
             :rules="[v => !!v || 'Este campo é obrigatório']" 
@@ -190,7 +200,7 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.pagamentoBanco" 
+            v-model="evento.bank" 
             label="Banco para pagamento" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -198,7 +208,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.pagamentoTitular" 
+            v-model="evento.holder" 
             label="Titular da conta" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -206,7 +216,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.pagamentoPix" 
+            v-model="evento.pix_key" 
             label="Chave PIX" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -246,30 +256,37 @@ export default {
     return {
       valid: false,
       evento: {
-        nome: "Evento de Teste",
+        title: "",
         banner: null,
         tipo: null,
-        sessoes: [
-          { data: null, inicio: null, fim: null }
+        description: "",
+        subscription_deadline: null,
+        payment_deadline: null,
+        estimated_value: null,
+        location: {
+          address: {
+            maps_link: null,
+            state: null,
+            city: null,
+            neighborhood: null,
+            zip_code: null,
+            street: null,
+            number: null,
+            complement: null,
+          }
+        },
+        event_periods: [
+          {
+            date: null,
+            opening_time: null,
+            closing_time: null,
+          }
         ],
-        data1: null,
-        horarioinicio1: null,
-        horariofim1: null,
-        descricao: "",
-        localizacaoCidade: "",
-        localizacaoEstado: null,
-        localizacaoCep: "",
-        localizacaoBairro: "",
-        localizacaoRua: "",
-        localizacaoNumero: null,
-        localizacaoComplemento: "",
-        localizacaoMaps: "",
-        dataInscricoes: null,
-        dataPagamento: null,
-        valor: null,
-        pagamentoBanco: "",
-        pagamentoTitular: "",
-        pagamentoPix: ""
+        banck_details: {
+            bank: null,
+            holder: null,
+            pix_key: null,
+        },
       },
       tipoOptions: [
         "Público",
@@ -313,57 +330,90 @@ export default {
   },
   methods: {
     addSessao() {
-      this.evento.sessoes.push({ data: null, inicio: null, fim: null });
+      this.evento.event_periods.push({
+        date: null,
+        opening_time: null,
+        closing_time: null
+      });
     },
 
     async adicionarEvento() {
-      if (!this.$refs.form.validate()) {
-        this.mensagemErro = "Preencha todos os campos obrigatórios!";
+    if (!this.$refs.form.validate()) {
+      this.mensagemErro = "Preencha todos os campos obrigatórios!";
+      this.snackbarErro = true;
+      return;
+    }
+
+    if (this.evento.banner) {
+      try {
+        const bannerBase64 = await this.convertToBase64(this.evento.banner);
+        this.evento.banner = bannerBase64;
+        console.log(this.evento.banner);
+      } catch (error) {
+        console.error("Erro ao converter imagem para Base64", error);
+        this.mensagemErro = "Erro ao processar a imagem! Tente novamente.";
         this.snackbarErro = true;
         return;
       }
+    }
 
-      this.buttonLoading = true;
-      try {
-        await EventoService.criarEvento(this.evento);
-        this.mensagemSucesso = "Evento cadastrado com sucesso!";
-        this.snackbarSucesso = true;
-        // this.limparFormulario();
-      } catch (error) {
-        console.error("Erro ao cadastrar produto", error);
-        this.mensagemErro = "Erro ao cadastrar produto! Tente novamente.";
-        this.snackbarErro = true;
-      } finally {
-        this.buttonLoading = false;
-      }
-    },
+    this.buttonLoading = true;
+    try {
+      await EventoService.criarEvento(this.evento);
+      this.mensagemSucesso = "Evento cadastrado com sucesso!";
+      this.snackbarSucesso = true;
+      // this.limparFormulario();
+    } catch (error) {
+      console.error("Erro ao cadastrar produto", error);
+      this.mensagemErro = "Erro ao cadastrar produto! Tente novamente.";
+      this.snackbarErro = true;
+    } finally {
+      this.buttonLoading = false;
+    }
+  },
+
+  convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  },
 
     limparFormulario() {
       this.evento = {
-        nome: "",
+        title: "",
         banner: null,
-        tipo: null,
-        sessoes: [
-          { data: null, inicio: null, fim: null }
+        public_event: null,
+        description: "",
+        subscription_deadline: null,
+        payment_deadline: null,
+        estimated_value: null,
+        banck_details: {
+          bank: null,
+          holder: null,
+          pix_key: null,
+        },
+        location: {
+          address: {
+            maps_link: null,
+            state: null,
+            city: null,
+            neighborhood: null,
+            zip_code: null,
+            street: null,
+            number: null,
+            complement: null,
+          }
+        },
+         event_periods: [
+          {
+            date: null,
+            opening_time: null,
+            closing_time: null,
+          }
         ],
-        data1: null,
-        horarioinicio1: null,
-        horariofim1: null,
-        descricao: "",
-        localizacaoCidade: "",
-        localizacaoEstado: null,
-        localizacaoCep: "",
-        localizacaoBairro: "",
-        localizacaoRua: "",
-        localizacaoNumero: null,
-        localizacaoComplemento: "",
-        localizacaoMaps: "",
-        dataInscricoes: null,
-        dataPagamento: null,
-        valor: null,
-        pagamentoBanco: "",
-        pagamentoTitular: "",
-        pagamentoPix: ""
       };
       this.$refs.form.resetValidation();
     }

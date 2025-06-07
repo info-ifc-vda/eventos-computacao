@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8082/eventos';
+const API_URL = 'http://localhost:/eventos';
 
 export default {
   async criarDespesa(despesa) {
