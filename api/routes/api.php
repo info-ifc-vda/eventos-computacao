@@ -39,7 +39,6 @@ Route::group(['prefix' => 'v1'], function() {
     });
 
     Route::post('users', [UserController::class, 'store']); // Rota que não necessita autenticação
-
     Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
@@ -50,6 +49,9 @@ Route::group(['prefix' => 'v1'], function() {
             Route::put('', [UserController::class, 'update']);
         });
     });
+    Route::put('forgot', [UserController::class, 'forgot']);
+    Route::put('recovery', [UserController::class, 'recovery']);
+
 
     Route::group(['prefix' => 'events', 'middleware' => 'auth:api'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);

@@ -65,5 +65,13 @@ class UserController extends Controller
         return new UserResource($this->userRepository->updatePassword($request, $user));
     }
 
-    // TODO: E-mail para recuperação de senha
+    // TODO: Documentação
+    public function forgot() {
+
+    }
+
+    // TODO: Documentação
+    public function recovery() {
+        
+    }
 }
