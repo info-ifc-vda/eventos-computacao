@@ -14,7 +14,7 @@
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
           <v-img
-            :src="evento.banner_url"
+            :src="evento.banner.url"
             width="100%"
             cover
             class="flex-shrink-0"
@@ -81,6 +81,7 @@ export default {
       EventoService.listarEventos()
         .then((response) => {
           this.eventos = response;
+          console.log(this.eventos);
         })
         .catch(() => {
           this.snackbarMessage = "Erro ao carregar eventos.";

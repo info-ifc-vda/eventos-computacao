@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12" md="3">
           <v-file-input
-            v-model="evento.banner"
+            v-model="evento.banner.data"
             label="Banner"
             accept="image/*"
             :rules="[v => !!v || 'Selecione uma imagem!']"
@@ -116,6 +116,7 @@
             label="CEP"
             maxlength="9"
             placeholder="00000-000"
+            v-mask="'#####-###'"
             :rules="[
               v => !!v || 'Este campo é obrigatório',
               v => /^\d{5}-?\d{3}$/.test(v) || 'CEP inválido'
@@ -160,7 +161,7 @@
         </v-col>
         <v-col cols="12" md="12">
           <v-text-field 
-            v-model="evento.maps_link" 
+            v-model="evento.location.maps_link" 
             label="Link do Google Maps" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -200,7 +201,7 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.bank" 
+            v-model="evento.bank_details.bank" 
             label="Banco para pagamento" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -208,7 +209,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.holder" 
+            v-model="evento.bank_details.holder" 
             label="Titular da conta" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -216,7 +217,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field 
-            v-model="evento.pix_key" 
+            v-model="evento.bank_details.pix_key" 
             label="Chave PIX" 
             :rules="[v => !!v || 'Este campo é obrigatório']" 
             required
@@ -257,15 +258,17 @@ export default {
       valid: false,
       evento: {
         title: "",
-        banner: null,
+        banner: { 
+          data: null,
+        },
         tipo: null,
         description: "",
         subscription_deadline: null,
         payment_deadline: null,
         estimated_value: null,
         location: {
+          maps_link: null,
           address: {
-            maps_link: null,
             state: null,
             city: null,
             neighborhood: null,
@@ -282,7 +285,7 @@ export default {
             closing_time: null,
           }
         ],
-        banck_details: {
+        bank_details: {
             bank: null,
             holder: null,
             pix_key: null,
@@ -346,8 +349,8 @@ export default {
 
     if (this.evento.banner) {
       try {
-        const bannerBase64 = await this.convertToBase64(this.evento.banner);
-        this.evento.banner = bannerBase64;
+        const bannerBase64 = await this.convertToBase64(this.evento.banner.data);
+        this.evento.banner.data = bannerBase64;
         console.log(this.evento.banner);
       } catch (error) {
         console.error("Erro ao converter imagem para Base64", error);
@@ -384,20 +387,22 @@ export default {
     limparFormulario() {
       this.evento = {
         title: "",
-        banner: null,
+        banner: { 
+          data: null,
+        },
         public_event: null,
         description: "",
         subscription_deadline: null,
         payment_deadline: null,
         estimated_value: null,
-        banck_details: {
+        bank_details: {
           bank: null,
           holder: null,
           pix_key: null,
         },
         location: {
+          maps_link: null,
           address: {
-            maps_link: null,
             state: null,
             city: null,
             neighborhood: null,

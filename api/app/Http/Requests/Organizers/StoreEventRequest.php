@@ -123,7 +123,7 @@ class StoreEventRequest extends FormRequest
             'banner.data' =>                    ['present', 'nullable', 'string'],
             'estimated_value' =>                ['nullable', 'numeric'],
             // 'public_event' =>                   ['required', 'boolean'],
-            'event_periods.*.date' =>           ['required', 'date_format:Y-m-d', /* Criar regra para validar se data é maior que hoje */],
+            'event_periods.*.date' =>           ['required', 'date_format:Y-m-d'],
             'event_periods.*.opening_time' =>   ['required', 'date_format:H:i:s'],
             'event_periods.*.closing_time' =>   ['required', 'date_format:H:i:s'],
             'location.address.state' =>         ['required', 'string', 'size:2'],
