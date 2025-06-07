@@ -2,3 +2,4 @@ docker-compose.yml
 .env
 Dockerfile.api
 Dockerfile.front
+web/dist/

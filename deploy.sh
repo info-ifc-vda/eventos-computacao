@@ -71,9 +71,9 @@ done
 [ -f "$DOCKER_COMPOSE_FILE" ] || error_exit "Arquivo docker-compose.yml não encontrado"
 
 # Passo 1: Atualizar o repositório (no host)
-info "Atualizando o repositório..."
-git pull origin main || error_exit "Falha ao atualizar o repositório"
-success "Repositório atualizado com sucesso"
+# info "Atualizando o repositório..."
+# git pull origin main || error_exit "Falha ao atualizar o repositório"
+# success "Repositório atualizado com sucesso"
 
 # Passo 2: Construir arquivos estáticos do Vue.js (se --front ou --all)
 if [ "$DEPLOY_MODE" = "front" ] || [ "$DEPLOY_MODE" = "all" ]; then
