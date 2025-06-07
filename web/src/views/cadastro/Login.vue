@@ -76,6 +76,7 @@
 
 <script>
 import UsuarioService from "@/services/UsuarioService";
+import { JWT_TOKEN_KEY } from "@/constants";
 
 export default {
   name: "LoginView",
@@ -88,6 +89,9 @@ export default {
       mensagemErro: "",
     };
   },
+  // created() {
+  //   this.verificarToken();
+  // },
   methods: {
     async fazerLogin() {
       this.mensagemErro = "";
@@ -103,6 +107,17 @@ export default {
           error.response?.data?.message || "Erro ao realizar login.";
       } finally {
         this.carregando = false;
+      }
+    },
+    async verificarToken() {
+      const token = localStorage.getItem(JWT_TOKEN_KEY);
+      if (!token) return;
+
+      const resultado = await UsuarioService.validarToken();
+      if (resultado) {
+        this.$router.push("/eventos");
+      } else {
+        localStorage.removeItem(JWT_TOKEN_KEY);
       }
     },
   },

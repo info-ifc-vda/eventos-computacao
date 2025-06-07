@@ -22,6 +22,15 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+// Rota para validar o token JWT
+Route::middleware('auth:api')->get('/v1/auth/validate', function (Request $request) {
+    return response()->json([
+        'valid' => true,
+        'user' => $request->user()
+    ]);
+});
+
+
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'auth'], function() {
         Route::post('login', [AuthController::class, 'login']);
@@ -31,7 +40,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::post('users', [UserController::class, 'store']); // Rota que não necessita autenticação
 
-    Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {    
+    Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
 

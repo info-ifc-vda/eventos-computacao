@@ -89,10 +89,6 @@ export default {
     },
 
     inscricoesAbertas(evento) {
-      console.log(
-        "Verificando inscrições para o evento:",
-        evento.subscription_deadline
-      );
       if (!evento.subscription_deadline) return false;
 
       const hoje = new Date();
