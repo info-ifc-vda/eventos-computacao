@@ -55,7 +55,12 @@ class Event extends Model
 
     public function event_periods()
     {
-        return $this->hasMany('event_periods', 'event_id', 'id');
+        return $this->hasMany(EventPeriod::class, 'event_id', 'id');
+    }
+
+    public function location()
+    {
+        return $this->hasOne(EventLocation::class, 'event_id', 'id');
     }
 
     /******************************************
@@ -69,4 +74,9 @@ class Event extends Model
      *                METHODS                 *
      *                                        *
      ******************************************/
+
+    public function getBannerUrl()
+    {
+        return env('APP_URL').'storage/'.$this->banner_url;
+    }
 }

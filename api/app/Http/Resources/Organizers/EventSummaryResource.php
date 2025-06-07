@@ -44,7 +44,7 @@ class EventSummaryResource extends JsonResource
             'id' => $this->uuid,
             'title' => $this->title,
             'cancelled' => $this->cancelled,
-            'event_initial_date' => $this->event_opening_hours->orderBy('date', 'asc')->first()?->date,
+            'event_initial_date' => $this->event_periods()->orderBy('date', 'asc')->first()?->date,
         ];
     }
 }

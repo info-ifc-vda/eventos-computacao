@@ -10,6 +10,8 @@ use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\StoreParticipantArrivalRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Http\Requests\Users\StoreParticipantRequest;
+use App\Http\Resources\Organizers\EventResource;
+use App\Http\Resources\Organizers\EventSummaryResource;
 use App\Http\Services\Contracts\Organizers\EventServiceInterface;
 use App\Http\Services\Organizers\EventService;
 use Illuminate\Http\Request;
@@ -59,8 +61,7 @@ class EventController extends Controller
     )]
     public function index(Request $request)
     {
-        \Log::info('Fetching all events with parameters: ', $request->all());
-        return $this->eventRepository->getAll($request);
+        return EventSummaryResource::collection($this->eventRepository->getAll($request));
     }
 
     #[OA\Post(
@@ -81,22 +82,22 @@ class EventController extends Controller
     )]
     public function store(StoreEventRequest $request)
     {
-        return $this->eventRepository->store($request);
+        return new EventResource($this->eventRepository->store($request));
     }
 
     public function show(Request $request)
     {
-        return $this->eventRepository->findOrFail($request);
+        return new EventResource($this->eventRepository->findOrFail($request->route('event_id')));
     }
 
     public function update(UpdateEventRequest $request)
     {
-        return $this->eventRepository->update($request->route('event_id'), $request);
+        return new EventResource($this->eventRepository->update($request->route('event_id'), $request));
     }
 
     public function cancel(CancelEventRequest $request)
     {
-        return $this->eventRepository->cancel($request->route('event_id'), $request);
+        return new EventResource($this->eventRepository->cancel($request->route('event_id'), $request));
     }
 
     public function indexParticipants(Request $request)
