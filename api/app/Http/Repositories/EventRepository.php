@@ -36,11 +36,16 @@ class EventRepository implements EventRepositoryInterface
         $event->description = $request->get('description');
         $event->subscription_deadline = $request->get('subscription_deadline');
         $event->payment_deadline = $request->get('payment_deadline');
-        $event->estimated_value = $request->get('estimated_value');
+        $event->estimated_value = $request->get('estimated_value') ?? 0;
 
         $file = Str::random(32).'.png';
 
-        Storage::put($file, base64_decode($request->get('banner')['data']));
+        $base64_image = $request->get('banner')['data'];
+        @list($type, $file_data) = explode(';', $base64_image);
+        @list(, $file_data) = explode(',', $file_data);
+
+        Storage::put($file, base64_decode($file_data));
+
         $event->banner_url = $file;
         $event->save();
         $event->refresh();
@@ -72,7 +77,7 @@ class EventRepository implements EventRepositoryInterface
         $eventLocation = new EventLocation();
         $eventLocation->event_id = $event->id;
         $eventLocation->address_id = $address->id;
-        $eventLocation->maps_link = 'sem uso';
+        $eventLocation->maps_link = $request->get('location')['maps_link'];
         $eventLocation->save();
 
         $requestBankDetails = $request->get('bank_details');
@@ -104,13 +109,16 @@ class EventRepository implements EventRepositoryInterface
         $event->description = $request->get('description');
         $event->subscription_deadline = $request->get('subscription_deadline');
         $event->payment_deadline = $request->get('payment_deadline');
-        $event->estimated_value = $request->get('estimated_value');
+        $event->estimated_value = $request->get('estimated_value') ?? 0;
         if ($request->has('banner.data')) {
-            $newFile = Str::random(32).'.png';
-
             Storage::delete($event->banner_url);
-            Storage::put($newFile, base64_encode($request->get('banner')['data']));
-            $event->banner_url = $newFile;
+            $file = Str::random(32).'.png';
+
+            $base64_image = $request->get('banner')['data'];
+            @list($type, $file_data) = explode(';', $base64_image);
+            @list(, $file_data) = explode(',', $file_data);
+
+            Storage::put($file, base64_decode($file_data));
         }
         $event->save();
 

@@ -133,7 +133,7 @@ class StoreEventRequest extends FormRequest
             'location.address.street' =>        ['required', 'string'],
             'location.address.number' =>        ['required', 'string'],
             'location.address.complement' =>    ['required', 'string'],
-            // 'location.maps_link' =>             ['required', 'string'],
+            'location.maps_link' =>             ['required', 'string'],
             'bank_details.bank' =>              ['required', 'string'],
             'bank_details.holder' =>            ['required', 'string'],
             'bank_details.pix_key' =>           ['required', 'string']
