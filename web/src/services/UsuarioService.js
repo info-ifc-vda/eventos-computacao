@@ -6,12 +6,6 @@ export default {
 
   async login(email, senha) {
     try {
-      console.log(`Tentando fazer login com email: ${email} e senha: ${senha}`);
-      console.log(`URL de login: ${API_URL}/auth/login`);
-      console.log(api.defaults.baseURL);
-
-
-
       const response = await api.post(`${API_URL}/auth/login`, {
         username: email,
         password: senha,

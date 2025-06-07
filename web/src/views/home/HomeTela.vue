@@ -4,53 +4,62 @@
       <v-app-bar-nav-icon @click="drawer = !drawer">
         <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-      <img src="@/assets/EventIF.png" alt="Logo do EventIF">
+      <router-link to="/" class="logo-link">
+        <img src="@/assets/EventIF.png" alt="Logo do EventIF" />
+      </router-link>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
       <v-list>
-
         <v-list-item to="/cadastro-evento">
           <v-list-item-icon>
             <v-icon>mdi-calendar-clock</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cadastrar Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cadastrar Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
         <v-list-item to="/cobranca-finalizacao">
-            <v-list-item-icon>
-              <v-icon>mdi-cash-multiple</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title class="black--text">Cobrança e Finalização</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+          <v-list-item-icon>
+            <v-icon>mdi-cash-multiple</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="black--text"
+              >Cobrança e Finalização</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
 
-          <v-list-item to="/lista-presenca">
-              <v-list-item-icon>
-                <v-icon>mdi-cash-sync</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="black--text">Pagamento</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+        <v-list-item to="/lista-presenca">
+          <v-list-item-icon>
+            <v-icon>mdi-cash-sync</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="black--text">Pagamento</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-            <v-list-item to="/pagamento-pix">
-            <v-list-item-icon>
-              <v-icon>mdi-hand-coin-outline</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title class="black--text">Pagamento Pix</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+        <v-list-item to="/pagamento-pix">
+          <v-list-item-icon>
+            <v-icon>mdi-hand-coin-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="black--text"
+              >Pagamento Pix</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
 
         <v-list-item to="/gerenciar-eventos">
           <v-list-item-icon>
             <v-icon>mdi-calendar-edit</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Gerenciar Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Gerenciar Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -59,7 +68,9 @@
             <v-icon>mdi-format-list-bulleted</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Listagem de Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Listagem de Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -68,7 +79,9 @@
             <v-icon>mdi-account-details</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Seus Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Seus Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
         <v-list-item to="/listar-despesas">
@@ -76,7 +89,9 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Listar Despesas</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Listar Despesas</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
         <v-list-item to="/editar-despesas">
@@ -84,7 +99,9 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Editar Despesas</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Editar Despesas</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -93,7 +110,9 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cadastrar Evento</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cadastrar Evento</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -102,19 +121,22 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cancelar Evento</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cancelar Evento</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
- <v-list-item to="/cadastro-despesa-individual">
+        <v-list-item to="/cadastro-despesa-individual">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cadastrar Despesa</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cadastrar Despesa</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
-
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -140,12 +162,11 @@ export default {
     };
   },
 };
-
 </script>
 
 <style scoped>
 .v-navigation-drawer {
-  background: #E8EDEE !important;
+  background: #e8edee !important;
   border-radius: 20px 0 0 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -155,7 +176,7 @@ export default {
 }
 
 .v-navigation-drawer .v-list-item--active {
-  background-color: #ACF4CB !important;
+  background-color: #acf4cb !important;
   color: black !important;
 }
 
@@ -222,6 +243,15 @@ img {
 .content-wrapper {
   flex: 1;
   padding-top: 20px;
+}
+
+.logo-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.logo-link img {
+  display: block;
 }
 
 footer {
