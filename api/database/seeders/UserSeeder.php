@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'email_verified_at' => new DateTime(),
             'phone' => '499123456789',
-            'password' => Hash::make('Yametekudas@1'),
+            'password' => Hash::make('Senha123$'),
         ]);
 
         UserPermission::create([
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             'email' => 'event_creator@gmail.com',
             'email_verified_at' => new DateTime(),
             'phone' => '499123456780',
-            'password' => Hash::make('Yametekudas@1'),
+            'password' => Hash::make('Senha123$'),
         ]);
 
         UserPermission::create([
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'email' => 'common_user@gmail.com',
             'phone' => '499123456781',
             'email_verified_at' => new DateTime(),
-            'password' => Hash::make('Yametekudas@1'),
+            'password' => Hash::make('Senha123$'),
         ]);
 
         Artisan::call('passport:client --password -q');
