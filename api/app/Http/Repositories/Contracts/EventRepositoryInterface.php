@@ -7,6 +7,7 @@ use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Http\Requests\StoreEventExpenseRequest;
+use App\Http\Requests\Users\StoreParticipantRequest;
 use App\Models\Event;
 use App\Models\EventExpense;
 use App\Models\User;
@@ -24,7 +25,7 @@ interface EventRepositoryInterface
     public function cancel(string $eventId, CancelEventRequest $request);
 
     public function indexParticipants(string $eventId, Request $request);
-    public function addParticipant(string $eventId, StoreEventParticipantDTO $dto);
+    public function addParticipant(string $eventId, int $internalUserId);
 
     public function indexOrganizers(string $eventId, Request $request);
     public function addOrganizer(string $eventId, User $user);

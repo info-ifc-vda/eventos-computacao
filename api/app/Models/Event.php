@@ -68,6 +68,11 @@ class Event extends Model
         return $this->hasOne(EventBankDetails::class, 'event_id', 'id');
     }
 
+    public function participants()
+    {
+        return $this->hasMany(EventParticipant::class, 'event_id', 'id');
+    }
+
     /******************************************
      *                                        *
      *                 SCOPES                 *
