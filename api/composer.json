@@ -20,6 +20,8 @@
         "lucascudo/laravel-pt-br-localization": "^3.0",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
+        "pestphp/pest": "^1.23",
+        "pestphp/pest-plugin": "^1.1",
         "phpunit/phpunit": "^9.5.10",
         "spatie/laravel-ignition": "^1.0"
     },
@@ -58,7 +60,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
