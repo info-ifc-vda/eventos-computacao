@@ -131,6 +131,28 @@ class EventRepository implements EventRepositoryInterface
         return EventExpense::fromEvent($internalEventId)->where('uuid', $eventExpenseId)->with('items')->firstOrFail();
     }
 
+    /**
+     * Registra a chegada de um participante ao evento.
+     * @param string $eventId
+     * @param int $participantId
+     * @return \App\Models\EventParticipant
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function storeParticipantArrival(string $eventId, int $participantId)
+    {
+        $event = $this->findOrFail($eventId);
+        $participant = \App\Models\EventParticipant::where('event_id', $event->id)
+            ->where('user_id', $participantId)
+            ->first();
+        if (!$participant) {
+            abort(400, 'Participante não faz parte do evento');
+        }
+        $participant->arrival_date = now();
+        $participant->save();
+        return $participant->refresh();
+    }
+
     // // Métodos para despesas
     // public function getEventExpenses(string $eventId, int $perPage = 15): LengthAwarePaginator
     // {
