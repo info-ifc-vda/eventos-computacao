@@ -16,6 +16,20 @@ class EnsureUserHasPermission
      */
     public function handle(Request $request, Closure $next, string $permission)
     {
+        if ($permission === 'organizer') {
+            $eventId = $request->route('event_id');
+            if (!$eventId) {
+                abort(400, 'Evento não especificado');
+            }
+            $event = \App\Models\Event::where('uuid', $eventId)->first();
+            if (!$event) {
+                abort(404, 'Evento não encontrado');
+            }
+            if (!$request->user()->can('organizer', $event)) {
+                abort(403);
+            }
+            return $next($request);
+        }
         if (! $request->user()->can($permission))
         {
             abort(403);
