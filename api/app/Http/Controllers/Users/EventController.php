@@ -9,6 +9,7 @@ use App\Http\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Repositories\EventRepository;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\Users\StoreParticipantRequest;
+use App\Http\Resources\Users\EventParticipantResource;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -53,13 +54,9 @@ class EventController extends Controller
     // )]
     public function join(StoreParticipantRequest $request)
     {
-        $this->eventRepository->addParticipant(
+        return new EventParticipantResource($this->eventRepository->addParticipant(
             $request->get('event_id'),
-            new StoreEventParticipantDTO(
-                $this->userRepository->findOrFail(
-                    $request->get('user_id')
-                )
-            )
-        );
+            $this->userRepository->findOrFail($request->get('user_id'))->id
+        ));
     }
 }

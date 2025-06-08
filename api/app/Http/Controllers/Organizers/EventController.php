@@ -20,6 +20,7 @@ use OpenApi\Attributes as OA;
 use App\Http\Requests\StoreEventExpenseRequest;
 use App\Http\Resources\Organizers\EventExpenseResource;
 use App\Http\Resources\Organizers\EventExpenseSummaryResource;
+use App\Http\Resources\Organizers\EventParticipantArrivalResource;
 use Illuminate\Http\JsonResponse;
 
 
@@ -102,7 +103,7 @@ class EventController extends Controller
 
     public function indexParticipants(Request $request)
     {
-        return $this->eventRepository->indexParticipants($request->route('event_id'), $request);
+        return EventParticipantArrivalResource::collection($this->eventRepository->indexParticipants($request->route('event_id'), $request));
     }
 
     public function storeParticipant(StoreParticipantRequest $request)

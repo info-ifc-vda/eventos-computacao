@@ -16,6 +16,8 @@ use App\Models\EventPeriod;
 use App\Models\User;
 use App\Models\EventExpense;
 use App\Models\EventExpenseItem;
+use App\Models\EventParticipant;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class EventRepository implements EventRepositoryInterface
 {
@@ -205,13 +208,21 @@ class EventRepository implements EventRepositoryInterface
         return $this->findOrFail($eventId)->participants()->paginate($request->query('per_page'));
     }
 
-    public function addParticipant(string $eventId, StoreEventParticipantDTO $dto)
+    public function addParticipant(string $eventId, int $internalUserId)
     {
         $event = $this->findOrFail($eventId);
 
-        // TODO: Adicionar participante ao evento
+        $eventParticipant = EventParticipant::where('event_id', $event->id)->where('user_id', $internalUserId)->first();
+        if ($eventParticipant) {
+            throw new BadRequestException('O participante já faz parte do evento');
+        }
 
-        return $event;
+        $participant = new EventParticipant();
+        $participant->user_id = $internalUserId;
+        $participant->event_id = $event->id;
+        $participant->save();
+
+        return $participant->refresh();
     }
 
     public function indexOrganizers(string $eventId, Request $request)

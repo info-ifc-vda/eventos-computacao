@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Route;
  * POST api/v1/events - create_event
  * GET api/v1/events/{event_id} - create_event
  * PUT api/v1/events/{event_id} - organizer do evento
- * POST api/v1/events/{event_id}/cancel - user_id do evento e nenhum participante // TODO
- * POST api/v1/events/{event_id}/join // TODO
+ * PATCH api/v1/events/{event_id}/cancel - user_id do evento e nenhum participante // TODO
+ * POST api/v1/events/join // TODO
  *
  * GET api/v1/events/{event_id}/expenses - organizer do evento
  * POST api/v1/events/{event_id}/expenses - organizer do evento

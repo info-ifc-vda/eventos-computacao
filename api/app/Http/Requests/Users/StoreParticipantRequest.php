@@ -14,7 +14,7 @@ class StoreParticipantRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     #[OA\Schema(
@@ -36,7 +36,8 @@ class StoreParticipantRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'event_id' => ['required', 'exists:events,uuid'],
+            'user_id' => ['required', 'exists:users,uuid']
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,8 +44,13 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (BadRequestException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        });
+
         $this->reportable(function (Throwable $e) {
             //
         });
+
     }
 }
