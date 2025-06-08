@@ -29,9 +29,7 @@ A aplicação estará disponível na rota http://eventos.fsw-ifc.brdrive.localho
 
 OBS 1: Em desenvolvimento, não é possível utilizar o https, caso estiver sofrendo com erros de "Não foi possível conectar, confira a rota e remova a parte do https"
 
-OBS 2: Em produção, é necessário criar um registro em /etc/hosts que redirecione `auth.eventos` para `127.0.0.1` e no nginx é necessário adicionar uma captura para este server_name
-
-OBS 3: Para o pessoal que trabalha no front, o HMR (Hot Module Reload) não funciona no windows, então recomendamos fortemente a utilização do WSL ou um SO Linux nativo para trabalhar adequadamente.
+OBS 2: Para o pessoal que trabalha no front, o HMR (Hot Module Reload) não funciona no windows, então recomendamos fortemente a utilização do WSL ou um SO Linux nativo para trabalhar adequadamente.
 
 ## Documentação
 
@@ -41,7 +39,3 @@ docker compose exec api php artisan generate:docs
 ```
 É recomendado rodar o comando a cada pull, pois a documentação é gerada somente ao executar o comando.
 A documentação estará disponível na rota http://eventos.fsw-ifc.brdrive.localhost/swagger
-
-## Seeder
-
-
