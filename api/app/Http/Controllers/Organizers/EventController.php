@@ -111,7 +111,11 @@ class EventController extends Controller
 
     public function storeParticipantArrival(StoreParticipantArrivalRequest $request)
     {
-        // return $this->eventService->storeParticipantArrival($request);
+        $eventId = $request->route('event_id');
+        $participantId = $request->input('participant_id');
+        // Middleware de organizador já deve proteger
+        $participant = $this->eventRepository->storeParticipantArrival($eventId, $participantId);
+        return new \App\Http\Resources\Organizers\EventParticipantArrivalResource($participant);
     }
 
     public function indexOrganizers(Request $request)
