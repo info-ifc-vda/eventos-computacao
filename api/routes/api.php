@@ -60,6 +60,13 @@ use Illuminate\Support\Facades\Route;
  * DELETE api/v1/events/{event_id}/organizers - user_id do evento
  *
  */
+// Rota para validar o token JWT
+Route::middleware('auth:api')->get('/v1/auth/validate', function (Request $request) {
+    return response()->json([
+        'valid' => true,
+        'user' => $request->user()
+    ]);
+});
 
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'auth'], function() {
@@ -72,8 +79,9 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
         Route::get('', [UserController::class, 'index']);
+        Route::put('password', [UserController::class, 'updatePassword']);
 
-        Route::get('me', [UserController::class, 'showMe']);
+        // Route::get('me', [UserController::class, 'showMe']);
         Route::group(['prefix' => '{user_id}'], function() {
             Route::get('', [UserController::class, 'show']);
             Route::put('', [UserController::class, 'update']);
@@ -83,13 +91,19 @@ Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'events', 'middleware' => 'auth:api'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);
         Route::post('', [OrganizersEventController::class, 'store']);
-
         Route::post('join', [UsersEventController::class, 'join']);
 
         Route::group(['prefix' => '{event_id}'], function() {
             Route::get('', [OrganizersEventController::class, 'show']);
             Route::put('', [OrganizersEventController::class, 'update']);
             Route::post('cancel', [OrganizersEventController::class, 'cancel']);
+
+            //Rotas de despesas de eventos
+            Route::group(['prefix' => 'expenses'], function() {
+                Route::get('', [OrganizersEventController::class, 'indexExpenses']);
+                Route::post('', [OrganizersEventController::class, 'storeExpense']);
+                Route::get('{event_expense_id}', [OrganizersEventController::class, 'showExpense']);
+            });
 
             Route::group(['prefix' => 'participants'], function() {
                 Route::post('arrival', [OrganizersEventController::class, 'storeParticipantArrival']);

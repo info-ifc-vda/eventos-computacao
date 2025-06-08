@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $client = Client::where('password_client', 1)->first();
 
-        $http = Http::asForm()->post((env('APP_ENV') == 'production' ? 'https' : 'http') .'://auth.eventos/oauth/token', [
+        $http = Http::asForm()->post((env('APP_ENV') == 'production' ? 'http' : 'http') .'://reverse-proxy/oauth/token', [
             'grant_type' => 'password',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -72,7 +72,7 @@ class AuthController extends Controller
     {
         $client = Client::where('password_client', 1)->first();
 
-        $http = Http::asForm()->post((env('APP_ENV') == 'production' ? 'https' : 'http') .'://auth.eventos/oauth/token', [
+        $http = Http::asForm()->post((env('APP_ENV') == 'production' ? 'http' : 'http') .'://reverse-proxy/oauth/token', [
             'grant_type' => 'refresh_token',
             'refresh_token' => $request->get('refresh_token'),
             'client_id' => $client->id,

@@ -1,9 +1,31 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/home/HomeTela.vue';
-import CadastroProduto from '../views/produto/CadastrarProduto.vue';
-import ListaProdutos from '../views/produto/ListarProduto.vue';
-import NotFound from '../views/NotFound.vue';
+import FinalizarEvento from '../views/cobrancafinalizacao/FinalizarEvento.vue';
+import CadastroEvento from '../views/eventos/CadastrarEvento.vue';
+import ListaEventos from '../views/eventos/Eventos.vue';
+import GerenciarEventos from '../views/evento/GerenciarEventos.vue';
+import SeusEventos from '../views/evento/SeusEventos.vue';
+import EditarEvento from '../views/evento/EditarEvento.vue';
+import DetalhesEvento from '../views/evento/DetalhesEvento.vue';
+import EnviarConvites from '../views/evento/EnviarConvites.vue';
+import EnviarLembrete from '../views/evento/EnviarLembrete.vue';
+import CadastrarDespesas from '../views/evento/CadastrarDespesas.vue';
+import GerenciarDespesas from '../views/evento/GerenciarDespesas.vue';
+import VisualizarPresencas from '../views/evento/VisualizarPresencas.vue';
+import CobrarFinalizar from '../views/evento/CobrarFinalizar.vue';
+import ListarDespesas from '@/views/eventos/ListarDespesas.vue';
+import EditarDespesas from '@/views/eventos/EditarDespesas.vue';
+import ListaPresenca from '../views/pagamento/ListaPresenca.vue';
+import PagamentoPix from '../views/pagamento/PagamentoPix.vue';
+import CancelarParticipacao from '../views/eventos/CancelarParticipacao.vue';
+import RegistrarEvento from '../views/eventos/RegistrarEvento.vue';
+import CadastroDespesaIndividual from '../views/eventos/CadastroDespesaIndividual.vue';
+import Login from "../views/cadastro/Login.vue";
+import CadastroUsuario from "../views/cadastro/CadastroUsuario.vue";
+import UsuarioService from '@/services/UsuarioService';
+import { JWT_TOKEN_KEY } from '@/constants'; // importe a constante do token
+
 
 
 Vue.use(VueRouter);
@@ -13,18 +35,71 @@ const routes = [
     path: '/',
     component: Home,
     children: [
-      { path: '', redirect: '/home' },
+      {
+        path: "/", component: Login, meta: { title: 'Login' }, beforeEnter: (to, from, next) => {
+          const token = localStorage.getItem(JWT_TOKEN_KEY);
+          if (token) return next({ path: '/home' });
+          next();
+        }
+      },
       { path: '/home', name: 'Home', component: Home },
-      { path: '/cadastro-produto', name: 'CadastroProduto', component: CadastroProduto },
-      { path: '/listar-produtos', name: 'ListaProdutos', component: ListaProdutos },
-      { path: '*', name: 'NotFound', component: NotFound }
+      { path: '/cadastro-evento', name: 'CadastroEventos', component: CadastroEvento, meta: { title: 'Cadastro de Evento', requiresAuth: true } },
+      { path: '/eventos', name: 'ListaEventos', component: ListaEventos, meta: { title: 'Lista de Eventos', requiresAuth: true } },
+      { path: '/cadastro-evento', name: 'CadastroEvento', component: CadastroEvento, meta: { title: 'Cadastro de Evento', requiresAuth: true } },
+      { path: '/gerenciar-eventos', name: 'GerenciarEventos', component: GerenciarEventos, meta: { title: 'Gerenciar Eventos', requiresAuth: true } },
+      { path: '/listar-eventos', name: 'ListaEventos', component: ListaEventos },
+      { path: '/seus-eventos', name: 'SeusEventos', component: SeusEventos },
+      { path: '/evento/:id/editar', name: 'EditarEvento', component: EditarEvento },
+      { path: '/evento/:id/detalhes', name: 'DetalhesEvento', component: DetalhesEvento },
+      { path: '/evento/enviar-convites', name: 'EnviarConvites', component: EnviarConvites },
+      { path: '/evento/enviar-lembrete', name: 'EnviarLembrete', component: EnviarLembrete },
+      { path: '/evento/cadastrar-despesas', name: 'CadastrarDespesas', component: CadastrarDespesas },
+      { path: '/evento/gerenciar-despesas', name: 'GerenciarDespesas', component: GerenciarDespesas },
+      { path: '/evento/visualizar-presencas', name: 'VisualizarPresencas', component: VisualizarPresencas },
+      { path: '/evento/cobrar-finalizar', name: 'CobrarFinalizar', component: CobrarFinalizar },
+      { path: '/listar-despesas', name: 'ListarDespesas', component: ListarDespesas },
+      { path: '/editar-despesas', name: 'EditarDespesas', component: EditarDespesas },
+      { path: 'cobranca-finalizacao', name: 'FinalizarEvento', component: FinalizarEvento },
+      { path: '/pagamento-pix', name: 'PagamentoPix', component: PagamentoPix },
+      { path: '/lista-presenca', name: 'ListaPresenca', component: ListaPresenca },
+      { path: '/registro-evento', name: 'RegistrarEvento', component: RegistrarEvento },
+      { path: '/cancelar-participacao', name: 'CancelarParticipacao', component: CancelarParticipacao },
+      { path: '/cadastro-despesa-individual', name: 'CadastroDespesaIndividual', component: CadastroDespesaIndividual },
+      { path: "/cadastro-usuario", component: CadastroUsuario },
     ],
   }
+
 ];
 
 const router = new VueRouter({
   mode: 'history',
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem(JWT_TOKEN_KEY);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth) {
+    if (!token) {
+      // Não tem token, redireciona pro login
+      return next({ path: '/' });
+    }
+
+    try {
+      // Tenta fazer refresh do token para validar e renovar
+      await UsuarioService.refresh();
+      // Se passar, continua na rota
+      next();
+    } catch (error) {
+      // Token inválido ou refresh falhou: limpa token e redireciona para login
+      localStorage.removeItem(JWT_TOKEN_KEY);
+      next({ path: '/' });
+    }
+  } else {
+    // Rota que não precisa de login
+    next();
+  }
 });
 
 export default router;

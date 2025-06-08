@@ -1,0 +1,70 @@
+import api from './api'
+
+const API_URL = '/api/v1';
+
+export default {
+  async criarEvento(evento) {
+    try {
+      const response = await api.post(`${API_URL}/events`, evento);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao criar evento:', error);
+      throw error;
+    }
+  },
+
+  async listarEventos() {
+    try {
+      const response = await api.get(`${API_URL}/events`);
+      return response.data.data;
+    } catch (error) {
+      console.error('Erro ao listar eventos:', error);
+      return [];
+    }
+  },
+
+  async deletarEvento(id) {
+    try {
+      const response = await api.put(`${API_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao deletar evento (ID: ${id}):`, error);
+      throw error;
+    }
+  },
+
+  async listarEventosPorFiltro(nome, preco) {
+    try {
+      const params = {};
+      if (nome) params.nome = nome;
+      if (preco) params.preco = preco;
+
+      const response = await api.get(`${API_URL}/filtro`, { params });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao listar eventos por filtro:', error);
+      return [];
+    }
+  },
+
+  async obterEventoPorId(id) {
+    try {
+      const response = await api.get(`${API_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao obter evento (ID: ${id}):`, error);
+      throw error;
+    }
+  },
+
+
+  async atualizarEvento(id, evento) {
+    try {
+      const response = await api.put(`${API_URL}/${id}`, evento);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao atualizar evento (ID: ${id}):`, error);
+      throw error;
+    }
+  }
+};
