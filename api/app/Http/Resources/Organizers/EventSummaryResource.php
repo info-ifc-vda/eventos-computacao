@@ -45,6 +45,7 @@ class EventSummaryResource extends JsonResource
             'title' => $this->title,
             'cancelled' => $this->cancelled,
             'event_initial_date' => $this->event_periods()->orderBy('date', 'asc')->first()?->date,
+            'banner' => ['url' => $this->getBannerUrl()],
         ];
     }
 }

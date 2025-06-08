@@ -35,7 +35,7 @@ class EventResource extends JsonResource
             'event_periods' => EventPeriodsResource::collection($this->event_periods),
             'location' => [
                 'address' => new AddressResource($this->location->address),
-                // 'maps_link' => $this->location->maps_link
+                'maps_link' => $this->location->maps_link
             ],
             'bank_details' => new EventBankDetailsResource($this->bank_details)
         ];

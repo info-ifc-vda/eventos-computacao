@@ -63,6 +63,11 @@ class Event extends Model
         return $this->hasOne(EventLocation::class, 'event_id', 'id');
     }
 
+    public function bank_details()
+    {
+        return $this->hasOne(EventBankDetails::class, 'event_id', 'id');
+    }
+
     /******************************************
      *                                        *
      *                 SCOPES                 *

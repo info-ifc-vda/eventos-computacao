@@ -126,51 +126,69 @@ class EventRepository implements EventRepositoryInterface
         }
         $event->save();
 
+        // Exclui os que foram removidos
         $requestEventPeriods = $request->get('event_periods');
-        foreach ($event->event_periods as $eventPeriod)
-        {
-
+        foreach ($event->event_periods as $eventPeriod) {
+            $found = false;
+            foreach ($requestEventPeriods as $requestEventPeriod) {
+                if (($eventPeriod->date == $requestEventPeriod['date']) &&
+                ($eventPeriod->opening_time == $requestEventPeriod['opening_time'] &&
+                ($eventPeriod->closing_time == $requestEventPeriod['closing_time']))) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $eventPeriod->delete();
+            }
         }
-        foreach ($requestEventPeriods as $requestEventPeriod) {
-            $eventPeriod = new EventPeriod();
-            $eventPeriod->event_id = $event->id;
 
-            $eventPeriod->date = $requestEventPeriod['date'];
-            $eventPeriod->opening_time = $requestEventPeriod['opening_time'];
-            $eventPeriod->closing_time = $requestEventPeriod['closing_time'];
-            $eventPeriod->save();
+        // Adiciona os novos
+        $event->refresh();
+        foreach ($requestEventPeriods as $requestEventPeriod) {
+            $found = false;
+            foreach ($event->event_periods as $eventPeriod) {
+                if (($eventPeriod->date == $requestEventPeriod['date']) &&
+                ($eventPeriod->opening_time == $requestEventPeriod['opening_time'] &&
+                ($eventPeriod->closing_time == $requestEventPeriod['closing_time']))) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                $newEventPeriod = new EventPeriod();
+                $newEventPeriod->event_id = $event->id;
+
+                $newEventPeriod->date = $requestEventPeriod['date'];
+                $newEventPeriod->opening_time = $requestEventPeriod['opening_time'];
+                $newEventPeriod->closing_time = $requestEventPeriod['closing_time'];
+
+                $newEventPeriod->save();
+            }
         }
 
         $eventLocationAddress = $request->get('location')['address'];
 
-        $address = new Address();
-        $address->state = $eventLocationAddress['state'];
-        $address->city = $eventLocationAddress['city'];
-        $address->neighborhood = $eventLocationAddress['neighborhood'];
-        $address->zip_code = preg_replace('/\D/', '', $eventLocationAddress['zip_code']);
-        $address->street = $eventLocationAddress['street'];
-        $address->number = $eventLocationAddress['number'];
-        $address->complement = $eventLocationAddress['complement'];
-        $address->save();
-        $address->refresh();
+        $event->location->address->state = $eventLocationAddress['state'];
+        $event->location->address->city = $eventLocationAddress['city'];
+        $event->location->address->neighborhood = $eventLocationAddress['neighborhood'];
+        $event->location->address->zip_code = preg_replace('/\D/', '', $eventLocationAddress['zip_code']);
+        $event->location->address->street = $eventLocationAddress['street'];
+        $event->location->address->number = $eventLocationAddress['number'];
+        $event->location->address->complement = $eventLocationAddress['complement'];
+        $event->location->address->save();
 
-        $eventLocation = new EventLocation();
-        $eventLocation->event_id = $event->id;
-        $eventLocation->address_id = $address->id;
-        $eventLocation->maps_link = 'sem uso';
-        $eventLocation->save();
+        $event->location->maps_link = $request->get('location')['maps_link'];
+        $event->location->save();
 
         $requestBankDetails = $request->get('bank_details');
-        $eventBankDetails = new EventBankDetails();
-        $eventBankDetails->event_id = $event->id;
-        $eventBankDetails->bank = $requestBankDetails['bank'];
-        $eventBankDetails->holder = $requestBankDetails['holder'];
-        $eventBankDetails->pix_key = $requestBankDetails['pix_key'];
-        $eventBankDetails->save();
+        $event->bank_details->bank = $requestBankDetails['bank'];
+        $event->bank_details->holder = $requestBankDetails['holder'];
+        $event->bank_details->pix_key = $requestBankDetails['pix_key'];
+        $event->bank_details->save();
 
         return $event->refresh();
-
-        return $event;
     }
 
     public function cancel(string $eventId, CancelEventRequest $request)
