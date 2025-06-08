@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Http\DTO\StoreEventParticipantDTO;
 use App\Http\Repositories\Contracts\EventRepositoryInterface;
+use App\Http\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
@@ -16,6 +17,7 @@ use App\Models\EventPeriod;
 use App\Models\User;
 use App\Models\EventExpense;
 use App\Models\EventExpenseItem;
+use App\Models\EventOrganizer;
 use App\Models\EventParticipant;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,6 +31,13 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class EventRepository implements EventRepositoryInterface
 {
+    public UserRepository $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function getAll(Request $request): LengthAwarePaginator
     {
         return Event::paginate($request->query('per_page'));
@@ -198,7 +207,13 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        // TODO: Cancelar evento
+        if ($event->cancellation_date) {
+            throw new BadRequestException('O evento já foi cancelado');
+        }
+
+        $event->cancellation_description = $request->get('cancellation_description');
+        $event->cancellation_date = now();
+        $event->save();
 
         return $event;
     }
@@ -225,19 +240,48 @@ class EventRepository implements EventRepositoryInterface
         return $participant->refresh();
     }
 
-    public function indexOrganizers(string $eventId, Request $request)
+    public function indexOrganizers(int $internalEventId, Request $request)
     {
-        // TODO: Listar organizadores do evento
+        $event = Event::where('id', $internalEventId)->with('organizers')->firstOrFail();
+        if (!$event->organizers) {
+            throw new Exception('Nenhum organizador encontrado para este evento.');
+        }
+        return $event->organizers()->paginate($request->query('per_page'));
     }
 
-    public function addOrganizer(string $eventId, User $user)
+    public function storeOrganizer(int $internalEventId, Request $request)
     {
-        // TODO: Adicionar organizador ao evento
+        $event = Event::where('id', $internalEventId)->firstOrFail();
+        $user = $this->userRepository->findOrFail($request->get('user_id'));
+
+        $eventOrganizer = EventOrganizer::where('event_id', $event->id)
+            ->where('user_id', $user->id)
+            ->first();
+        if ($eventOrganizer) {
+            throw new BadRequestException('O usuário já é um organizador deste evento.');
+        }
+
+        $eventOrganizer = new EventOrganizer();
+        $eventOrganizer->event_id = $event->id;
+        $eventOrganizer->user_id = $user->id;
+        $eventOrganizer->save();
+
+        return $eventOrganizer->refresh();
     }
 
-    public function removeOrganizer(string $eventId, string $organizerId)
+    public function deleteOrganizer(int $internalEventId, string $organizerId)
     {
-        // TODO: Remover organizador do evento
+        $event = Event::where('id', $internalEventId)->firstOrFail();
+
+        $eventOrganizer = EventOrganizer::findOrFail($organizerId);
+
+        if (!$eventOrganizer || $eventOrganizer->event_id !== $event->id) {
+            throw new BadRequestException('Usuário não é um organizador deste evento.');
+        }
+
+        $eventOrganizer->delete();
+
+        return true;
     }
 
     public function getAllExpenses(int $internalEventId, Request $request): LengthAwarePaginator
