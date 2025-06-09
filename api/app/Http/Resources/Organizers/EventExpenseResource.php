@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
 class EventExpenseResource extends JsonResource
 {
@@ -12,6 +13,22 @@ class EventExpenseResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    #[OA\Schema(
+        schema: 'OrganizersEventExpense',
+        type: 'object',
+        properties: [
+            new OA\Property(property: 'id', type: 'string', format: 'uuid', example: 'uuid-expense-123'),
+            new OA\Property(property: 'description', type: 'string', example: 'Compra de bebidas'),
+            new OA\Property(property: 'total_value', type: 'number', format: 'float', example: 205.00),
+            new OA\Property(
+                property: 'items',
+                type: 'array',
+                items: new OA\Items(ref: '#/components/schemas/OrganizersEventExpenseItem')
+            ),
+            new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+            new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+        ]
+    )]
     public function toArray($request)
     {
         return [
