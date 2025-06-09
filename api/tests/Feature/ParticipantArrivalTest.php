@@ -16,7 +16,6 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
         $organizer = User::factory()->create();
         $participant = User::factory()->create();
         $event = Event::create([
-            'uuid' => (string) Str::uuid(),
             'user_id' => $organizer->id,
             'title' => 'Evento Teste',
             'description' => 'Desc',
@@ -38,7 +37,7 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
         // Permissão de organizador
         $organizer->permissions()->create(['permission' => 'organizer']);
 
-        $response = $this->actingAs($organizer)
+        $response = $this->actingAs($organizer, 'api')
             ->postJson("/api/v1/events/{$event->uuid}/participants/arrival", [
                 'participant_id' => $participant->id,
             ]);
@@ -56,7 +55,6 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
         $organizer = User::factory()->create();
         $participant = User::factory()->create();
         $event = Event::create([
-            'uuid' => (string) Str::uuid(),
             'user_id' => $organizer->id,
             'title' => 'Evento Teste',
             'description' => 'Desc',
@@ -73,7 +71,7 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
         // Permissão de organizador
         $organizer->permissions()->create(['permission' => 'organizer']);
 
-        $response = $this->actingAs($organizer)
+        $response = $this->actingAs($organizer, 'api')
             ->postJson("/api/v1/events/{$event->uuid}/participants/arrival", [
                 'participant_id' => $participant->id,
             ]);
@@ -83,9 +81,9 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
     });
 
     it('retorna erro 401 se usuário não autenticado', function () {
+        $user = User::factory()->create();
         $event = Event::create([
-            'uuid' => (string) Str::uuid(),
-            'user_id' => 1,
+            'user_id' => $user->id,
             'title' => 'Evento Teste',
             'description' => 'Desc',
             'subscription_deadline' => now()->addDays(5),
@@ -103,7 +101,6 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
         $user = User::factory()->create();
         $participant = User::factory()->create();
         $event = Event::create([
-            'uuid' => (string) Str::uuid(),
             'user_id' => $user->id,
             'title' => 'Evento Teste',
             'description' => 'Desc',
@@ -113,7 +110,15 @@ describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
             'estimated_value' => 100,
         ]);
         // Não vincula como organizador nem permissão
-        $response = $this->actingAs($user)
+        // Criar um organizador para o evento
+        $organizer = User::factory()->create();
+        \DB::table('event_organizers')->insert([
+            'event_id' => $event->id,
+            'user_id' => $organizer->id,
+        ]);
+        $organizer->permissions()->create(['permission' => 'organizer']);
+        
+        $response = $this->actingAs($user, 'api')
             ->postJson("/api/v1/events/{$event->uuid}/participants/arrival", [
                 'participant_id' => $participant->id,
             ]);
