@@ -1,28 +1,61 @@
-import api, { JWT_TOKEN_KEY } from './api'
+import api from './api'
+import { JWT_REFRESH_TOKEN_KEY, JWT_TOKEN_KEY } from '@/constants';
 
 const API_URL = '/api/v1';
 
 export default {
 
+  async validarToken() {
+    try {
+      const response = await api.get(`${API_URL}/auth/validate`);
+      return response.data;
+    } catch (error) {
+      console.warn("Token inválido ou expirado.");
+      return null;
+    }
+  },
+
+  async refresh() {
+    try {
+      const response = await api.post(`${API_URL}/auth/refresh`, {
+        refresh_token: localStorage.getItem(JWT_REFRESH_TOKEN_KEY),
+      })
+      console.log('Token atualizado com sucesso:', response.data);
+
+      const { access_token, refresh_token } = response.data
+
+      if (access_token && refresh_token) {
+        localStorage.setItem(JWT_TOKEN_KEY, access_token);
+        localStorage.setItem(JWT_REFRESH_TOKEN_KEY, refresh_token);
+      }
+      else {
+        console.warn('Tokens não encontrados na resposta de refresh:', response.data);
+        throw new Error('Tokens não encontrados na resposta de refresh');
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao atualizar token:', error.response?.data || error);
+      throw error;
+    }
+  },
+
+
   async login(email, senha) {
     try {
-      console.log(`Tentando fazer login com email: ${email} e senha: ${senha}`);
-      console.log(`URL de login: ${API_URL}/auth/login`);
-      console.log(api.defaults.baseURL);
-
-
-
       const response = await api.post(`${API_URL}/auth/login`, {
         username: email,
         password: senha,
       });
 
-      const token = response.data.access_token;
+      const { access_token, refresh_token } = response.data;
 
-      if (token) {
-        localStorage.setItem(JWT_TOKEN_KEY, token);
+      if (access_token && refresh_token) {
+        localStorage.setItem(JWT_TOKEN_KEY, access_token);
+        localStorage.setItem(JWT_REFRESH_TOKEN_KEY, refresh_token);
       } else {
         console.warn('Token não encontrado na resposta de login:', response.data);
+        throw new Error('Token não encontrado na resposta de login');
       }
 
       return response.data;

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+Route::get('storage/{file}', function (Request $request) {
+
+    if (! file_exists(storage_path('app/'.$request->route('file')))) {
+        abort(404);
+    }
+    return response()->file(storage_path('app/'.$request->route('file')));
+});

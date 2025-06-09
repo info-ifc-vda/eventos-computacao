@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Users;
+namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use OpenApi\Attributes as OA;
 
-class EventParticipantResource extends JsonResource
+class EventOrganizerSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,16 +12,14 @@ class EventParticipantResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    // TODO: Documentação
     public function toArray($request)
     {
         return [
             'id' => $this->uuid,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'event_id' => $this->event->uuid,
             'user_id' => $this->user->uuid,
-            'event_it' => $this->event->uuid,
-            'arrival_date' => $this->arrival_date
         ];
     }
 }

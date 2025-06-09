@@ -31,11 +31,11 @@ class EventExpenseSummaryResource extends JsonResource
         return [
             'id' => $this->uuid,
             'created_at' => $this->created_at,
-            'user_id' => $this->user_id,
-            'event_id' => $this->event_id,
+            'user_id' => $this->user->uuid,
+            'event_id' => $this->event->uuid,
             'proof_access_key' => $this->proof_access_key,
             'title' => $this->title,
-            'items_total' => $this->items_total,
+            'items_total' => (float) $this->items_total,
             // 'items_count' => $this->items->count(),
         ];
     }

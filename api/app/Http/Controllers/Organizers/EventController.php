@@ -6,18 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Http\Repositories\Contracts\EventRepositoryInterface;
 use App\Http\Repositories\EventRepository;
 use App\Http\Requests\Organizers\CancelEventRequest;
+use App\Http\Requests\Organizers\DeleteOrganizerRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
+use App\Http\Requests\Organizers\StoreOrganizerRequest;
 use App\Http\Requests\Organizers\StoreParticipantArrivalRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Http\Requests\Users\StoreParticipantRequest;
+use App\Http\Resources\Organizers\EventResource;
+use App\Http\Resources\Organizers\EventSummaryResource;
 use App\Http\Services\Contracts\Organizers\EventServiceInterface;
 use App\Http\Services\Organizers\EventService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 use App\Http\Requests\StoreEventExpenseRequest;
+use App\Http\Requests\UpdateEventExpenseRequest;
 use App\Http\Resources\Organizers\EventExpenseResource;
 use App\Http\Resources\Organizers\EventExpenseSummaryResource;
+use App\Http\Resources\Organizers\EventOrganizerResource;
+use App\Http\Resources\Organizers\EventOrganizerSummaryResource;
+use App\Http\Resources\Organizers\EventParticipantArrivalResource;
+use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 
 
@@ -59,8 +68,7 @@ class EventController extends Controller
     )]
     public function index(Request $request)
     {
-        \Log::info('Fetching all events with parameters: ', $request->all());
-        return $this->eventRepository->getAll($request);
+        return EventSummaryResource::collection($this->eventRepository->getAll($request));
     }
 
     #[OA\Post(
@@ -81,7 +89,7 @@ class EventController extends Controller
     )]
     public function store(StoreEventRequest $request)
     {
-        return $this->eventRepository->store($request);
+        return new EventResource($this->eventRepository->store($request));
     }
 
     #[OA\Get(
@@ -108,7 +116,7 @@ class EventController extends Controller
     )]
     public function show(Request $request)
     {
-        return $this->eventRepository->findOrFail($request);
+        return new EventResource($this->eventRepository->findOrFail($request->route('event_id')));
     }
 
     #[OA\Put(
@@ -134,7 +142,7 @@ class EventController extends Controller
     )]
     public function update(UpdateEventRequest $request)
     {
-        return $this->eventRepository->update($request->route('event_id'), $request);
+        return new EventResource($this->eventRepository->update($request->route('event_id'), $request));
     }
 
     #[OA\Post(
@@ -161,7 +169,7 @@ class EventController extends Controller
     )]
     public function cancel(CancelEventRequest $request)
     {
-        return $this->eventRepository->cancel($request->route('event_id'), $request);
+        return new EventResource($this->eventRepository->cancel($request->route('event_id'), $request));
     }
 
     #[OA\Get(
@@ -183,7 +191,7 @@ class EventController extends Controller
     )]
     public function indexParticipants(Request $request)
     {
-        return $this->eventRepository->indexParticipants($request->route('event_id'), $request);
+        return EventParticipantArrivalResource::collection($this->eventRepository->indexParticipants($request->route('event_id'), $request));
     }
 
     #[OA\Post(
@@ -259,7 +267,19 @@ class EventController extends Controller
     )]
     public function indexOrganizers(Request $request)
     {
-        // return $this->eventService->indexOrganizers($request);
+        return EventOrganizerSummaryResource::collection($this->eventRepository->indexOrganizers($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    public function storeOrganizer(StoreOrganizerRequest $request)
+    {
+        return new EventOrganizerResource($this->eventRepository->storeOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    public function deleteOrganizer(DeleteOrganizerRequest $request)
+    {
+        if ($this->eventRepository->deleteOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request->route('organizer_id'))){
+            return response()->json([], 204);
+        }
     }
 
     /**
@@ -331,32 +351,12 @@ class EventController extends Controller
     public function showExpense(Request $request)
     {
         return new EventExpenseResource($this->eventRepository->findEventExpenseOrFail($this->eventRepository->findOrFail($request->route('event_id'))->id, $request->route('event_expense_id')));
-        // try {
-        //     $expense = $this->eventRepository->findEventExpense($eventId, $expenseUuid);
+    }
 
-        //     if (!$expense) {
-        //         return response()->json([
-        //             'message' => 'Despesa não encontrada.'
-        //         ], 404);
-        //     }
+    public function updateExpense(UpdateEventExpenseRequest $request)
+    {
+        $event = $this->eventRepository->findOrFail($request->route('event_id'));
 
-        //     // Verificar se o usuário pode visualizar esta despesa
-        //     // (pode ser o próprio usuário ou ter permissões especiais)
-        //     if ($expense->user_id !== auth()->id() && !$this->canViewExpense($expense)) {
-        //         return response()->json([
-        //             'message' => 'Não autorizado a visualizar esta despesa.'
-        //         ], 403);
-        //     }
-
-        //     return response()->json([
-        //         'data' => new EventExpenseResource($expense)
-        //     ]);
-
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'message' => 'Erro ao buscar despesa.',
-        //         'error' => $e->getMessage()
-        //     ], 500);
-        // }
+        return new EventExpenseResource($this->eventRepository->updateExpense($event->id, $request->route('event_expense_id'), $request));
     }
 }

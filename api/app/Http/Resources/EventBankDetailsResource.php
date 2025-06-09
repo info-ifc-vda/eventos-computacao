@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AddressResource extends JsonResource
+class EventBankDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -12,17 +12,12 @@ class AddressResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    // TODO: Documentação
     public function toArray($request)
     {
         return [
-            'state' => $this->state,
-            'city' => $this->city,
-            'neighborhood' => $this->neighborhood,
-            'zip_code' => $this->zip_code,
-            'street' => $this->street,
-            'number' => $this->number,
-            'complement' => $this->complement
+            'bank' => $this->bank,
+            'holder' => $this->holder,
+            'pix_key' => $this->pix_key
         ];
     }
 }

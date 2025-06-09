@@ -4,7 +4,7 @@ namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventPeriods extends JsonResource
+class EventPeriodsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
