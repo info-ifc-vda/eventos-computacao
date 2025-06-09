@@ -1,12 +1,15 @@
 <?php
 
+namespace Tests\Feature;
+
+use Tests\TestCase;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventParticipant;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 describe('POST /api/v1/events/{event_id}/participants/arrival', function () {
     it('registra chegada com sucesso para organizador e participante do evento', function () {
