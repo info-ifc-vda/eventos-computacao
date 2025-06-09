@@ -7,6 +7,7 @@ use App\Http\Requests\Organizers\CancelEventRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Http\Requests\StoreEventExpenseRequest;
+use App\Http\Requests\UpdateEventExpenseRequest;
 use App\Http\Requests\Users\StoreParticipantRequest;
 use App\Models\Event;
 use App\Models\EventExpense;
@@ -34,6 +35,7 @@ interface EventRepositoryInterface
     public function getAllExpenses(int $internalEventId, Request $request): LengthAwarePaginator;
     public function storeExpense(int $internalEventId, StoreEventExpenseRequest $request): EventExpense;
     public function findEventExpenseOrFail(int $internalEventId, string $eventExpenseId): EventExpense;
+    public function updateExpense(int $internalEventId, string $eventExpenseId, UpdateEventExpenseRequest $request): EventExpense;
 
      // Novos métodos para despesas
     // public function getEventExpenses(string $eventId, int $perPage = 15): LengthAwarePaginator;
