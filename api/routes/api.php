@@ -102,7 +102,10 @@ Route::group(['prefix' => 'v1'], function() {
             Route::group(['prefix' => 'expenses'], function() {
                 Route::get('', [OrganizersEventController::class, 'indexExpenses']);
                 Route::post('', [OrganizersEventController::class, 'storeExpense']);
-                Route::get('{event_expense_id}', [OrganizersEventController::class, 'showExpense']);
+                Route::group(['prefix' => '{event_expense_id}'], function() {
+                    Route::get('', [OrganizersEventController::class, 'showExpense']);
+                    Route::put('', [OrganizersEventController::class, 'updateExpense']);
+                });
             });
 
             Route::group(['prefix' => 'participants'], function() {
