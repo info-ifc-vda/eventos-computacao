@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Repositories\Contracts\EventRepositoryInterface;
 use App\Http\Repositories\EventRepository;
 use App\Http\Requests\Organizers\CancelEventRequest;
+use App\Http\Requests\Organizers\DeleteOrganizerRequest;
 use App\Http\Requests\Organizers\StoreEventRequest;
+use App\Http\Requests\Organizers\StoreOrganizerRequest;
 use App\Http\Requests\Organizers\StoreParticipantArrivalRequest;
 use App\Http\Requests\Organizers\UpdateEventRequest;
 use App\Http\Requests\Users\StoreParticipantRequest;
@@ -20,7 +22,10 @@ use OpenApi\Attributes as OA;
 use App\Http\Requests\StoreEventExpenseRequest;
 use App\Http\Resources\Organizers\EventExpenseResource;
 use App\Http\Resources\Organizers\EventExpenseSummaryResource;
+use App\Http\Resources\Organizers\EventOrganizerResource;
+use App\Http\Resources\Organizers\EventOrganizerSummaryResource;
 use App\Http\Resources\Organizers\EventParticipantArrivalResource;
+use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 
 
@@ -118,7 +123,19 @@ class EventController extends Controller
 
     public function indexOrganizers(Request $request)
     {
-        // return $this->eventService->indexOrganizers($request);
+        return EventOrganizerSummaryResource::collection($this->eventRepository->indexOrganizers($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    public function storeOrganizer(StoreOrganizerRequest $request)
+    {
+        return new EventOrganizerResource($this->eventRepository->storeOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
+    }
+
+    public function deleteOrganizer(DeleteOrganizerRequest $request)
+    {
+        if ($this->eventRepository->deleteOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request->route('organizer_id'))){
+            return response()->json([], 204);
+        }
     }
 
     /**
