@@ -78,11 +78,6 @@ class Event extends Model
         return $this->hasMany(EventOrganizer::class, 'event_id', 'id');
     }
 
-    public function organizers()
-    {
-        return $this->belongsToMany(User::class, 'event_organizers', 'event_id', 'user_id');
-    }
-
     /******************************************
      *                                        *
      *                 SCOPES                 *
