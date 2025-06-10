@@ -44,7 +44,7 @@ export default {
       throw error;
     }
   },
-  
+
   async deletarEvento(id) {
     try {
       const response = await api.delete(`${API_URL}/events/${id}`);

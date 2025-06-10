@@ -16,8 +16,12 @@
             <v-icon color="green">mdi-account-circle</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="black--text">{{ usuario.nome }}</v-list-item-title>
-            <v-list-item-subtitle class="black--text">{{ usuario.email }}</v-list-item-subtitle>
+            <v-list-item-title class="black--text">{{
+              usuario.nome
+            }}</v-list-item-title>
+            <v-list-item-subtitle class="black--text">{{
+              usuario.email
+            }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -153,12 +157,16 @@
         </v-list-item>
 
         <v-divider></v-divider>
-        <v-list-item @click="logout" class="logout-item" style="cursor:pointer;">
+        <v-list-item
+          @click="logout"
+          class="logout-item"
+          style="cursor: pointer"
+        >
           <v-list-item-icon>
             <v-icon color="red">mdi-logout</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="red--text">Deslogar</v-list-item-title>
+            <v-list-item-title class="red--text">Sair</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -185,8 +193,8 @@ export default {
       drawer: false,
       usuario: {
         nome: "",
-        email: ""
-      }
+        email: "",
+      },
     };
   },
   created() {
@@ -206,17 +214,17 @@ export default {
     },
     async logout() {
       try {
-      localStorage.removeItem("JWT_TOKEN_KEY");
-      localStorage.removeItem("JWT_REFRESH_TOKEN_KEY");
-      localStorage.removeItem("usuario_nome");
-      localStorage.removeItem("usuario_email");
-      await UsuarioService.logout();
-      this.$router.push("/login");
+        localStorage.removeItem("JWT_TOKEN_KEY");
+        localStorage.removeItem("JWT_REFRESH_TOKEN_KEY");
+        localStorage.removeItem("usuario_nome");
+        localStorage.removeItem("usuario_email");
+        await UsuarioService.logout();
+        this.$router.push("/login");
       } catch (error) {
-      console.error('Erro ao fazer logout:', error.response?.data || error);
+        console.error("Erro ao fazer logout:", error.response?.data || error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
