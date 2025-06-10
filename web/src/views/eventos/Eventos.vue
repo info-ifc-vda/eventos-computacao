@@ -14,7 +14,7 @@
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
           <v-img
-            :src="evento.banner_url"
+            :src="evento.banner.url"
             width="100%"
             cover
             class="flex-shrink-0"
@@ -63,6 +63,7 @@
 
 <script>
 import EventoService from "@/services/EventoService";
+import UsuarioService from "@/services/UsuarioService";
 
 export default {
   name: "ListarEventos",
@@ -74,6 +75,7 @@ export default {
     };
   },
   created() {
+    this.carregarUsuarioLogado();
     this.carregarEventos();
   },
   methods: {
@@ -81,6 +83,7 @@ export default {
       EventoService.listarEventos()
         .then((response) => {
           this.eventos = response;
+          console.log(this.eventos);
         })
         .catch(() => {
           this.snackbarMessage = "Erro ao carregar eventos.";
@@ -88,20 +91,29 @@ export default {
         });
     },
 
-    inscricoesAbertas(evento) {
-      if (!evento.subscription_deadline) return false;
+    normalizarUrl(url) {
+    const prefixoInvalido = "http://eventos.fsw-ifc.brdrive.localhoststorage/";
+    if (url && url.startsWith(prefixoInvalido)) {
+      return url.replace(prefixoInvalido, "");
+    }
+    return url;
+  },
 
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
+inscricoesAbertas(evento) {
+  return !evento.cancelled;
+},
 
-      // Cria objeto Date a partir da string completa com data e hora
-      const limite = new Date(evento.subscription_deadline);
+  //comentei porque o back não retorna oque precisa
+    // inscricoesAbertas(evento) {
+    //   if (!evento.subscription_deadline) return false;
 
-      // Ajusta limite para 23:59:59 do dia, pra permitir inscrição até o final do dia
-      limite.setHours(23, 59, 59, 999);
+    //   const hoje = new Date();
+    //   hoje.setHours(0, 0, 0, 0);
 
-      return limite >= hoje;
-    },
+    //   const limite = new Date(evento.subscription_deadline);
+    //   limite.setHours(23, 59, 59, 999);
+    //   return limite >= hoje;
+    // },
 
     formatarData(isoDate) {
       if (!isoDate) return "";
@@ -113,9 +125,31 @@ export default {
       });
     },
 
-    inscrever(eventoId) {
-      this.snackbarMessage = `Você clicou em Inscrever-se no evento ${eventoId}.`;
-      this.snackbar = true;
+    async carregarUsuarioLogado() {
+      try {
+        const response = await UsuarioService.getUsuarioLogado();
+        this.usuario = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar usuário logado:", error);
+      }
+    },
+
+
+    async inscrever(eventoId) {
+      if (!this.usuario) {
+        this.snackbarMessage = 'Usuário não autenticado.';
+        this.snackbar = true;
+        return;
+      }
+
+      try {
+        await EventoService.inscreverEvento(eventoId, this.usuario.id);
+        this.snackbarMessage = 'Inscrição no evento realizada com sucesso!';
+        this.snackbar = true;
+      } catch (error) {
+        this.snackbarMessage = 'Erro ao inscrever no evento.';
+        this.snackbar = true;
+      }
     },
   },
 };

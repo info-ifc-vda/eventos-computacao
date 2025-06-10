@@ -15,6 +15,20 @@ export default {
     }
   },
 
+  async logout() {
+    try {
+      localStorage.removeItem(JWT_TOKEN_KEY);
+      localStorage.removeItem(JWT_REFRESH_TOKEN_KEY);
+
+      await api.get(`${API_URL}/auth/logout`);
+
+      return true;
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error.response?.data || error);
+      throw error;
+    }
+  },
+
   async refresh() {
     try {
       const response = await api.post(`${API_URL}/auth/refresh`, {
@@ -89,6 +103,17 @@ export default {
       return [];
     }
   },
+
+async getUsuarioLogado() {
+  try {
+    const response = await api.get(`${API_URL}/users/me`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar usuário logado:", error);
+    throw error;
+  }
+},
+
 
   async obterUsuarioPorId(id) {
     try {

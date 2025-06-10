@@ -3,22 +3,30 @@
     <h2 class="title">Lista de Eventos</h2>
     <v-row>
       <v-col>
-        <v-text-field v-model="filtro.nome" class="text" label="Filtrar por Nome"></v-text-field>
+        <v-text-field v-model="filtro.nome" class="text" label="Filtrar por Nome" />
       </v-col>
       <v-col>
-        <v-text-field v-model="filtro.data"  class="text" type="date"></v-text-field>
+        <v-text-field v-model="filtro.data" class="text" type="date" label="Filtrar por Data" />
       </v-col>
-      <v-btn class="botao" @click="buscarEventos">Buscar</v-btn>
+      <v-col cols="12" md="2" class="d-flex align-center">
+        <v-btn class="botao" @click="buscarEventos">Buscar</v-btn>
+      </v-col>
     </v-row>
-   
-    <v-data-table class="tabela" v-if="eventos.length" :headers="headers" :items="eventos" item-key="id">
+
+    <v-data-table
+      class="tabela"
+      v-if="eventos.length"
+      :headers="headers"
+      :items="eventos"
+      item-key="id"
+    >
       <template v-slot:item="{ item }">
         <tr :key="item.id">
-          <td>{{ item.nome }}</td>
-          <td>{{ item.data }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.event_initial_date || '—' }}</td>
           <td>
             <v-btn color="botao-opcao" small @click="irParaDetalhes(item.id)">Detalhes</v-btn>
-            <v-btn color="botao-opcao" small @click="$router.push(`/evento/${item.id}/editar`)">Editar</v-btn>
+            <v-btn color="botao-opcao" small @click="irParaEditar(item.id)">Editar</v-btn>
             <v-btn color="botao-opcao" small @click="abrirDialog(item.id)">Excluir</v-btn>
           </td>
         </tr>
@@ -30,41 +38,34 @@
     </v-snackbar>
 
     <v-dialog v-model="dialog" max-width="350">
-        <v-card>
-            <div class="verde"></div>
-            <h3>Cancelar Evento</h3>
-
-            <p style="text-align: center;">Deseja realmente excluir este evento? </p>
-
-            <v-card-actions class="justify-center">
-                <v-btn class="botao-opcao1" @click="confirmarRemocao">Sim</v-btn>
-                <v-btn class="botao-opcao1" @click="dialog=false">Não</v-btn>
-            </v-card-actions>
-        </v-card>
+      <v-card>
+        <div class="verde"></div>
+        <h3>Cancelar Evento</h3>
+        <p style="text-align: center;">Deseja realmente excluir este evento?</p>
+        <v-card-actions class="justify-center">
+          <v-btn class="botao-opcao1" @click="confirmarRemocao">Sim</v-btn>
+          <v-btn class="botao-opcao1" @click="dialog = false">Não</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-import EventoService from '../../services/EventoService.js';
+import EventoService from '@/services/EventoService';
 
 export default {
+  name: 'ListaEventos',
   data() {
     return {
-      //eventos teste: [],
-      eventos: [
-        { id: 1, nome: 'Workshop de Vue.js', data: '2025-06-10' },
-        { id: 2, nome: 'Palestra de Inteligência Artificial', data: '2025-06-15' },
-        { id: 3, nome: 'Encontro de Programadores', data: '2025-06-20' }
-      ],
-
+      eventos: [],
       filtro: {
         nome: '',
         data: ''
       },
       headers: [
-        { text: 'Nome do Evento', value: 'nome' },
-        { text: 'Data do Evento', value: 'data' },
+        { text: 'Nome do Evento', value: 'title' },
+        { text: 'Data do Evento', value: 'event_initial_date' },
         { text: 'Opções', value: 'actions', sortable: false }
       ],
       snackbar: false,
@@ -73,109 +74,92 @@ export default {
       eventoSelecionado: null
     };
   },
-
   methods: {
-    carregarEventos() {
-      EventoService.listarEventos()
-        .then(response => {
-          this.eventos = response;
-        })
-        .catch(() => {
-          this.snackbarMessage = 'Erro ao carregar eventos.';
-          this.snackbar = true;
-        });
-    },
-    buscarEventos() {
-      EventoService.listarEventosPorFiltro(this.filtro.nome, this.filtro.data)
-        .then(response => {
-          this.eventos = response;
-        })
-        .catch(() => {
-          this.snackbarMessage = 'Erro ao buscar eventos.';
-          this.snackbar = true;
-        });
-    },
+  async carregarEventos() {
+    try {
+      const eventosUsuario = await EventoService.listarEventosDoUsuario();
+      this.eventos = eventosUsuario;
+    } catch (error) {
+      this.snackbarMessage = "Erro ao carregar eventos do usuário.";
+      this.snackbar = true;
+    }
+  },
 
-    abrirDialog(id){
-        this.eventoSelecionado = id;
-        this.dialog = true;
+    async buscarEventos() {
+      try {
+        const response = await EventoService.listarEventosPorFiltro(
+          this.filtro.nome,
+          this.filtro.data
+        );
+        this.eventos = response?.data || response || [];
+      } catch (error) {
+        this.snackbarMessage = 'Erro ao buscar eventos.';
+        this.snackbar = true;
+      }
     },
 
-    confirmarRemocao(){
-        EventoService.deletarEvento(this.eventoSelecionado)
-            .then(() => {
-                this.snackbarMessage='Evento deletado com sucesso!';
-                this.snackbar = true;
-                this.carregarEventos();
-            })
+    abrirDialog(id) {
+      this.eventoSelecionado = id;
+      this.dialog = true;
+    },
 
-            .catch(() => {
-                this.snackbarMessage = 'Erro ao deletar evento. ';
-                this.snackbar = true;
-            })
-
-            .finally(() => {
-                this.dialog = false;
-            })
+    async confirmarRemocao() {
+      try {
+        const dataAtual = new Date().toISOString().split('T')[0];
+        await EventoService.cancelarEvento(this.eventoSelecionado, { data: dataAtual });
+        this.snackbarMessage = 'Evento deletado com sucesso!';
+        this.snackbar = true;
+        await this.buscarEventos();
+      } catch (error) {
+        this.snackbarMessage = 'Erro ao deletar evento.';
+        this.snackbar = true;
+      } finally {
+        this.dialog = false;
+      }
     },
 
     irParaDetalhes(id) {
-    this.$router.push(`/evento/${id}/detalhes`);
+      this.$router.push(`/evento/${id}/detalhes`);
     },
 
     irParaEditar(id) {
-        this.$router.push(`/evento/${id}/editar`);
+      this.$router.push(`/cadastro-evento/${id}`);
     }
-
   },
- // created() {
-   // this.carregarEventos();
- // }
+
+  mounted() {
+    this.carregarEventos();
+  }
 };
 </script>
 
 <style scoped>
-
-.container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-}
-
 .title {
   text-align: center;
   margin-bottom: 10px;
 }
 
-.botao{
+.botao {
   background-color: #005324 !important;
   color: white !important;
-  margin-top: 24px;
   text-transform: none;
 }
 
-.botao:last-child {
-  margin-right: 10px;
-}
-
-.text{
+.text {
   margin-right: 150px;
 }
 
-.botao-opcao, .botao-opcao1{
+.botao-opcao,
+.botao-opcao1 {
   background-color: #005324 !important;
   color: white !important;
   margin-right: 24px;
   text-transform: none;
 }
 
-.botao-opcao1{
-    margin-left: 40px !important;
-    margin-bottom: 20px !important;
-}
-
-.botao-opcao:last-child {
-  margin-right: 10px !important;
+.botao-opcao1 {
+  margin-left: 40px !important;
+  margin-bottom: 20px !important;
 }
 
 .verde {
@@ -184,9 +168,9 @@ export default {
   width: 100%;
 }
 
-.tabela{
-    margin-top: 30px;
-    background-color: #E8EDEE !important;
+.tabela {
+  margin-top: 30px;
+  background-color: #e8edee !important;
 }
 
 ::v-deep(.v-data-table thead th) {
@@ -202,10 +186,9 @@ export default {
   padding-top: 20px !important;
 }
 
-h3{
-    margin-top: 10px;
-    margin-bottom: 15px;
-    text-align: center;
+h3 {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
 }
-
 </style>

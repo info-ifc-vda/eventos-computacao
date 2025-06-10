@@ -13,7 +13,7 @@ module.exports = defineConfig({
     proxy: {
       '/api': {
         // Usa variável de ambiente ou fallback para desenvolvimento local
-        target: process.env.VUE_APP_API_URL || 'http://localhost:8082',
+        target: process.env.VUE_APP_API_URL || 'http://eventos.fsw-ifc.brdrive.localhost',
         changeOrigin: true,
         secure: false,
         pathRewrite: {

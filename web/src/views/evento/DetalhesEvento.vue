@@ -22,7 +22,7 @@
 
             <v-row class="align-center justify-space-between my-7 mx-1">
             <span>Realizar Cadastro de Despesas Individuais</span>
-            <v-btn style="text-transform: none; " color="#005324" dark @click="cadastrarDespesas">Cadastrar Despesas</v-btn>
+            <v-btn style="text-transform: none; " color="#005324" dark @click="cadastrarDespesaIndividual">Cadastrar Despesas</v-btn>
             </v-row>
 
             <v-divider></v-divider>
@@ -62,8 +62,9 @@
             enviarLembrete() {
             this.$router.push('/evento/enviar-lembrete')
             },
-            cadastrarDespesas() {
-            this.$router.push('/evento/cadastrar-despesas')
+            cadastrarDespesaIndividual() {
+              const idEvento = this.$route.params.id || this.eventoId;
+              this.$router.push(`/evento/${idEvento}/cadastro-despesa-individual`);
             },
             gerenciarDespesas() {
             this.$router.push('/evento/gerenciar-despesas')

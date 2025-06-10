@@ -2,7 +2,7 @@ import axios from "axios";
 import { JWT_TOKEN_KEY } from "@/constants";
 
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || "http://localhost:8082",
+  baseURL: process.env.VUE_APP_API_URL || "http://eventos.fsw-ifc.brdrive.localhost",
 });
 
 api.interceptors.request.use(config => {
