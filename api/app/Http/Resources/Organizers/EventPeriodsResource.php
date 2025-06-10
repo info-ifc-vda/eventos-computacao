@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AddressResource extends JsonResource
+class EventPeriodsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +16,9 @@ class AddressResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'state' => $this->state,
-            'city' => $this->city,
-            'neighborhood' => $this->neighborhood,
-            'zip_code' => $this->zip_code,
-            'street' => $this->street,
-            'number' => $this->number,
-            'complement' => $this->complement
+            'date' => $this->date,
+            'opening_time' => $this->opening_time,
+            'closing_time' => $this->closing_time
         ];
     }
 }

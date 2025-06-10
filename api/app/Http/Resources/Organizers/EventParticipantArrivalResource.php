@@ -15,6 +15,11 @@ class EventParticipantArrivalResource extends JsonResource
     // TODO: Documentação
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->uuid,
+            'event_id' => $this->event->uuid,
+            'user_id' => $this->user->uuid,
+            'arrival_date' => $this->arrival_date
+        ];
     }
 }

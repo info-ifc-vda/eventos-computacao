@@ -1,5 +1,5 @@
 import axios from "axios";
-export const JWT_TOKEN_KEY = 'EventIF#authToken';
+import { JWT_TOKEN_KEY } from "@/constants";
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL || "http://localhost:8082",

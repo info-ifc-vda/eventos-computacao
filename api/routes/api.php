@@ -22,6 +22,52 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+/**
+ * POST api/v1/auth/login - Não auth
+ * POST api/v1/auth/refresh
+ * GET api/v1/auth/logout
+ *
+ * POST api/v1/users - Não auth
+ * GET api/v1/users
+ * PUT api/v1/users/password
+ * GET api/v1/users/{user_id}
+ * PUT api/v1/users/{user_id}
+ *
+ * GET api/v1/events
+ * POST api/v1/events - create_event
+ * GET api/v1/events/{event_id} - create_event
+ * PUT api/v1/events/{event_id} - organizer do evento
+ * PATCH api/v1/events/{event_id}/cancel - user_id do evento e nenhum participante // TODO
+ * POST api/v1/events/join // TODO
+ *
+ * GET api/v1/events/{event_id}/expenses - organizer do evento
+ * POST api/v1/events/{event_id}/expenses - organizer do evento
+ * GET api/v1/events/{event_id}/expenses/{event_expense_id} - organizer do evento
+ * PUT api/v1/events/{event_id}/expenses/{event_expense_id} - organizer do evento // TODO
+ *
+ * GET api/v1/events/{event_id}/participants - organizer do evento
+ * POST api/v1/events/{event_id}/participants - organizer do evento
+ * POST api/v1/events/{event_id}/participants/arrival - organizer do evento // TODO
+ *
+ * GET api/v1/events/{event_id}/payments - user_id do evento // TODO
+ * POST api/v1/events/{event_id}/payments - user_id do evento // TODO
+ * POST api/v1/events/{event_id}/payments/dispatch - user_id do evento // TODO
+ *
+ * POST api/v1/events/{event_id}/conclude - user_id do evento e todos payments pagos // TODO
+ *
+ * GET api/v1/events/{event_id}/organizers - organizer do evento
+ * POST api/v1/events/{event_id}/organizers - organizer do evento
+ * DELETE api/v1/events/{event_id}/organizers - user_id do evento
+ *
+ */
+// Rota para validar o token JWT
+Route::middleware('auth:api')->get('/v1/auth/validate', function (Request $request) {
+    return response()->json([
+        'valid' => true,
+        'user' => $request->user()
+    ]);
+});
+
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'auth'], function() {
         Route::post('login', [AuthController::class, 'login']);
@@ -31,7 +77,7 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::post('users', [UserController::class, 'store']); // Rota que não necessita autenticação
 
-    Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {    
+    Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
 
@@ -56,7 +102,10 @@ Route::group(['prefix' => 'v1'], function() {
             Route::group(['prefix' => 'expenses'], function() {
                 Route::get('', [OrganizersEventController::class, 'indexExpenses']);
                 Route::post('', [OrganizersEventController::class, 'storeExpense']);
-                Route::get('{event_expense_id}', [OrganizersEventController::class, 'showExpense']);
+                Route::group(['prefix' => '{event_expense_id}'], function() {
+                    Route::get('', [OrganizersEventController::class, 'showExpense']);
+                    Route::put('', [OrganizersEventController::class, 'updateExpense']);
+                });
             });
 
             Route::group(['prefix' => 'participants'], function() {
@@ -75,12 +124,6 @@ Route::group(['prefix' => 'v1'], function() {
                     Route::delete('', [OrganizersEventController::class, 'deleteOrganizer']);
                 });
             });
-
-            Route::group(['prefix' => 'payments'], function() {
-
-            });
-
-
         });
     });
 });

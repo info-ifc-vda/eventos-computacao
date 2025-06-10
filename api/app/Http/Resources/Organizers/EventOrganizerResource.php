@@ -4,7 +4,7 @@ namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventPeriods extends JsonResource
+class EventOrganizerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -12,13 +12,14 @@ class EventPeriods extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    // TODO: Documentação
     public function toArray($request)
     {
         return [
-            'date' => $this->date,
-            'opening_time' => $this->opening_time,
-            'closing_time' => $this->closing_time
+            'id' => $this->uuid,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'event_id' => $this->event->uuid,
+            'user_id' => $this->user->uuid,
         ];
     }
 }

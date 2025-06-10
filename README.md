@@ -14,9 +14,14 @@ docker compose exec api composer install
 docker compose exec api cp .env.example .env
 docker compose exec api php artisan key:generate
 docker compose exec api php artisan migrate --force
-docker compose exec api php artisan passport:keys
-docker compose exec api php artisan passport:client --password -q
 ```
+
+5. Adicione alguns registros de teste para facilitar o desenvolvimento:
+```bash
+docker compose exec api php artisan db:seed # Rode apenas uma vez ou o haverá registros duplicados no seu banco de dados
+```
+O comando acima cria 3 usuários no banco de dados: admin@gmail.com, event_creator@gmail.com e common_user@gmail.com, todos com a senha "Senha123$"
+
 
 A aplicação estará disponível na rota http://eventos.fsw-ifc.brdrive.localhost/api/v1/events
 
@@ -24,7 +29,7 @@ A aplicação estará disponível na rota http://eventos.fsw-ifc.brdrive.localho
 
 OBS 1: Em desenvolvimento, não é possível utilizar o https, caso estiver sofrendo com erros de "Não foi possível conectar, confira a rota e remova a parte do https"
 
-OBS 2: Em produção, é necessário criar um registro em /etc/hosts que redirecione `auth.eventos` para `127.0.0.1` e no nginx é necessário adicionar uma captura para este server_name
+OBS 2: Para o pessoal que trabalha no front, o HMR (Hot Module Reload) não funciona no windows, então recomendamos fortemente a utilização do WSL ou um SO Linux nativo para trabalhar adequadamente.
 
 ## Documentação
 
@@ -34,11 +39,3 @@ docker compose exec api php artisan generate:docs
 ```
 É recomendado rodar o comando a cada pull, pois a documentação é gerada somente ao executar o comando.
 A documentação estará disponível na rota http://eventos.fsw-ifc.brdrive.localhost/swagger
-
-## Seeder
-
-Para seedar a base de dados rode:
-
-```bash
-docker compose exec api php artisan migrate:fresh --seed
-```
