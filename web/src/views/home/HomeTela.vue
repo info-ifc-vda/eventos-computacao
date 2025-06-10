@@ -8,8 +8,20 @@
         <img src="@/assets/EventIF.png" alt="Logo do EventIF" />
       </router-link>
     </v-app-bar>
+
     <v-navigation-drawer v-model="drawer" app>
       <v-list>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-icon color="green">mdi-account-circle</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title class="black--text">{{ usuario.nome }}</v-list-item-title>
+            <v-list-item-subtitle class="black--text">{{ usuario.email }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider></v-divider>
+
         <v-list-item to="/cadastro-evento">
           <v-list-item-icon>
             <v-icon>mdi-calendar-clock</v-icon>
@@ -84,6 +96,7 @@
             >
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item to="/listar-despesas">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
@@ -94,6 +107,7 @@
             >
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item to="/editar-despesas">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
@@ -105,7 +119,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/registro-evento">
+        <!-- <v-list-item to="/registro-evento">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
@@ -114,7 +128,7 @@
               >Cadastrar Evento</v-list-item-title
             >
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
 
         <v-list-item to="/cancelar-participacao">
           <v-list-item-icon>
@@ -137,8 +151,19 @@
             >
           </v-list-item-content>
         </v-list-item>
+
+        <v-divider></v-divider>
+        <v-list-item @click="logout" class="logout-item" style="cursor:pointer;">
+          <v-list-item-icon>
+            <v-icon color="red">mdi-logout</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="red--text">Deslogar</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
     <v-main>
       <v-container>
         <router-view></router-view>
@@ -151,16 +176,47 @@
 </template>
 
 <script>
+import UsuarioService from "@/services/UsuarioService";
+
 export default {
   name: "HomeTela",
   data() {
     return {
       drawer: false,
-      menuProduto: false,
-      menuPedido: false,
-      menuEvento: false,
+      usuario: {
+        nome: "",
+        email: ""
+      }
     };
   },
+  created() {
+    this.carregarUsuarioLogado();
+  },
+  methods: {
+    async carregarUsuarioLogado() {
+      try {
+        console.log("Chamando serviço para carregar usuário...");
+        const dadosUsuario = await UsuarioService.getUsuarioLogado();
+        console.log("Dados do usuário recebidos:", dadosUsuario);
+        this.usuario.nome = dadosUsuario.data.name || "Usuário";
+        this.usuario.email = dadosUsuario.data.email || "";
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário logado:", error);
+      }
+    },
+    async logout() {
+      try {
+      localStorage.removeItem("JWT_TOKEN_KEY");
+      localStorage.removeItem("JWT_REFRESH_TOKEN_KEY");
+      localStorage.removeItem("usuario_nome");
+      localStorage.removeItem("usuario_email");
+      await UsuarioService.logout();
+      this.$router.push("/login");
+      } catch (error) {
+      console.error('Erro ao fazer logout:', error.response?.data || error);
+      }
+    }
+  }
 };
 </script>
 
@@ -220,14 +276,11 @@ export default {
 .drawer-custom {
   border-radius: 16px !important;
   margin-left: -3px;
-  /* Move para a esquerda */
   margin-top: -5px;
-  /* Move para cima */
   overflow: hidden;
 }
 
 img {
-  /* width: 6%; */
   width: 100px;
   height: auto;
 }
@@ -263,5 +316,10 @@ footer {
   bottom: 0;
   width: 100%;
   height: 60px;
+}
+
+/* Estilo para o item de logout */
+.logout-item:hover {
+  background-color: #ffcccc !important;
 }
 </style>

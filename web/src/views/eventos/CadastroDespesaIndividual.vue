@@ -38,7 +38,7 @@
                         max-width="200" contain style="margin-top: 12px; border-radius: 8px;" />
                 </v-col>
                 <v-col cols="12">
-                    <v-btn block color="#757575" @click="registrarDespesa">
+                    <v-btn block color="#757575" type="button" @click="registrarDespesa">
                         Registrar Despesa
                     </v-btn>
                 </v-col>
@@ -49,6 +49,7 @@
 
 <script>
 import { Fragment } from "vue-frag";
+import despesaService from '@/services/DespesaService.js';
 
 export default {
     name: "CadastroDespesaIndividual",
@@ -57,12 +58,83 @@ export default {
     },
     data() {
         return {
+            idEvento: null,
             titulo: "",
             valor: "",
             valorConfirm: "",
             chave: "",
             imagePreview: null,
+            titleContainerStyle: {
+                backgroundColor: "#E0E0E0",
+                padding: "10px",
+                borderRadius: "8px",
+                textAlign: "center",
+                marginBottom: "20px",
+            },
+            snackbar: false,
+            snackbarMessage: "",
+            dialog: false,
+            dialogMessage: "Deseja realmente excluir este evento?",
+            dialogTitle: "Cancelar Evento",
+            dialogConfirmText: "Sim",
+            dialogCancelText: "Não",
+            dialogConfirmAction: this.confirmarRemocao,
+            dialogCancelAction: () => {
+                this.dialog = false;
+            },
+            dialogStyle: {
+                backgroundColor: "#E0E0E0",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+            },
+            dialogActionsStyle: {
+                justifyContent: "center",
+            },
+            dialogTitleStyle: {
+                color: "#333",
+                fontSize: "20px",
+                marginBottom: "10px",
+            },
+            dialogMessageStyle: {
+                color: "#555",
+                fontSize: "16px",
+                marginBottom: "20px",
+            },
+            dialogButtonStyle: {
+                backgroundColor: "#005324",
+                color: "#fff",
+                textTransform: "none",
+                margin: "0 10px",
+            },
+            dialogButtonCancelStyle: {
+                backgroundColor: "#757575",
+                color: "#fff",
+                textTransform: "none",
+                margin: "0 10px",
+            },
+            dialogButtonConfirmStyle: {
+                backgroundColor: "#005324",
+                color: "#fff",
+                textTransform: "none",
+                margin: "0 10px",
+            },
+            dialogButtonTextStyle: {
+                fontSize: "16px",
+                fontWeight: "bold",
+            },
+            dialogButtonCancelTextStyle: {
+                fontSize: "16px",
+                fontWeight: "bold",
+            },
+            dialogButtonConfirmTextStyle: {
+                fontSize: "16px",
+                fontWeight: "bold",
+            },      
         };
+    },
+    mounted() {
+        this.idEvento = this.$route.params.id;
     },
     methods: {
         handleFileUpload(event) {
@@ -76,29 +148,38 @@ export default {
             }
         },
 
-        registrarDespesa() {
+        async registrarDespesa() {
             if (!this.titulo || !this.valor || !this.valorConfirm || !this.chave) {
-                this.$alert("Por favor, preencha todos os campos.");
+                window.alert("Por favor, preencha todos os campos.");
                 return;
             }
+
             if (this.valor !== this.valorConfirm) {
-                this.$alert("Os valores não coincidem.");
+                window.alert("Os valores não coincidem.");
                 return;
             }
 
             if (!this.imagePreview) {
-                this.$alert("Por favor, envie uma imagem.");
+                window.alert("Por favor, envie uma imagem.");
                 return;
             }
 
             const payload = {
-                titulo: this.titulo,
-                valor: this.valor,
-                chave: this.chave,
-                imagemBase64: this.imagePreview,
+                id: this.idEvento,
+                description: this.titulo,
+                unit_value: parseFloat(this.valor),
+                quantity: 1,
+                total_value: parseFloat(this.valor),
             };
-            console.log("Payload para enviar:", payload);
-            this.$alert("Despesa registrada com sucesso!");
+
+            try {
+                await despesaService.criarDespesa(this.idEvento, payload);
+                window.alert("Despesa registrada com sucesso!");
+                this.$router.push(`/evento/${this.idEvento}/detalhes`);
+            } catch (error) {
+                window.alert("Erro ao registrar a despesa. Tente novamente.");
+                console.error("Erro:", error);
+            }
         },
     },
 };

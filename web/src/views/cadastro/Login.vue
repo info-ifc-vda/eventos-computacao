@@ -82,8 +82,8 @@ export default {
   name: "LoginView",
   data() {
     return {
-      email: "admin@gmail.com",
-      senha: "Yametekudas@1",
+      email: "",
+      senha: "",
       mostrarSenha: false,
       carregando: false,
       mensagemErro: "",
@@ -101,6 +101,12 @@ export default {
       this.carregando = true;
       try {
         await UsuarioService.login(this.email, this.senha);
+        
+        const dadosUsuario = await UsuarioService.obterUsuarioPorEmail(this.email);
+
+        localStorage.setItem('usuario_nome', dadosUsuario.name || dadosUsuario.nome || '');
+        localStorage.setItem('usuario_email', dadosUsuario.email || '');
+
         this.$router.push("/eventos");
       } catch (error) {
         this.mensagemErro =

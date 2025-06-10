@@ -331,7 +331,67 @@ export default {
       snackbarSucesso: false,
     };
   },
+  mounted() {
+    const idEvento = this.$route.params.id;
+    if (idEvento) {
+      this.carregarEvento(idEvento);
+    }
+  },
   methods: {
+    async carregarEvento(id) {
+      try {
+        const eventoBuscado = await EventoService.obterEventoPorId(id);
+        console.log("evento!", eventoBuscado.data)
+        const data = eventoBuscado.data;
+        this.evento = {
+          title: data.title || "",
+          banner: { 
+            data: null,
+            url: data.banner?.url || null
+          },
+          public_event: data.public_event ?? null,
+          description: data.decription || "",
+          subscription_deadline: data.subscription_deadline || null,
+          payment_deadline: data.payment_deadline || null,
+          estimated_value: data.estimated_value || null,
+          event_periods: Array.isArray(data.event_periods) ? data.event_periods.map(period => ({
+            date: period.date || null,
+            opening_time: period.opening_time || null,
+            closing_time: period.closing_time || null
+          })) : [{
+            date: null,
+            opening_time: null,
+            closing_time: null
+          }],
+          bank_details: data.bank_details ? {
+            bank: data.bank_details.bank || null,
+            holder: data.bank_details.holder || null,
+            pix_key: data.bank_details.pix_key || null,
+          } : {
+            bank: null,
+            holder: null,
+            pix_key: null,
+          },
+          location: {
+            maps_link: data.location?.maps_link || null,
+            address: {
+              state: data.location?.address?.state || null,
+              city: data.location?.address?.city || null,
+              neighborhood: data.location?.address?.neighborhood || null,
+              zip_code: data.location?.address?.zip_code || null,
+              street: data.location?.address?.street || null,
+              number: data.location?.address?.number || null,
+              complement: data.location?.address?.complement || null,
+            }
+          }
+        };
+      } catch (error) {
+        console.error("Erro ao carregar evento para edição:", error);
+        this.mensagemErro = "Erro ao carregar dados do evento.";
+        this.snackbarErro = true;
+      }
+    },
+
     addSessao() {
       this.evento.event_periods.push({
         date: null,
@@ -339,7 +399,9 @@ export default {
         closing_time: null
       });
     },
-
+    isEdicao() {
+      return !!this.$route.params.id;
+    },
     async adicionarEvento() {
     if (!this.$refs.form.validate()) {
       this.mensagemErro = "Preencha todos os campos obrigatórios!";
@@ -347,10 +409,31 @@ export default {
       return;
     }
 
-    if (this.evento.banner) {
+    if (this.evento.subscription_deadline && typeof this.evento.subscription_deadline === 'string') {
+      this.evento.subscription_deadline = this.evento.subscription_deadline.split('T')[0];
+    }
+    if (this.evento.payment_deadline && typeof this.evento.payment_deadline === 'string') {
+      this.evento.payment_deadline = this.evento.payment_deadline.split('T')[0];
+    }
+    if (Array.isArray(this.evento.event_periods)) {
+      this.evento.event_periods = this.evento.event_periods.map(period => {
+        let date = period.date;
+        if (typeof date === 'string' && date.includes(' ')) {
+          date = date.split(' ')[0];
+        }
+        return {
+          ...period,
+          date
+        };
+      });
+    }
+
+    if (this.evento.banner && this.evento.banner.data) {
       try {
-        const bannerBase64 = await this.convertToBase64(this.evento.banner.data);
-        this.evento.banner.data = bannerBase64;
+        if (this.evento.banner.data instanceof File || this.evento.banner.data instanceof Blob) {
+          const bannerBase64 = await this.convertToBase64(this.evento.banner.data);
+          this.evento.banner.data = bannerBase64;
+        }
         console.log(this.evento.banner);
       } catch (error) {
         console.error("Erro ao converter imagem para Base64", error);
@@ -362,8 +445,14 @@ export default {
 
     this.buttonLoading = true;
     try {
-      await EventoService.criarEvento(this.evento);
-      this.mensagemSucesso = "Evento cadastrado com sucesso!";
+      if (this.isEdicao()) {
+        this.evento.id = this.$route.params.id;
+        await EventoService.atualizarEvento(this.evento.id, this.evento,);
+        this.mensagemSucesso = "Evento atualizado com sucesso!";
+      } else {
+        await this.criarEvento();
+        this.mensagemSucesso = "Evento cadastrado com sucesso!";
+      }
       this.snackbarSucesso = true;
       // this.limparFormulario();
     } catch (error) {
@@ -391,7 +480,7 @@ export default {
           data: null,
         },
         public_event: null,
-        description: "",
+        decription: "",
         subscription_deadline: null,
         payment_deadline: null,
         estimated_value: null,
