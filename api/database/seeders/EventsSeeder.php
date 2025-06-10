@@ -19,7 +19,7 @@ class EventsSeeder extends Seeder
             return;
         }
 
-        Event::create([
+        $event = Event::create([
             'uuid' => (string) \Illuminate\Support\Str::uuid(),
             'user_id' => $user->id,
             'title' => 'Evento de Teste',
@@ -32,5 +32,22 @@ class EventsSeeder extends Seeder
             'cancellation_description' => null,
         ]);
 
+        // Adiciona um organizador (event_creator)
+        $eventCreator = User::where('email', 'event_creator@gmail.com')->first();
+        if ($eventCreator) {
+            \App\Models\EventOrganizer::create([
+                'event_id' => $event->id,
+                'user_id' => $eventCreator->id,
+            ]);
+        }
+
+        // Adiciona um participante (common_user)
+        $commonUser = User::where('email', 'common_user@gmail.com')->first();
+        if ($commonUser) {
+            \App\Models\EventParticipant::create([
+                'event_id' => $event->id,
+                'user_id' => $commonUser->id,
+            ]);
+        }
     }
 }
