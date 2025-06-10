@@ -1,8 +1,21 @@
-import api from './api'
+import api from './api';
 
 const API_URL = '/api/v1';
 
 export default {
+  async inscreverEvento(eventId, userId) {
+    try {
+      const response = await api.post(`${API_URL}/events/join`, {
+        event_id: eventId,
+        user_id: userId
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao inscrever no evento:', error);
+      throw error;
+    }
+  },
+
   async criarEvento(evento) {
     try {
       const response = await api.post(`${API_URL}/events`, evento);
@@ -22,14 +35,35 @@ export default {
       return [];
     }
   },
+  async cancelarEvento(id, data) {
+    try {
+      const response = await api.post(`${API_URL}/events/${id}/cancel`, data);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao cancelar evento (ID: ${id}):`, error);
+      throw error;
+    }
+  },
 
   async deletarEvento(id) {
     try {
-      const response = await api.put(`${API_URL}/${id}`);
+      const response = await api.delete(`${API_URL}/events/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Erro ao deletar evento (ID: ${id}):`, error);
       throw error;
+    }
+  },
+
+  async listarEventosDoUsuario() {
+    try {
+      const response = await api.get(`${API_URL}/events`, {
+        params: { meus_eventos: true }
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error('Erro ao listar eventos do usuário:', error);
+      return [];
     }
   },
 
@@ -49,7 +83,7 @@ export default {
 
   async obterEventoPorId(id) {
     try {
-      const response = await api.get(`${API_URL}/${id}`);
+      const response = await api.get(`${API_URL}/events/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Erro ao obter evento (ID: ${id}):`, error);
@@ -57,10 +91,9 @@ export default {
     }
   },
 
-
   async atualizarEvento(id, evento) {
     try {
-      const response = await api.put(`${API_URL}/${id}`, evento);
+      const response = await api.put(`${API_URL}/events/${id}`, evento);
       return response.data;
     } catch (error) {
       console.error(`Erro ao atualizar evento (ID: ${id}):`, error);

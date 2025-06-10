@@ -8,24 +8,12 @@
             <v-col cols="12" md="4">
               <v-text-field label="Nome" v-model="usuario.nome" autofocus />
             </v-col>
-            <!-- <v-col cols="12" md="6">
-              <v-text-field label="CPF" v-model="usuario.cpf" v-mask="'###.###.###-##'" />
-            </v-col> -->
             <v-col cols="12" md="4">
               <v-text-field label="Email" v-model="usuario.email" />
             </v-col>
             <v-col cols="12" md="4">
               <v-text-field label="Telefone" v-model="usuario.telefone" v-mask="'(##) #####-####'" />
             </v-col>
-            <!-- <v-col cols="12" md="6">
-              <v-text-field label="Endereço" v-model="usuario.endereco" />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select label="Sexo" :items="['Masculino', 'Feminino', 'Outro']" v-model="usuario.sexo" />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field label="Data de Nascimento" v-model="usuario.dataNascimento" type="date" />
-            </v-col> -->
           </v-row>
           <v-row>
             <v-col cols="12" md="6">
@@ -61,10 +49,6 @@ export default {
         telefone: "",
         senha: "",
         confirmarSenha: "",
-        // cpf: "",
-        // endereco: "",
-        // sexo: "",
-        // dataNascimento: "",
       },
     };
   },
@@ -75,19 +59,15 @@ export default {
         alert("Preencha todos os campos!");
         return;
       }
-
       if (this.usuario.senha !== this.usuario.confirmarSenha) {
         alert("As senhas não coincidem!");
         return;
       }
-
       try {
         const usuarioParaEnviar = { ...this.usuario };
         delete usuarioParaEnviar.confirmarSenha;
-
         await UsuarioService.cadastrarUsuario(usuarioParaEnviar);
-        // alert("Usuário cadastrado com sucesso!");
-        this.$router.push("/");
+        this.$router.push("/login");
       } catch (error) {
         alert("Erro ao cadastrar usuário: " + error.response.data.message);
       }

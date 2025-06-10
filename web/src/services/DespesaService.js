@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8082/eventos';
+const API_URL = '/api/v1';
 
 export default {
-  async criarDespesa(despesa) {
+  async criarDespesa(idEvento, despesa) {
     try {
-      const response = await axios.post(API_URL, despesa);
+      const response = await axios.post(`${API_URL}/eventos/${idEvento}/despesas`, despesa);
       return response.data;
     } catch (error) {
       console.error('Erro ao criar despesa:', error);

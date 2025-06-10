@@ -81,6 +81,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
 
+        Route::get('me', [UserController::class, 'showMe']);
         // Route::get('me', [UserController::class, 'showMe']);
         Route::group(['prefix' => '{user_id}'], function() {
             Route::get('', [UserController::class, 'show']);
