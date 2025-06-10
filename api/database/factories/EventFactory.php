@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Support\Str;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
  */
 class EventFactory extends Factory
 {
+    protected $model = Event::class;
+    
     /**
      * Define the model's default state.
      *
