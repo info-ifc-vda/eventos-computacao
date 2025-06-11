@@ -99,6 +99,7 @@ Route::group(['prefix' => 'v1'], function() {
             Route::get('', [OrganizersEventController::class, 'show']);
             Route::put('', [OrganizersEventController::class, 'update']);
             Route::post('cancel', [OrganizersEventController::class, 'cancel']);
+            Route::post('leave', [OrganizersEventController::class, 'leave']);
 
             //Rotas de despesas de eventos
             Route::group(['prefix' => 'expenses'], function() {

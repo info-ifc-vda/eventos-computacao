@@ -16,7 +16,9 @@
             <v-icon color="green">mdi-account-circle</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="black--text">{{ usuario.nome }}</v-list-item-title>
+            <v-list-item-title class="black--text">{{
+              usuario.nome
+            }}</v-list-item-title>
             <v-list-item-subtitle class="black--text">{{
               usuario.email
             }}</v-list-item-subtitle>
@@ -29,7 +31,9 @@
             <v-icon>mdi-calendar-clock</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cadastrar Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cadastrar Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -58,7 +62,9 @@
             <v-icon>mdi-hand-coin-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Pagamento Pix</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Pagamento Pix</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -67,7 +73,9 @@
             <v-icon>mdi-calendar-edit</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Gerenciar Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Gerenciar Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -76,25 +84,29 @@
             <v-icon>mdi-format-list-bulleted</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Listagem de Eventos</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Listagem de Eventos</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/seus-eventos">
+        <!-- <v-list-item to="/seus-eventos">
           <v-list-item-icon>
             <v-icon>mdi-account-details</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="black--text">Seus Eventos</v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
 
         <v-list-item to="/listar-despesas" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Listar Despesas</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Listar Despesas</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -103,7 +115,9 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Editar Despesas</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Editar Despesas</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -123,7 +137,9 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cancelar Evento</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cancelar Evento</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
@@ -132,12 +148,18 @@
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text">Cadastrar Despesa</v-list-item-title>
+            <v-list-item-title class="black--text"
+              >Cadastrar Despesa</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
 
         <v-divider></v-divider>
-        <v-list-item @click="logout" class="logout-item" style="cursor: pointer">
+        <v-list-item
+          @click="logout"
+          class="logout-item"
+          style="cursor: pointer"
+        >
           <v-list-item-icon>
             <v-icon color="red">mdi-logout</v-icon>
           </v-list-item-icon>

@@ -174,4 +174,15 @@ class EventController extends Controller
 
         return new EventExpenseResource($this->eventRepository->updateExpense($event->id, $request->route('event_expense_id'), $request));
     }
+
+    public function leave(Request $request)
+    {
+        try{
+            $this->eventRepository->leaveEvent($request->route('event_id'), $request->user()->id);
+            return response()->json([], 204);
+        } catch (\BadRequestException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
 }

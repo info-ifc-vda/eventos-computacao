@@ -151,6 +151,20 @@ export default {
       console.error(`Erro ao obter participantes do evento (ID: ${eventId}):`, error);
       throw error;
     }
+  },
+
+  async cancelarInscricaoNoEvento(eventId, userId) {
+    try {
+      const response = await api.post(`${API_URL}/events/${eventId}/leave`, {
+        event_id: eventId,
+        user_id: userId
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao cancelar inscrição no evento:', error);
+      throw error;
+    }
   }
 
 };

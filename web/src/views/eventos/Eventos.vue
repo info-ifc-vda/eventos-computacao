@@ -89,9 +89,17 @@
           </v-card-text>
           <v-card-actions>
             <template v-if="evento.inscrito">
-              <v-btn block color="grey darken-1" class="white--text" disabled>
-                Já inscrito
+              <v-btn
+                block
+                color="red darken-2"
+                class="white--text"
+                @click="cancelarInscricaoNoEvento(evento.id)"
+              >
+                Cancelar Inscrição no Evento
               </v-btn>
+              <!-- <v-btn block color="grey darken-1" class="white--text" disabled>
+                Já inscrito
+              </v-btn> -->
             </template>
             <template v-else-if="inscricoesAbertas(evento)">
               <v-btn
@@ -260,6 +268,35 @@ export default {
         this.snackbar = true;
       } catch (error) {
         this.snackbarMessage = "Erro ao inscrever no evento.";
+        this.snackbar = true;
+      }
+    },
+    async cancelarInscricaoNoEvento(eventoId) {
+      if (!this.usuario) {
+        this.snackbarMessage = "Usuário não autenticado.";
+        this.snackbar = true;
+        return;
+      }
+
+      try {
+        await EventoService.cancelarInscricaoNoEvento(
+          eventoId,
+          this.usuario.id
+        );
+
+        // Atualiza localmente o evento marcado como não inscrito
+        const eventoIndex = this.eventos.findIndex((e) => e.id === eventoId);
+        if (eventoIndex !== -1) {
+          this.$set(this.eventos[eventoIndex], "inscrito", false);
+        }
+
+        this.snackbarMessage = "Inscrição no evento cancelada com sucesso!";
+        this.snackbar = true;
+      } catch (error) {
+        // this.snackbarMessage = "Erro ao cancelar inscrição no evento.";
+        this.snackbarMessage =
+          error.response?.data?.message ||
+          "Erro ao cancelar inscrição no evento.";
         this.snackbar = true;
       }
     },

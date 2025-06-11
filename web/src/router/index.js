@@ -87,7 +87,7 @@ router.beforeEach(async (to, from, next) => {
 
       if (requiresAdmin) {
         const isAdmin = await UsuarioService.isAdmin();
-        // if not admin, redirect to /events with some message
+        console.log(`Usuário é admin: ${isAdmin}`);
         if (!isAdmin) return next({ name: 'PaginaNaoAutorizada' });
       }
 
