@@ -9,6 +9,7 @@ export default {
         event_id: eventId,
         user_id: userId
       });
+
       return response.data;
     } catch (error) {
       console.error('Erro ao inscrever no evento:', error);
@@ -29,6 +30,10 @@ export default {
   async listarEventos() {
     try {
       const response = await api.get(`${API_URL}/events`);
+
+      console.log('Eventos listados:', response.data);
+
+
       return response.data.data;
     } catch (error) {
       console.error('Erro ao listar eventos:', error);
@@ -99,5 +104,32 @@ export default {
       console.error(`Erro ao atualizar evento (ID: ${id}):`, error);
       throw error;
     }
+  },
+
+  async isParticipante(eventId, userId) {
+    try {
+      const response = await api.get(`${API_URL}/events/is-participant`, {
+        params: {
+          event_id: eventId,
+          user_id: userId
+        }
+      });
+
+      return response.data.is_participant;
+    } catch (error) {
+      console.error(`Erro ao verificar participação no evento (ID: ${eventId}):`, error);
+      throw error;
+    }
+  },
+
+  async getEventLocation(eventId) {
+    try {
+      const response = await api.get(`${API_URL}/events/${eventId}/location`);
+      return response.data.location;
+    } catch (error) {
+      console.error(`Erro ao obter localização do evento (ID: ${eventId}):`, error);
+      throw error;
+    }
   }
+
 };

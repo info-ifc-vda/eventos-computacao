@@ -205,7 +205,7 @@ export default {
       try {
         console.log("Chamando serviço para carregar usuário...");
         const dadosUsuario = await UsuarioService.getUsuarioLogado();
-        console.log("Dados do usuário recebidos:", dadosUsuario);
+        // console.log("Dados do usuário recebidos:", dadosUsuario);
         this.usuario.nome = dadosUsuario.data.name || "Usuário";
         this.usuario.email = dadosUsuario.data.email || "";
       } catch (error) {

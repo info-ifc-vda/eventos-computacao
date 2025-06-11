@@ -93,6 +93,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);
         Route::post('', [OrganizersEventController::class, 'store']);
         Route::post('join', [UsersEventController::class, 'join']);
+        Route::get('is-participant', [UsersEventController::class, 'isParticipant']);
 
         Route::group(['prefix' => '{event_id}'], function() {
             Route::get('', [OrganizersEventController::class, 'show']);
