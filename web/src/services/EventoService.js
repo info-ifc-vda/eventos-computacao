@@ -36,6 +36,8 @@ export default {
         throw new Error('Resposta inválida da API: dados ausentes');
       }
 
+      console.log('Eventos recebidos:', response.data.data);
+
       return response.data.data;
     } catch (error) {
       console.error('Erro ao listar eventos:', error);

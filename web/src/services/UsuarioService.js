@@ -19,6 +19,7 @@ export default {
     try {
 
       const response = await api.get(`${API_URL}/auth/logout`);
+      console.log('Logout realizado com sucesso:', response.data);
 
       localStorage.removeItem(JWT_TOKEN_KEY);
       localStorage.removeItem(JWT_REFRESH_TOKEN_KEY);
