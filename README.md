@@ -190,7 +190,3 @@ Agradecemos a todos que colaboraram com este projeto:
 ## 🙌 Agradecimentos
 
 Este projeto é fruto do esforço conjunto de estudantes, professores e colaboradores do IFC Campus Videira. Cada contribuição foi fundamental para o desenvolvimento desta iniciativa.
-
----
-
-Se quiser, posso ajudar a formatar para incluir badges, links para issues, roadmap, etc. Quer que eu faça?
