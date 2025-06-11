@@ -37,7 +37,7 @@ const routes = [
       {
         path: "/", component: Login, meta: { title: 'Login' }, beforeEnter: (to, from, next) => {
           const token = localStorage.getItem(JWT_TOKEN_KEY);
-          if (token) return next({ path: '/home' });
+          if (token) return next({ path: '/eventos' });
           next();
         }
       },
@@ -62,7 +62,7 @@ const routes = [
       { path: '/lista-presenca', name: 'ListaPresenca', component: ListaPresenca, requiresAuth: true },
       { path: '/registro-evento', name: 'RegistrarEvento', component: RegistrarEvento, requiresAuth: true },
       { path: '/cancelar-participacao', name: 'CancelarParticipacao', component: CancelarParticipacao, requiresAuth: true },
-      {path: '/evento/:id/cadastro-despesa-individual', name: 'CadastroDespesaIndividual', component: () => import('../views/eventos/CadastroDespesaIndividual.vue')},
+      { path: '/evento/:id/cadastro-despesa-individual', name: 'CadastroDespesaIndividual', component: () => import('../views/eventos/CadastroDespesaIndividual.vue') },
       { path: "/cadastro-usuario", component: CadastroUsuario },
       { path: "/login", component: Login },
     ],

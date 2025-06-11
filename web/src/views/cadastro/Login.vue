@@ -35,6 +35,9 @@
             dense
             :rules="[(v) => !!v || 'Email é obrigatório']"
             required
+            type="email"
+            autocomplete="email"
+            autofocus
           />
 
           <v-text-field
@@ -89,9 +92,6 @@ export default {
       mensagemErro: "",
     };
   },
-  // created() {
-  //   this.verificarToken();
-  // },
   methods: {
     async fazerLogin() {
       this.mensagemErro = "";
@@ -101,11 +101,14 @@ export default {
       this.carregando = true;
       try {
         await UsuarioService.login(this.email, this.senha);
-        
-        const dadosUsuario = await UsuarioService.obterUsuarioPorEmail(this.email);
+        const dadosUsuario = await UsuarioService.getUsuarioLogado();
 
-        localStorage.setItem('usuario_nome', dadosUsuario.name || dadosUsuario.nome || '');
-        localStorage.setItem('usuario_email', dadosUsuario.email || '');
+        this.$root.$emit("usuario-logado", {
+          nome: dadosUsuario.data.name,
+          email: dadosUsuario.data.email,
+          permissions: dadosUsuario.data.permissions,
+          logado: true,
+        });
 
         this.$router.push("/eventos");
       } catch (error) {

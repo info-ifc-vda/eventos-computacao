@@ -68,7 +68,11 @@ class EventController extends Controller
     )]
     public function index(Request $request)
     {
-        return EventSummaryResource::collection($this->eventRepository->getAll($request));
+        // listar todos os dados do evento e suas tabelas relacionadas
+        return EventResource::collection(
+            $this->eventRepository->getAll($request)
+        );
+        // return EventSummaryResource::collection($this->eventRepository->getAll($request));
     }
 
     #[OA\Post(

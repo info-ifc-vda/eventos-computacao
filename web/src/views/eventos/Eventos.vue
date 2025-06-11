@@ -43,11 +43,31 @@
           <v-card-text class="flex-grow-1">
             <div class="text-h6 mb-2">{{ evento.title }}</div>
 
-            <div v-if="evento.sessoes && evento.sessoes.length">
-              <span>{{ formatarData(evento.sessoes[0].data) }}</span>
-              <span> - {{ evento.sessoes[0].inicio }}</span>
+            <div class="mb-2 text-body-2">
+              {{ evento.decription }}
             </div>
-            <div v-else>Sem sessão definida</div>
+
+            <div class="mb-1" v-if="evento.event_periods && evento.event_periods.length">
+              <v-icon small class="mr-1">mdi-calendar</v-icon>
+              {{ formatarData(evento.event_periods[0].date) }}
+              —
+              {{ evento.event_periods[0].opening_time }} às {{ evento.event_periods[0].closing_time }}
+            </div>
+
+             <div class="mb-1" v-if="evento.location">
+              <v-icon small class="mr-1">mdi-map-marker</v-icon>
+              <a
+                :href="evento.location.maps_link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text--secondary"
+              >
+                {{ evento.location.address.street }}, {{ evento.location.address.number }},
+                {{ evento.location.address.neighborhood }},
+                {{ evento.location.address.city }} - {{ evento.location.address.state }}
+              </a>
+            </div>
+            
           </v-card-text>
           <v-card-actions>
             <template v-if="evento.inscrito">
@@ -157,9 +177,11 @@ export default {
     //   return limite >= hoje;
     // },
 
-    formatarData(isoDate) {
+   formatarData(isoDate) {
       if (!isoDate) return "";
-      const dt = new Date(isoDate);
+      const [year, month, day] = isoDate.split("-");
+      const dt = new Date(year, month - 1, day);
+      
       return dt.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",

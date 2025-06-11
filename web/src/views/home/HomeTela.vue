@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar color="#005324" dark app elevate-on-scroll>
-      <v-app-bar-nav-icon @click="drawer = !drawer">
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="logado">
         <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
       <router-link to="/" class="logo-link">
@@ -9,16 +9,14 @@
       </router-link>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer v-model="drawer" app v-if="logado">
       <v-list>
         <v-list-item>
           <v-list-item-avatar>
             <v-icon color="green">mdi-account-circle</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="black--text">{{
-              usuario.nome
-            }}</v-list-item-title>
+            <v-list-item-title class="black--text">{{ usuario.nome }}</v-list-item-title>
             <v-list-item-subtitle class="black--text">{{
               usuario.email
             }}</v-list-item-subtitle>
@@ -26,18 +24,16 @@
         </v-list-item>
         <v-divider></v-divider>
 
-        <v-list-item to="/cadastro-evento">
+        <v-list-item to="/cadastro-evento" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-calendar-clock</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Cadastrar Eventos</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Cadastrar Eventos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/cobranca-finalizacao">
+        <v-list-item to="/cobranca-finalizacao" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cash-multiple</v-icon>
           </v-list-item-icon>
@@ -48,7 +44,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/lista-presenca">
+        <v-list-item to="/lista-presenca" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cash-sync</v-icon>
           </v-list-item-icon>
@@ -57,25 +53,21 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/pagamento-pix">
+        <v-list-item to="/pagamento-pix" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-hand-coin-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Pagamento Pix</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Pagamento Pix</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/gerenciar-eventos">
+        <v-list-item to="/gerenciar-eventos" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-calendar-edit</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Gerenciar Eventos</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Gerenciar Eventos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -84,9 +76,7 @@
             <v-icon>mdi-format-list-bulleted</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Listagem de Eventos</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Listagem de Eventos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -95,31 +85,25 @@
             <v-icon>mdi-account-details</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Seus Eventos</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Seus Eventos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/listar-despesas">
+        <v-list-item to="/listar-despesas" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Listar Despesas</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Listar Despesas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/editar-despesas">
+        <v-list-item to="/editar-despesas" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Editar Despesas</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Editar Despesas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -134,34 +118,26 @@
           </v-list-item-content>
         </v-list-item> -->
 
-        <v-list-item to="/cancelar-participacao">
+        <v-list-item to="/cancelar-participacao" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Cancelar Evento</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Cancelar Evento</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/cadastro-despesa-individual">
+        <v-list-item to="/cadastro-despesa-individual" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="black--text"
-              >Cadastrar Despesa</v-list-item-title
-            >
+            <v-list-item-title class="black--text">Cadastrar Despesa</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-divider></v-divider>
-        <v-list-item
-          @click="logout"
-          class="logout-item"
-          style="cursor: pointer"
-        >
+        <v-list-item @click="logout" class="logout-item" style="cursor: pointer">
           <v-list-item-icon>
             <v-icon color="red">mdi-logout</v-icon>
           </v-list-item-icon>
@@ -192,23 +168,43 @@ export default {
     return {
       drawer: false,
       usuario: {
-        nome: "",
+        nome: "Convidado",
         email: "",
+        permissions: [],
       },
+      logado: false,
     };
   },
   created() {
     this.carregarUsuarioLogado();
   },
+  mounted() {
+    this.$root.$on("usuario-logado", (usuario) => {
+      console.log("Atualizando dados do usuário logado:", usuario);
+      this.usuario.nome = usuario.nome;
+      this.usuario.email = usuario.email;
+      this.usuario.permissions = usuario.permissions;
+      this.logado = usuario.logado;
+    });
+  },
+  computed: {
+    isAdmin() {
+      return this.usuario.permissions.includes("admin");
+    },
+  },
   methods: {
     async carregarUsuarioLogado() {
+      this.logado = false;
       try {
         console.log("Chamando serviço para carregar usuário...");
         const dadosUsuario = await UsuarioService.getUsuarioLogado();
-        // console.log("Dados do usuário recebidos:", dadosUsuario);
-        this.usuario.nome = dadosUsuario.data.name || "Usuário";
+        console.log("Dados do usuário recebidos:", dadosUsuario);
+        this.usuario.nome = dadosUsuario.data.name || "Convidado";
         this.usuario.email = dadosUsuario.data.email || "";
+        this.usuario.permissions = dadosUsuario.data.permissions || [];
+        this.logado = true;
       } catch (error) {
+        this.logado = false;
         console.error("Erro ao carregar dados do usuário logado:", error);
       }
     },
@@ -219,6 +215,12 @@ export default {
         localStorage.removeItem("usuario_nome");
         localStorage.removeItem("usuario_email");
         await UsuarioService.logout();
+        this.usuario = {
+          nome: "Convidado",
+          email: "",
+          permissions: [],
+        };
+        this.logado = false;
         this.$router.push("/login");
       } catch (error) {
         console.error("Erro ao fazer logout:", error.response?.data || error);
