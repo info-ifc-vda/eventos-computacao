@@ -180,7 +180,6 @@ export default {
   },
   mounted() {
     this.$root.$on("usuario-logado", (usuario) => {
-      console.log("Atualizando dados do usuário logado:", usuario);
       this.usuario.nome = usuario.nome;
       this.usuario.email = usuario.email;
       this.usuario.permissions = usuario.permissions;
@@ -198,7 +197,7 @@ export default {
       try {
         console.log("Chamando serviço para carregar usuário...");
         const dadosUsuario = await UsuarioService.getUsuarioLogado();
-        console.log("Dados do usuário recebidos:", dadosUsuario);
+
         this.usuario.nome = dadosUsuario.data.name || "Convidado";
         this.usuario.email = dadosUsuario.data.email || "";
         this.usuario.permissions = dadosUsuario.data.permissions || [];

@@ -1,14 +1,25 @@
 <template>
-  <v-container fluid style="padding-top: 0">
-    <h2 style="margin-bottom: 30px">Eventos</h2>
+  <v-container fluid class="pa-4 pt-0">
+    <v-row justify="center" class="mb-8">
+      <v-col cols="12" sm="10" md="8" class="text-center">
+        <h2 class="text-h3 font-weight-black gradient-text animate-header">
+          Eventos
+        </h2>
+        <v-divider
+          class="mx-auto my-3 gradient-divider"
+          style="max-width: 120px"
+        ></v-divider>
+      </v-col>
+    </v-row>
+
     <v-row justify="center" v-if="carregando">
       <v-col
         v-for="n in 3"
         :key="n"
         cols="12"
         sm="6"
-        md="4"
-        lg="4"
+        md="6"
+        lg="6"
         class="d-flex"
       >
         <v-skeleton-loader
@@ -21,14 +32,14 @@
       </v-col>
     </v-row>
 
-    <v-row justify="center" v-else>
+    <v-row v-else>
       <v-col
         v-for="evento in eventos"
         :key="evento.id"
         cols="12"
         sm="6"
-        md="4"
-        lg="4"
+        md="6"
+        lg="6"
         class="d-flex"
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
@@ -37,24 +48,29 @@
             width="100%"
             cover
             class="flex-shrink-0"
-            style="min-height: 200px; max-height: 200px; object-fit: cover"
+            style="min-height: 400px; max-height: 400px; object-fit: cover"
           />
 
           <v-card-text class="flex-grow-1">
-            <div class="text-h6 mb-2">{{ evento.title }}</div>
-
-            <div class="mb-2 text-body-2">
-              {{ evento.decription }}
+            <div class="d-flex justify-center align-center mb-2">
+              <span class="text-h6 mr-2">
+                {{ evento.title }}
+              </span>
             </div>
+            <v-divider class="mb-2"></v-divider>
 
-            <div class="mb-1" v-if="evento.event_periods && evento.event_periods.length">
+            <div
+              class="mb-1 text-left"
+              v-if="evento.event_periods && evento.event_periods.length"
+            >
               <v-icon small class="mr-1">mdi-calendar</v-icon>
               {{ formatarData(evento.event_periods[0].date) }}
               —
-              {{ evento.event_periods[0].opening_time }} às {{ evento.event_periods[0].closing_time }}
+              {{ evento.event_periods[0].opening_time }} às
+              {{ evento.event_periods[0].closing_time }}
             </div>
 
-             <div class="mb-1" v-if="evento.location">
+            <div class="mb-1 text-left" v-if="evento.location">
               <v-icon small class="mr-1">mdi-map-marker</v-icon>
               <a
                 :href="evento.location.maps_link"
@@ -62,12 +78,14 @@
                 rel="noopener noreferrer"
                 class="text--secondary"
               >
-                {{ evento.location.address.street }}, {{ evento.location.address.number }},
+                {{ evento.location.address.street }},
+                {{ evento.location.address.number }},
                 {{ evento.location.address.neighborhood }},
-                {{ evento.location.address.city }} - {{ evento.location.address.state }}
+                {{ evento.location.address.city }} -
+                {{ evento.location.address.state }}
               </a>
             </div>
-            
+            {{ evento.tipo }}
           </v-card-text>
           <v-card-actions>
             <template v-if="evento.inscrito">
@@ -94,6 +112,29 @@
               </div>
             </template>
           </v-card-actions>
+          <v-card-subtitle class="text-caption text-right pr-4 pb-2 grey--text">
+            {{
+              evento.tipo === "publico"
+                ? "Evento Público"
+                : "Evento privado apenas para convidados"
+            }}.
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  :color="evento.tipo === 'publico' ? 'green' : 'red'"
+                  class="ml-1"
+                >
+                  {{ evento.tipo === "publico" ? "mdi-earth" : "mdi-lock" }}
+                </v-icon>
+              </template>
+              <span>{{
+                evento.tipo === "publico" ? "Evento público" : "Evento privado"
+              }}</span>
+            </v-tooltip>
+          </v-card-subtitle>
         </v-card>
       </v-col>
     </v-row>
@@ -129,6 +170,7 @@ export default {
     async carregarEventos() {
       try {
         const eventos = await EventoService.listarEventos();
+        console.log("Eventos carregados:", eventos);
 
         // Para cada evento, verificar se o usuário está inscrito
         const eventosComStatus = await Promise.all(
@@ -177,11 +219,11 @@ export default {
     //   return limite >= hoje;
     // },
 
-   formatarData(isoDate) {
+    formatarData(isoDate) {
       if (!isoDate) return "";
       const [year, month, day] = isoDate.split("-");
       const dt = new Date(year, month - 1, day);
-      
+
       return dt.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
@@ -207,6 +249,13 @@ export default {
 
       try {
         await EventoService.inscreverEvento(eventoId, this.usuario.id);
+
+        // Atualiza localmente o evento marcado como inscrito
+        const eventoIndex = this.eventos.findIndex((e) => e.id === eventoId);
+        if (eventoIndex !== -1) {
+          this.$set(this.eventos[eventoIndex], "inscrito", true);
+        }
+
         this.snackbarMessage = "Inscrição no evento realizada com sucesso!";
         this.snackbar = true;
       } catch (error) {

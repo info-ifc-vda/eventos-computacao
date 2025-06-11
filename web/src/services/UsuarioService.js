@@ -107,7 +107,7 @@ export default {
   async getUsuarioLogado() {
     try {
       const response = await api.get(`${API_URL}/users/me`);
-      console.log("Usuário logado obtido com sucesso:", response.data);
+      // console.log("Usuário logado obtido com sucesso:", response.data);
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar usuário logado:", error);

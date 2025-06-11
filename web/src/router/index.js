@@ -53,7 +53,7 @@ const routes = [
       { path: '/evento/enviar-lembrete', name: 'EnviarLembrete', component: EnviarLembrete, requiresAuth: true },
       { path: '/evento/cadastrar-despesas', name: 'CadastrarDespesas', component: CadastrarDespesas, requiresAuth: true },
       { path: '/evento/gerenciar-despesas', name: 'GerenciarDespesas', component: GerenciarDespesas, requiresAuth: true },
-      { path: '/evento/visualizar-presencas', name: 'VisualizarPresencas', component: VisualizarPresencas, requiresAuth: true },
+      { path: '/evento/:id/visualizar-presencas', name: 'VisualizarPresencas', component: VisualizarPresencas, requiresAuth: true },
       { path: '/evento/cobrar-finalizar', name: 'CobrarFinalizar', component: CobrarFinalizar, requiresAuth: true },
       { path: '/listar-despesas', name: 'ListarDespesas', component: ListarDespesas, requiresAuth: true },
       { path: '/editar-despesas', name: 'EditarDespesas', component: EditarDespesas, requiresAuth: true },

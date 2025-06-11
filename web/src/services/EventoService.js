@@ -31,13 +31,14 @@ export default {
     try {
       const response = await api.get(`${API_URL}/events`);
 
-      console.log('Eventos listados:', response.data);
-
+      if (!response.data || !response.data.data) {
+        throw new Error('Resposta inválida da API: dados ausentes');
+      }
 
       return response.data.data;
     } catch (error) {
       console.error('Erro ao listar eventos:', error);
-      return [];
+      return []; // Retorna um array vazio em caso de erro
     }
   },
   async cancelarEvento(id, data) {
@@ -128,6 +129,25 @@ export default {
       return response.data.location;
     } catch (error) {
       console.error(`Erro ao obter localização do evento (ID: ${eventId}):`, error);
+      throw error;
+    }
+  },
+
+  async getEventParticipants(eventId) {
+    try {
+      const response = await api.get(`${API_URL}/events/${eventId}/participants`);
+
+      const evento = await this.obterEventoPorId(eventId);
+      const participants = response.data.data || [];
+
+      // retornar o evento e seus participantes
+      return {
+        evento: evento.data,
+        participantes: participants
+      };
+
+    } catch (error) {
+      console.error(`Erro ao obter participantes do evento (ID: ${eventId}):`, error);
       throw error;
     }
   }

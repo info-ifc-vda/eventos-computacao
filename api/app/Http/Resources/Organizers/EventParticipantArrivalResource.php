@@ -18,8 +18,14 @@ class EventParticipantArrivalResource extends JsonResource
         return [
             'id' => $this->uuid,
             'event_id' => $this->event->uuid,
-            'user_id' => $this->user->uuid,
-            'arrival_date' => $this->arrival_date
+            // 'user_id' => $this->user->uuid,
+            'arrival_date' => $this->arrival_date,
+            'user' => [
+                'id' => $this->user->uuid,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+                'phone' => $this->user->phone,
+            ],
         ];
     }
 }
