@@ -18,8 +18,8 @@
         :key="n"
         cols="12"
         sm="6"
-        md="6"
-        lg="6"
+        md="4"
+        lg="3"
         class="d-flex"
       >
         <v-skeleton-loader
@@ -38,8 +38,8 @@
         :key="evento.id"
         cols="12"
         sm="6"
-        md="6"
-        lg="6"
+        md="4"
+        lg="3"
         class="d-flex"
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
