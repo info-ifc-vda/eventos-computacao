@@ -320,5 +320,25 @@ class EventRepository implements EventRepositoryInterface
         return $eventExpense->refresh();
     }
 
+    public function leaveEvent(string $eventId, int $userId): bool
+    {
+        $event = $this->findOrFail($eventId);
+
+        if ($event->user_id === $userId) {
+            throw new BadRequestException('O organizador do evento não pode sair do evento.');
+        }
+
+        $eventParticipant = EventParticipant::where('event_id', $event->id)
+                                            ->where('user_id', $userId)
+                                            ->first();
+
+        if (!$eventParticipant) {
+            throw new BadRequestException('O usuário não é um participante deste evento.');
+        }
+
+        return $eventParticipant->delete();
+    }
+
+
     // TODO: Registrar chegada do participante ao evento (leitura do QR Code)
 }

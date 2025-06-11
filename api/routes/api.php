@@ -81,6 +81,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
 
+        Route::get('me', [UserController::class, 'showMe']);
         // Route::get('me', [UserController::class, 'showMe']);
         Route::group(['prefix' => '{user_id}'], function() {
             Route::get('', [UserController::class, 'show']);
@@ -92,11 +93,13 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('', [OrganizersEventController::class, 'index']);
         Route::post('', [OrganizersEventController::class, 'store']);
         Route::post('join', [UsersEventController::class, 'join']);
+        Route::get('is-participant', [UsersEventController::class, 'isParticipant']);
 
         Route::group(['prefix' => '{event_id}'], function() {
             Route::get('', [OrganizersEventController::class, 'show']);
             Route::put('', [OrganizersEventController::class, 'update']);
             Route::post('cancel', [OrganizersEventController::class, 'cancel']);
+            Route::post('leave', [OrganizersEventController::class, 'leave']);
 
             //Rotas de despesas de eventos
             Route::group(['prefix' => 'expenses'], function() {

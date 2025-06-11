@@ -12,6 +12,7 @@ use App\Http\Requests\Users\StoreParticipantRequest;
 use App\Http\Resources\Users\EventParticipantResource;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use App\Http\Resources\EventResource;
 
 class EventController extends Controller
 {
@@ -22,6 +23,13 @@ class EventController extends Controller
     {
         $this->eventRepository = $eventRepository;
         $this->userRepository = $userRepository;
+    }
+
+    public function index()
+    {
+        $eventos = $this->eventRepository->allWithRelations();
+        dd($eventos);
+        return EventResource::collection($eventos);
     }
 
     // #[OA\Post(
@@ -59,4 +67,22 @@ class EventController extends Controller
             $this->userRepository->findOrFail($request->get('user_id'))->id
         ));
     }
+
+    // função para verificar se o usuário já é participante do evento
+    public function isParticipant(StoreParticipantRequest $request)
+    {
+        $event = $this->eventRepository->findOrFail($request->get('event_id'));
+        $user = $this->userRepository->findOrFail($request->get('user_id'));
+
+        $isParticipant = $event->participants()->where('user_id', $user->id)->exists();
+
+        \Log::info('Checking if user is participant', [
+            'event_id' => $event->id,
+            'user_id' => $user->id,
+            'is_participant' => $isParticipant
+        ]);
+
+        return response()->json(['is_participant' => $isParticipant]);
+    }
+
 }

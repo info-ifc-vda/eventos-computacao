@@ -35,6 +35,9 @@
             dense
             :rules="[(v) => !!v || 'Email é obrigatório']"
             required
+            type="email"
+            autocomplete="email"
+            autofocus
           />
 
           <v-text-field
@@ -82,16 +85,13 @@ export default {
   name: "LoginView",
   data() {
     return {
-      email: "admin@gmail.com",
-      senha: "Yametekudas@1",
+      email: "",
+      senha: "",
       mostrarSenha: false,
       carregando: false,
       mensagemErro: "",
     };
   },
-  // created() {
-  //   this.verificarToken();
-  // },
   methods: {
     async fazerLogin() {
       this.mensagemErro = "";
@@ -101,7 +101,16 @@ export default {
       this.carregando = true;
       try {
         await UsuarioService.login(this.email, this.senha);
-        this.$router.push("/eventos");
+        const dadosUsuario = await UsuarioService.getUsuarioLogado();
+
+        this.$root.$emit("usuario-logado", {
+          nome: dadosUsuario.data.name,
+          email: dadosUsuario.data.email,
+          permissions: dadosUsuario.data.permissions,
+          logado: true,
+        });
+
+        this.$router.push("/listar-eventos");
       } catch (error) {
         this.mensagemErro =
           error.response?.data?.message || "Erro ao realizar login.";
@@ -115,7 +124,7 @@ export default {
 
       const resultado = await UsuarioService.validarToken();
       if (resultado) {
-        this.$router.push("/eventos");
+        this.$router.push("/listar-eventos");
       } else {
         localStorage.removeItem(JWT_TOKEN_KEY);
       }

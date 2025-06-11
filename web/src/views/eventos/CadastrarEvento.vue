@@ -1,24 +1,24 @@
 <template>
   <a-container>
     <v-form ref="form" v-model="valid" lazy-validation>
-      <h2 style="margin-left: 0;">Cadastro de Evento</h2>
-      <h3 style="text-align: left; margin-top: 20px;">Sobre o evento</h3>
+      <h2 style="margin-left: 0">Cadastro de Evento</h2>
+      <h3 style="text-align: left; margin-top: 20px">Sobre o evento</h3>
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field 
-            v-model="evento.nome" 
-            label="Nome do Produto" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.title"
+            label="Nome do Produto"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="3">
           <v-file-input
-            v-model="evento.banner"
+            v-model="evento.banner.data"
             label="Banner"
             accept="image/*"
-            :rules="[v => !!v || 'Selecione uma imagem!']"
-            append-icon="mdi-tray-arrow-up"  
+            :rules="[(v) => !!v || 'Selecione uma imagem!']"
+            append-icon="mdi-tray-arrow-up"
             prepend-icon=""
             required
           />
@@ -28,42 +28,65 @@
             v-model="evento.tipo"
             :items="tipoOptions"
             label="Tipo"
-            :rules="[v => !!v || 'Selecione o tipo do evento']"
+            :rules="[(v) => !!v || 'Selecione o tipo do evento']"
             required
           />
         </v-col>
       </v-row>
-      <div v-for="(sessao, i) in evento.sessoes" :key="i">
+      <div v-for="(periodo, i) in evento.event_periods" :key="i">
         <v-row>
           <v-col cols="12" md="4">
-            <v-text-field 
-              v-model="sessao.data" 
-              label="Data" 
+            <v-text-field
+              v-model="periodo.date"
+              label="Data"
               type="date"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
+              :rules="[(v) => !!v || 'Este campo é obrigatório']"
               required
             />
           </v-col>
           <v-col cols="12" md="3">
-            <v-text-field 
-              v-model="sessao.inicio" 
-              label="Horário de início" 
-              type="time"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
+            <v-text-field
+              v-model="periodo.opening_time"
+              label="Horário de início"
+              type="text"
+              placeholder="00:00:00"
+              v-mask="'##:##:##'"
+              :rules="[
+                (v) => !!v || 'Este campo é obrigatório',
+                (v) =>
+                  /^\d{2}:\d{2}:\d{2}$/.test(v) ||
+                  'Formato inválido (HH:mm:ss)',
+              ]"
               required
             />
           </v-col>
           <v-col cols="12" md="3">
-            <v-text-field 
-              v-model="sessao.fim" 
-              label="Horário de fim" 
-              type="time"
-              :rules="[v => !!v || 'Este campo é obrigatório']" 
+            <v-text-field
+              v-model="periodo.closing_time"
+              label="Horário de fim"
+              type="text"
+              placeholder="00:00:00"
+              v-mask="'##:##:##'"
+              :rules="[
+                (v) => !!v || 'Este campo é obrigatório',
+                (v) =>
+                  /^\d{2}:\d{2}:\d{2}$/.test(v) ||
+                  'Formato inválido (HH:mm:ss)',
+              ]"
               required
             />
           </v-col>
-          <v-col cols="12" md="2" class="d-flex align-center align-items-center">
-            <v-btn icon @click="addSessao" v-if="i === evento.sessoes.length - 1" style="margin: 0 auto;">
+          <v-col
+            cols="12"
+            md="2"
+            class="d-flex align-center align-items-center"
+          >
+            <v-btn
+              icon
+              @click="addSessao"
+              v-if="i === evento.event_periods.length - 1"
+              style="margin: 0 auto"
+            >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-col>
@@ -71,144 +94,145 @@
       </div>
       <v-row>
         <v-col cols="12" md="12">
-          <v-textarea 
-            v-model="evento.descricao" 
-            label="Descrição" 
-            :rows="1" 
+          <v-textarea
+            v-model="evento.description"
+            label="Descrição"
+            :rows="1"
             auto-grow
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
       </v-row>
-      <h3 style="text-align: left; margin-top: 20px;">Localização</h3>
+      <h3 style="text-align: left; margin-top: 20px">Localização</h3>
       <v-row>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.localizacaoCidade" 
-            label="Cidade" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.location.address.city"
+            label="Cidade"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="2">
           <v-select
-            v-model="evento.localizacaoEstado"
+            v-model="evento.location.address.state"
             :items="localizacaoEstadoOptions"
             label="Estado"
-            :rules="[v => !!v || 'Este campo é obrigatório']"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="3">
           <v-text-field
-            v-model="evento.localizacaoCep"
+            v-model="evento.location.address.zip_code"
             label="CEP"
             maxlength="9"
             placeholder="00000-000"
+            v-mask="'#####-###'"
             :rules="[
-              v => !!v || 'Este campo é obrigatório',
-              v => /^\d{5}-?\d{3}$/.test(v) || 'CEP inválido'
+              (v) => !!v || 'Este campo é obrigatório',
+              (v) => /^\d{5}-?\d{3}$/.test(v) || 'CEP inválido',
             ]"
             required
           />
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field 
-            v-model="evento.localizacaoBairro" 
-            label="Bairro" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.location.address.neighborhood"
+            label="Bairro"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="6">
-          <v-text-field 
-            v-model="evento.localizacaoRua" 
-            label="Rua" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.location.address.street"
+            label="Rua"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="2">
-          <v-text-field 
-            v-model="evento.localizacaoNumero" 
+          <v-text-field
+            v-model="evento.location.address.number"
             label="Número"
-            type="number" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+            type="number"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.localizacaoComplemento" 
-            label="Complemento" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.location.address.complement"
+            label="Complemento"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="12">
-          <v-text-field 
-            v-model="evento.localizacaoMaps" 
-            label="Link do Google Maps" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.location.maps_link"
+            label="Link do Google Maps"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
       </v-row>
-      <h3 style="text-align: left; margin-top: 20px;">Detalhes</h3>
+      <h3 style="text-align: left; margin-top: 20px">Detalhes</h3>
       <v-row>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.dataInscricoes" 
-            label="Data limite para inscrições" 
+          <v-text-field
+            v-model="evento.subscription_deadline"
+            label="Data limite para inscrições"
             type="date"
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.dataPagamento" 
-            label="Data limite para pagamento (após o evento)" 
+          <v-text-field
+            v-model="evento.payment_deadline"
+            label="Data limite para pagamento (após o evento)"
             type="date"
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.valor" 
-            label="Valor estimado de gastos" 
+          <v-text-field
+            v-model="evento.estimated_value"
+            label="Valor estimado de gastos"
             type="number"
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.pagamentoBanco" 
-            label="Banco para pagamento" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.bank_details.bank"
+            label="Banco para pagamento"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.pagamentoTitular" 
-            label="Titular da conta" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.bank_details.holder"
+            label="Titular da conta"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
         <v-col cols="12" md="4">
-          <v-text-field 
-            v-model="evento.pagamentoPix" 
-            label="Chave PIX" 
-            :rules="[v => !!v || 'Este campo é obrigatório']" 
+          <v-text-field
+            v-model="evento.bank_details.pix_key"
+            label="Chave PIX"
+            :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
         </v-col>
@@ -238,7 +262,7 @@
 </template>
 
 <script>
-import EventoService from '@/services/EventoService';
+import EventoService from "@/services/EventoService";
 
 export default {
   name: "CadastroEvento",
@@ -246,35 +270,42 @@ export default {
     return {
       valid: false,
       evento: {
-        nome: "Evento de Teste",
-        banner: null,
-        tipo: null,
-        sessoes: [
-          { data: null, inicio: null, fim: null }
+        title: "1° Confraternidade da Turma",
+        banner: {
+          data: null,
+        },
+        tipo: "Privado",
+        description: "Evento de confraternização da turma",
+        subscription_deadline: "2025-06-11",
+        payment_deadline: "2025-06-20",
+        estimated_value: "500",
+        location: {
+          maps_link:
+            "https://www.openstreetmap.org/search?lat=-27.027374&lon=-51.145196&zoom=19#map=19/-27.027374/-51.145196",
+          address: {
+            state: "SC",
+            city: "Videira",
+            neighborhood: "Campo Experimental",
+            zip_code: "89560000",
+            street: "Rod. SC 135",
+            number: "135",
+            complement: "Copa do IFC Campus Videira",
+          },
+        },
+        event_periods: [
+          {
+            date: "2025-06-13",
+            opening_time: "09:00:00",
+            closing_time: "15:00:00",
+          },
         ],
-        data1: null,
-        horarioinicio1: null,
-        horariofim1: null,
-        descricao: "",
-        localizacaoCidade: "",
-        localizacaoEstado: null,
-        localizacaoCep: "",
-        localizacaoBairro: "",
-        localizacaoRua: "",
-        localizacaoNumero: null,
-        localizacaoComplemento: "",
-        localizacaoMaps: "",
-        dataInscricoes: null,
-        dataPagamento: null,
-        valor: null,
-        pagamentoBanco: "",
-        pagamentoTitular: "",
-        pagamentoPix: ""
+        bank_details: {
+          bank: "Nubank",
+          holder: "Fabricio Bizotto",
+          pix_key: "fabricio.bizotto@gmail.com",
+        },
       },
-      tipoOptions: [
-        "Público",
-        "Privado"
-      ],
+      tipoOptions: ["Privado", "Público"],
       localizacaoEstadoOptions: [
         "AC", // Acre
         "AL", // Alagoas
@@ -302,7 +333,7 @@ export default {
         "SC", // Santa Catarina
         "SP", // São Paulo
         "SE", // Sergipe
-        "TO"  // Tocantins
+        "TO", // Tocantins
       ],
       buttonLoading: false,
       mensagemErro: "",
@@ -311,9 +342,82 @@ export default {
       snackbarSucesso: false,
     };
   },
+  mounted() {
+    const idEvento = this.$route.params.id;
+    if (idEvento) {
+      this.carregarEvento(idEvento);
+    }
+  },
   methods: {
+    async carregarEvento(id) {
+      try {
+        const eventoBuscado = await EventoService.obterEventoPorId(id);
+        console.log("evento!", eventoBuscado.data);
+        const data = eventoBuscado.data;
+        this.evento = {
+          title: data.title || "",
+          banner: {
+            data: null,
+            url: data.banner?.url || null,
+          },
+          public_event: data.public_event ?? null,
+          description: data.decription || "",
+          subscription_deadline: data.subscription_deadline || null,
+          payment_deadline: data.payment_deadline || null,
+          estimated_value: data.estimated_value || null,
+          event_periods: Array.isArray(data.event_periods)
+            ? data.event_periods.map((period) => ({
+                date: period.date || null,
+                opening_time: period.opening_time || null,
+                closing_time: period.closing_time || null,
+              }))
+            : [
+                {
+                  date: null,
+                  opening_time: null,
+                  closing_time: null,
+                },
+              ],
+          bank_details: data.bank_details
+            ? {
+                bank: data.bank_details.bank || null,
+                holder: data.bank_details.holder || null,
+                pix_key: data.bank_details.pix_key || null,
+              }
+            : {
+                bank: null,
+                holder: null,
+                pix_key: null,
+              },
+          location: {
+            maps_link: data.location?.maps_link || null,
+            address: {
+              state: data.location?.address?.state || null,
+              city: data.location?.address?.city || null,
+              neighborhood: data.location?.address?.neighborhood || null,
+              zip_code: data.location?.address?.zip_code || null,
+              street: data.location?.address?.street || null,
+              number: data.location?.address?.number || null,
+              complement: data.location?.address?.complement || null,
+            },
+          },
+        };
+      } catch (error) {
+        console.error("Erro ao carregar evento para edição:", error);
+        this.mensagemErro = "Erro ao carregar dados do evento.";
+        this.snackbarErro = true;
+      }
+    },
+
     addSessao() {
-      this.evento.sessoes.push({ data: null, inicio: null, fim: null });
+      this.evento.event_periods.push({
+        date: null,
+        opening_time: null,
+        closing_time: null,
+      });
+    },
+    isEdicao() {
+      return !!this.$route.params.id;
     },
 
     async adicionarEvento() {
@@ -323,10 +427,63 @@ export default {
         return;
       }
 
+      if (
+        this.evento.subscription_deadline &&
+        typeof this.evento.subscription_deadline === "string"
+      ) {
+        this.evento.subscription_deadline =
+          this.evento.subscription_deadline.split("T")[0];
+      }
+      if (
+        this.evento.payment_deadline &&
+        typeof this.evento.payment_deadline === "string"
+      ) {
+        this.evento.payment_deadline =
+          this.evento.payment_deadline.split("T")[0];
+      }
+      if (Array.isArray(this.evento.event_periods)) {
+        this.evento.event_periods = this.evento.event_periods.map((period) => {
+          let date = period.date;
+          if (typeof date === "string" && date.includes(" ")) {
+            date = date.split(" ")[0];
+          }
+          return {
+            ...period,
+            date,
+          };
+        });
+      }
+
+      if (this.evento.banner && this.evento.banner.data) {
+        try {
+          if (
+            this.evento.banner.data instanceof File ||
+            this.evento.banner.data instanceof Blob
+          ) {
+            const bannerBase64 = await this.convertToBase64(
+              this.evento.banner.data
+            );
+            this.evento.banner.data = bannerBase64;
+          }
+          console.log(this.evento.banner);
+        } catch (error) {
+          console.error("Erro ao converter imagem para Base64", error);
+          this.mensagemErro = "Erro ao processar a imagem! Tente novamente.";
+          this.snackbarErro = true;
+          return;
+        }
+      }
+
       this.buttonLoading = true;
       try {
-        await EventoService.criarEvento(this.evento);
-        this.mensagemSucesso = "Evento cadastrado com sucesso!";
+        if (this.isEdicao()) {
+          this.evento.id = this.$route.params.id;
+          await EventoService.atualizarEvento(this.evento.id, this.evento);
+          this.mensagemSucesso = "Evento atualizado com sucesso!";
+        } else {
+          await EventoService.criarEvento(this.evento);
+          this.mensagemSucesso = "Evento cadastrado com sucesso!";
+        }
         this.snackbarSucesso = true;
         // this.limparFormulario();
       } catch (error) {
@@ -338,45 +495,63 @@ export default {
       }
     },
 
+    convertToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    },
+
     limparFormulario() {
       this.evento = {
-        nome: "",
-        banner: null,
-        tipo: null,
-        sessoes: [
-          { data: null, inicio: null, fim: null }
+        title: "",
+        banner: {
+          data: null,
+        },
+        public_event: null,
+        decription: "",
+        subscription_deadline: null,
+        payment_deadline: null,
+        estimated_value: null,
+        bank_details: {
+          bank: null,
+          holder: null,
+          pix_key: null,
+        },
+        location: {
+          maps_link: null,
+          address: {
+            state: null,
+            city: null,
+            neighborhood: null,
+            zip_code: null,
+            street: null,
+            number: null,
+            complement: null,
+          },
+        },
+        event_periods: [
+          {
+            date: null,
+            opening_time: null,
+            closing_time: null,
+          },
         ],
-        data1: null,
-        horarioinicio1: null,
-        horariofim1: null,
-        descricao: "",
-        localizacaoCidade: "",
-        localizacaoEstado: null,
-        localizacaoCep: "",
-        localizacaoBairro: "",
-        localizacaoRua: "",
-        localizacaoNumero: null,
-        localizacaoComplemento: "",
-        localizacaoMaps: "",
-        dataInscricoes: null,
-        dataPagamento: null,
-        valor: null,
-        pagamentoBanco: "",
-        pagamentoTitular: "",
-        pagamentoPix: ""
       };
       this.$refs.form.resetValidation();
-    }
+    },
   },
 };
 </script> 
 <style scoped>
-  .container {
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-  }
-  .title {
-    text-align: center;
-  }
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+.title {
+  text-align: center;
+}
 </style>

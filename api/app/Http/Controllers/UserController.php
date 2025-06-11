@@ -22,11 +22,17 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    // TODO: Implementar essa funcao ainda
-    public function showMe(Request $request) 
-    {
+   public function showMe(Request $request)
+{
+    $user = Auth::user();
 
+    if (!$user) {
+        return response()->json(['message' => 'Usuário não autenticado'], 401);
     }
+
+    return new UserResource($user);
+}
+
 
     public function show(Request $request, $user_id)
     {

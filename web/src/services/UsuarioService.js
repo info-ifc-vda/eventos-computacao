@@ -15,6 +15,21 @@ export default {
     }
   },
 
+  async logout() {
+    try {
+
+      const response = await api.get(`${API_URL}/auth/logout`);
+      console.log('Logout realizado com sucesso:', response.data);
+
+      localStorage.removeItem(JWT_TOKEN_KEY);
+      localStorage.removeItem(JWT_REFRESH_TOKEN_KEY);
+      return true;
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error.response?.data || error);
+      throw error;
+    }
+  },
+
   async refresh() {
     try {
       const response = await api.post(`${API_URL}/auth/refresh`, {
@@ -90,6 +105,17 @@ export default {
     }
   },
 
+  async getUsuarioLogado() {
+    try {
+      const response = await api.get(`${API_URL}/users/me`);
+      // console.log("Usuário logado obtido com sucesso:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao buscar usuário logado:", error);
+      throw error;
+    }
+  },
+
   async obterUsuarioPorId(id) {
     try {
       const response = await api.get(`${API_URL}/${id}`);
@@ -119,4 +145,16 @@ export default {
       throw error;
     }
   },
+
+  async isAdmin() {
+    try {
+      const usuario = await this.getUsuarioLogado();
+
+      return usuario?.data?.permissions?.includes('admin');
+    } catch (error) {
+      console.error('Erro ao verificar permissões do usuário:', error);
+      return false;
+    }
+  }
+
 };
