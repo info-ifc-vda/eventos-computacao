@@ -39,7 +39,7 @@ class CancelEventRequest extends FormRequest
      * @return array<string, mixed>
      */
     #[OA\Schema(
-        schema: 'OrganizersCancelEventRequest',
+        schema: 'OrganizersCancelEvent',
         type: 'object',
         required: ['cancellation_description'],
         properties: [
