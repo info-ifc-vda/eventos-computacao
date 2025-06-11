@@ -23,7 +23,7 @@ class StoreParticipantArrivalRequest extends FormRequest
      * @return array<string, mixed>
      */
     #[OA\Schema(
-        schema: 'OrganizersStoreParticipantArrivalRequest',
+        schema: 'OrganizersStoreParticipantArrival',
         type: 'object',
         description: 'Nenhum campo definido.'
     )]
