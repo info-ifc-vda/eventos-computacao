@@ -8,7 +8,6 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'OrganizersUpdateEvent',
     type: 'object',
-    required: [...],
     properties: [
         new OA\Property(property: "id", type: "string", format: "uuid", example: "17f8fbbd-4d7b-4bcb-888a-f7c23b350573"),
         new OA\Property(property: "created_at", type: "string", format: "date-time", example: "2024-06-10T12:00:00Z"),
