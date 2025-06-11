@@ -13,6 +13,11 @@ class EventBankDetails extends Model
     ******************************************/
 
     public $table = 'event_bank_details';
+    public $fillable = [
+        'bank',
+        'holder',
+        'pix_key'
+    ];
 
     /******************************************
     *                                         *

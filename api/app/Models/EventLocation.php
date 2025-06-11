@@ -15,6 +15,11 @@ class EventLocation extends Model
     public $table = 'event_location';
     public $timestamps = false;
     public $primaryKey = 'id';
+    public $fillable = [
+        'event_id',
+        'addres_id',
+        'maps_link'
+    ];
 
     /******************************************
     *                                         *

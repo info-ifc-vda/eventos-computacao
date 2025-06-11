@@ -19,6 +19,15 @@ class Address extends Model
 
     public $table = 'addresses';
     public $primaryKey = 'uuid';
+    public $fillable = [
+        'state',
+        'city',
+        'neighborhood',
+        'zip_code',
+        'street',
+        'number',
+        'complement'
+    ];
 
     /******************************************
     *                                         *
