@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="!carregando">
     <h2 class="text-center my-6">Participantes do Evento</h2>
 
     <v-row>
@@ -84,6 +84,7 @@
 
 <script>
 import EventoService from "@/services/EventoService";
+import UsuarioService from "@/services/UsuarioService";
 
 export default {
   name: "VisualizarParticipantes",
@@ -94,13 +95,22 @@ export default {
       participantes: [],
       snackbar: false,
       snackbarMessage: "",
-      carregando: true, // nova propriedade
+      carregando: true,
     };
   },
+
   async created() {
     this.eventoId = this.$route.params.id;
+
+    const isAdmin = await UsuarioService.isAdmin();
+    if (!isAdmin) {
+      this.$router.push("/pagina-nao-autorizada");
+      return;
+    }
+
     await this.carregarDados();
   },
+
   methods: {
     async carregarDados() {
       try {

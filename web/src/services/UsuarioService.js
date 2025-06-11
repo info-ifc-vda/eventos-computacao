@@ -144,4 +144,16 @@ export default {
       throw error;
     }
   },
+
+  async isAdmin() {
+    try {
+      const usuario = this.getUsuarioLogado();
+
+      return usuario?.permissoes?.includes('admin');
+    } catch (error) {
+      console.error('Erro ao verificar permissões do usuário:', error);
+      return false;
+    }
+  }
+
 };

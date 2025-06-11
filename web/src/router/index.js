@@ -24,8 +24,7 @@ import Login from "../views/cadastro/Login.vue";
 import CadastroUsuario from "../views/cadastro/CadastroUsuario.vue";
 import UsuarioService from '@/services/UsuarioService';
 import { JWT_TOKEN_KEY } from '@/constants'; // importe a constante do token
-
-
+import PaginaNaoAutorizada from '../views/PaginaNaoAutorizada.vue';
 
 Vue.use(VueRouter);
 
@@ -37,15 +36,14 @@ const routes = [
       {
         path: "/", component: Login, meta: { title: 'Login' }, beforeEnter: (to, from, next) => {
           const token = localStorage.getItem(JWT_TOKEN_KEY);
-          if (token) return next({ path: '/eventos' });
+          if (token) return next({ path: '/listar-eventos' });
           next();
         }
       },
       { path: '/home', name: 'Home', component: ListaEventos },
-      { path: '/eventos', name: 'ListaEventos', component: ListaEventos, meta: { title: 'Lista de Eventos', requiresAuth: true } },
-      { path: '/cadastro-evento/:id?', name: 'CadastroEvento', component: CadastroEvento, meta: { title: 'Cadastro de Evento', requiresAuth: true } },
-      { path: '/gerenciar-eventos', name: 'GerenciarEventos', component: GerenciarEventos, meta: { title: 'Gerenciar Eventos', requiresAuth: true } },
-      { path: '/listar-eventos', name: 'ListaEventos', component: ListaEventos },
+      { path: '/listar-eventos', name: 'ListaEventos', component: ListaEventos, meta: { title: 'Lista de Eventos', requiresAuth: true } },
+      { path: '/cadastro-evento/:id?', name: 'CadastroEvento', component: CadastroEvento, meta: { title: 'Cadastro de Evento', requiresAuth: true, requireAdmin: true } },
+      { path: '/gerenciar-eventos', name: 'GerenciarEventos', component: GerenciarEventos, meta: { title: 'Gerenciar Eventos', requiresAuth: true, requireAdmin: true } },
       { path: '/seus-eventos', name: 'SeusEventos', component: SeusEventos, requiresAuth: true },
       { path: '/evento/:id/editar', name: 'EditarEvento', component: EditarEvento, requiresAuth: true },
       { path: '/evento/:id/detalhes', name: 'DetalhesEvento', component: DetalhesEvento, requiresAuth: true },
@@ -53,7 +51,7 @@ const routes = [
       { path: '/evento/enviar-lembrete', name: 'EnviarLembrete', component: EnviarLembrete, requiresAuth: true },
       { path: '/evento/cadastrar-despesas', name: 'CadastrarDespesas', component: CadastrarDespesas, requiresAuth: true },
       { path: '/evento/gerenciar-despesas', name: 'GerenciarDespesas', component: GerenciarDespesas, requiresAuth: true },
-      { path: '/evento/:id/visualizar-presencas', name: 'VisualizarPresencas', component: VisualizarPresencas, requiresAuth: true },
+      { path: '/evento/:id/visualizar-presencas', name: 'VisualizarPresencas', component: VisualizarPresencas, requiresAuth: true, requireAdmin: true },
       { path: '/evento/cobrar-finalizar', name: 'CobrarFinalizar', component: CobrarFinalizar, requiresAuth: true },
       { path: '/listar-despesas', name: 'ListarDespesas', component: ListarDespesas, requiresAuth: true },
       { path: '/editar-despesas', name: 'EditarDespesas', component: EditarDespesas, requiresAuth: true },
@@ -65,6 +63,7 @@ const routes = [
       { path: '/evento/:id/cadastro-despesa-individual', name: 'CadastroDespesaIndividual', component: () => import('../views/eventos/CadastroDespesaIndividual.vue') },
       { path: "/cadastro-usuario", component: CadastroUsuario },
       { path: "/login", component: Login },
+      { path: '/pagina-nao-autorizada', component: PaginaNaoAutorizada, name: 'PaginaNaoAutorizada', meta: { title: 'Página Não Autorizada' } }
     ],
   }
 
@@ -78,25 +77,26 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem(JWT_TOKEN_KEY);
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some(record => record.meta.requireAdmin);
 
   if (requiresAuth) {
-    if (!token) {
-      // Não tem token, redireciona pro login
-      return next({ path: '/' });
-    }
+    if (!token) return next({ path: '/' });
 
     try {
-      // Tenta fazer refresh do token para validar e renovar
       await UsuarioService.refresh();
-      // Se passar, continua na rota
+
+      if (requiresAdmin) {
+        const isAdmin = await UsuarioService.isAdmin();
+        // if not admin, redirect to /events with some message
+        if (!isAdmin) return next({ name: 'PaginaNaoAutorizada' });
+      }
+
       next();
     } catch (error) {
-      // Token inválido ou refresh falhou: limpa token e redireciona para login
       localStorage.removeItem(JWT_TOKEN_KEY);
-      next({ path: '/' });
+      return next({ path: '/' });
     }
   } else {
-    // Rota que não precisa de login
     next();
   }
 });

@@ -3,6 +3,7 @@ import api from './api';
 const API_URL = '/api/v1';
 
 export default {
+
   async inscreverEvento(eventId, userId) {
     try {
       const response = await api.post(`${API_URL}/events/join`, {

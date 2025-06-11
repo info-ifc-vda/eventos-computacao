@@ -14,7 +14,7 @@
 
     <v-row justify="center" v-if="carregando">
       <v-col
-        v-for="n in 3"
+        v-for="n in 1"
         :key="n"
         cols="12"
         sm="6"

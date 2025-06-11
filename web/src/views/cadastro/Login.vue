@@ -110,7 +110,7 @@ export default {
           logado: true,
         });
 
-        this.$router.push("/eventos");
+        this.$router.push("/listar-eventos");
       } catch (error) {
         this.mensagemErro =
           error.response?.data?.message || "Erro ao realizar login.";
@@ -124,7 +124,7 @@ export default {
 
       const resultado = await UsuarioService.validarToken();
       if (resultado) {
-        this.$router.push("/eventos");
+        this.$router.push("/listar-eventos");
       } else {
         localStorage.removeItem(JWT_TOKEN_KEY);
       }
