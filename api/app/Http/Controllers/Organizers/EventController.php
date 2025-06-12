@@ -68,6 +68,7 @@ class EventController extends Controller
         path: '/api/v1/events',
         tags: ['Events'],
         operationId: 'Events@index',
+        summary: 'Lista eventos',
         parameters: [
             new OA\Parameter(ref: "#/components/parameters/per_page"),
             new OA\Parameter(ref: "#/components/parameters/page"),
@@ -76,24 +77,24 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: "Listagem paginada de eventos detalhados",
-                content: new OA\JsonContent(
-                    type: 'object',
-                    properties: [
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(ref: "#/components/schemas/OrganizersEventSummary")
-                        ),
-                        new OA\Property(
-                            property: 'links',
-                            ref: '#/components/schemas/PaginationLinks'
-                        ),
-                        new OA\Property(
-                            property: 'meta',
-                            ref: '#/components/schemas/PaginationMeta'
-                        )
-                    ]
-                )
+                // content: new OA\JsonContent(
+                //     type: 'object',
+                //     properties: [
+                //         new OA\Property(
+                //             property: 'data',
+                //             type: 'array',
+                //             items: new OA\Items(ref: "#/components/schemas/OrganizersEventSummary")
+                //         ),
+                //         new OA\Property(
+                //             property: 'links',
+                //             ref: '#/components/schemas/PaginationLinks'
+                //         ),
+                //         new OA\Property(
+                //             property: 'meta',
+                //             ref: '#/components/schemas/PaginationMeta'
+                //         )
+                //     ]
+                // )
             )
         ]
     )]
@@ -110,6 +111,7 @@ class EventController extends Controller
         path: '/api/v1/events',
         tags: ['Events'],
         operationId: 'Events@store',
+        summary: 'Cria um evento',
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/OrganizersUpdateEventRequest')
@@ -131,6 +133,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}',
         tags: ['Events'],
         operationId: 'Events@show',
+        summary: 'Busca evento por id',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -158,6 +161,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}',
         tags: ['Events'],
         operationId: 'Events@update',
+        summary: 'Atualizar um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -184,6 +188,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/cancel',
         tags: ['Events'],
         operationId: 'Events@cancel',
+        summary: 'Cancela um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -211,6 +216,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/participants',
         tags: ['Events'],
         operationId: 'Events@indexParticipants',
+        summary: 'Lista participantes de um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -224,10 +230,10 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Participantes do evento listados com sucesso',
-                content: new OA\JsonContent(
-                    type: 'array',
-                    items: new OA\Items(ref: '#/components/schemas/OrganizersEventParticipantArrival')
-                )
+                // content: new OA\JsonContent(
+                //     type: 'array',
+                //     items: new OA\Items(ref: '#/components/schemas/OrganizersEventParticipantArrival')
+                // )
             )
         ]
     )]
@@ -289,6 +295,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/organizers',
         tags: ['Events'],
         operationId: 'Events@indexOrganizers',
+        summary: 'Lista organizadores de um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -302,10 +309,10 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Lista de organizadores do evento',
-                content: new OA\JsonContent(
-                    type: 'array',
-                    items: new OA\Items(ref: '#/components/schemas/OrganizersEventOrganizerSummary')
-                )
+                // content: new OA\JsonContent(
+                //     type: 'array',
+                //     items: new OA\Items(ref: '#/components/schemas/OrganizersEventOrganizerSummary')
+                // )
             )
         ]
     )]
@@ -318,7 +325,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/organizers',
         tags: ['Events'],
         operationId: 'Events@storeOrganizer',
-        summary: 'Adiciona um novo organizador ao evento',
+        summary: 'Adiciona um organizador ao evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -330,13 +337,13 @@ class EventController extends Controller
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreOrganizerRequest')
         ),
         responses: [
             new OA\Response(
                 response: 201,
                 description: 'Organizador criado com sucesso',
-                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventSummary')
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventSummary')
             )
         ]
     )]
@@ -345,6 +352,7 @@ class EventController extends Controller
         return new EventOrganizerResource($this->eventRepository->storeOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
     }
 
+    //TODO back here
     #[OA\Delete(
         path: '/api/v1/events/{event_id}/organizers/{organizer_id}',
         operationId: 'Events@deleteOrganizer',
@@ -399,7 +407,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/expenses',
         tags: ['Events'],
         operationId: 'Events@indexExpenses',
-        summary: 'Lista todas as despesas de um evento',
+        summary: 'Lista despesas de um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -413,10 +421,10 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Lista de despesas do evento',
-                content: new OA\JsonContent(
-                    type: 'array',
-                    items: new OA\Items(ref: '#/components/schemas/OrganizersEventExpenseSummary')
-                )
+                // content: new OA\JsonContent(
+                //     type: 'array',
+                //     items: new OA\Items(ref: '#/components/schemas/OrganizersEventExpenseSummary')
+                // )
             ),
             new OA\Response(
                 response: 404,
@@ -456,7 +464,7 @@ class EventController extends Controller
             new OA\Response(
                 response: 201,
                 description: 'Despesa criada com sucesso',
-                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
             ),
             new OA\Response(
                 response: 422,
@@ -477,7 +485,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/expenses/{event_expense_id}',
         tags: ['Events'],
         operationId: 'Events@showExpense',
-        summary: 'Retorna os detalhes de uma despesa do evento',
+        summary: 'Retorna uma despesa de um evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -498,7 +506,7 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Detalhes da despesa',
-                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
             ),
             new OA\Response(
                 response: 404,
@@ -518,7 +526,7 @@ class EventController extends Controller
         path: '/api/v1/events/{event_id}/expenses/{event_expense_id}',
         tags: ['Events'],
         operationId: 'Events@updateExpense',
-        summary: 'Atualiza os dados de uma despesa do evento',
+        summary: 'Atualiza uma despesa do evento',
         parameters: [
             new OA\Parameter(
                 name: 'event_id',
@@ -544,7 +552,7 @@ class EventController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Despesa atualizada com sucesso',
-                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventExpense')
             ),
             new OA\Response(
                 response: 404,
