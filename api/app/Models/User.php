@@ -25,6 +25,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'recovery_account_token',
+        'recovery_account_token_created_at'
     ];
 
     protected $hidden = [

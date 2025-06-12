@@ -38,19 +38,20 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
     });
 
+    Route::put('forgot', [UserController::class, 'forgot']);
+    Route::put('recovery', [UserController::class, 'recovery']);
+
     Route::post('users', [UserController::class, 'store']); // Rota que não necessita autenticação
     Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
         Route::get('', [UserController::class, 'index']);
         Route::put('password', [UserController::class, 'updatePassword']);
 
-        // Route::get('me', [UserController::class, 'showMe']);
+        Route::get('showMe', [UserController::class, 'showMe']); //! DEV: FUNCTION TO TEST SOME LARAVEL FUNCTIONS
         Route::group(['prefix' => '{user_id}'], function() {
             Route::get('', [UserController::class, 'show']);
             Route::put('', [UserController::class, 'update']);
         });
     });
-    Route::put('forgot', [UserController::class, 'forgot']);
-    Route::put('recovery', [UserController::class, 'recovery']);
 
 
     Route::group(['prefix' => 'events', 'middleware' => 'auth:api'], function() {
