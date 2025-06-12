@@ -217,7 +217,7 @@ export default {
     async carregarUsuarioLogado() {
       this.logado = false;
       try {
-        console.log("Chamando serviço para carregar usuário...");
+        // console.log("Chamando serviço para carregar usuário...");
         const dadosUsuario = await UsuarioService.getUsuarioLogado();
 
         this.usuario.nome = dadosUsuario.data.name || "Convidado";
@@ -317,11 +317,11 @@ img {
 }
 
 .v-main {
-  background-color: #fff;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 128vh;
-  padding-bottom: 70px;
+  background-color: #fff;
+  padding-bottom: 70px; /* se ainda quiser espaço extra abaixo */
 }
 
 .content-wrapper {
@@ -343,14 +343,18 @@ footer {
   color: white;
   text-align: center;
   padding: 1rem;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   height: 60px;
+  margin-top: auto;
 }
 
 /* Estilo para o item de logout */
 .logout-item:hover {
   background-color: #ffcccc !important;
+}
+
+.v-application {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 </style>

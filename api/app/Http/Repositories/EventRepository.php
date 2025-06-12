@@ -324,9 +324,10 @@ class EventRepository implements EventRepositoryInterface
     {
         $event = $this->findOrFail($eventId);
 
-        if ($event->user_id === $userId) {
-            throw new BadRequestException('O organizador do evento não pode sair do evento.');
-        }
+        // Descomentar se quiser impedir que o organizador saia do evento
+        // if ($event->user_id === $userId) {
+        //     throw new BadRequestException('O organizador do evento não pode sair do evento.');
+        // }
 
         $eventParticipant = EventParticipant::where('event_id', $event->id)
                                             ->where('user_id', $userId)

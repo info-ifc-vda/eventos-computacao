@@ -1,7 +1,5 @@
 <template>
   <v-container v-if="!carregando">
-    <h2 class="text-center my-6">Participantes do Evento</h2>
-
     <v-row>
       <v-col cols="12" md="5">
         <v-card outlined>
@@ -21,12 +19,38 @@
                 {{ evento.event_periods[0].opening_time }} -
                 {{ evento.event_periods[0].closing_time }}
               </div>
-              <div v-if="evento.location">
-                <strong>Local:</strong> {{ evento.location.address.street }},
-                {{ evento.location.address.number }},
+              <address v-if="evento.location" style="font-style: normal">
+                <strong>Local:</strong><br />
+                {{ evento.location.address.street }},
+                {{ evento.location.address.number }}<br />
                 {{ evento.location.address.city }} -
                 {{ evento.location.address.state }}
-              </div>
+                {{ evento.location.address.zip_code }}
+                {{
+                  evento.location.address.complement
+                    ? `, ${evento.location.address.complement}`
+                    : ""
+                }}
+                {{
+                  evento.location.address.neighborhood
+                    ? `, ${evento.location.address.neighborhood}`
+                    : ""
+                }}
+                <br />
+                <div
+                  v-if="evento.location && evento.location.maps_link"
+                  class="mt-4"
+                >
+                  <iframe
+                    :src="gerarEmbedMapa(evento.location.maps_link)"
+                    width="100%"
+                    height="300"
+                    style="border: 1px solid #ccc; border-radius: 8px"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </address>
             </div>
           </v-card-text>
         </v-card>
@@ -34,7 +58,12 @@
 
       <v-col cols="12" md="7">
         <v-card outlined>
-          <v-card-title>Participantes</v-card-title>
+          <v-card-title class="d-flex justify-space-between align-center">
+            Participantes do Evento
+            <v-chip color="success">
+              {{ participantes.length }} participantes
+            </v-chip>
+          </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
             <v-skeleton-loader
@@ -136,6 +165,25 @@ export default {
         month: "long",
         year: "numeric",
       });
+    },
+    gerarEmbedMapa(mapsLink) {
+      try {
+        const url = new URL(mapsLink);
+        const lat = parseFloat(url.searchParams.get("lat"));
+        const lon = parseFloat(url.searchParams.get("lon"));
+        if (!lat || !lon) return "";
+
+        // Pequena área para o bbox em torno do ponto
+        const delta = 0.001;
+        const bbox = [lon - delta, lat - delta, lon + delta, lat + delta].join(
+          ","
+        );
+
+        return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+      } catch (e) {
+        console.warn("Erro ao gerar embed do mapa:", e);
+        return "";
+      }
     },
   },
 };
