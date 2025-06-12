@@ -1,6 +1,7 @@
 import api from './api';
 
 const API_URL = '/api/v1';
+const PER_PAGE = 100;
 
 export default {
 
@@ -138,7 +139,7 @@ export default {
 
   async getEventParticipants(eventId) {
     try {
-      const response = await api.get(`${API_URL}/events/${eventId}/participants`);
+      const response = await api.get(`${API_URL}/events/${eventId}/participants?per_page=${PER_PAGE}`);
 
       const evento = await this.obterEventoPorId(eventId);
       const participants = response.data.data || [];

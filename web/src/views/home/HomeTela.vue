@@ -9,7 +9,7 @@
       </router-link>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app v-if="logado">
+    <v-navigation-drawer v-model="drawer" app v-show="logado">
       <v-list>
         <v-list-item>
           <v-list-item-avatar>
@@ -356,5 +356,9 @@ footer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.v-main {
+  padding-top: 0px !important;
 }
 </style>
