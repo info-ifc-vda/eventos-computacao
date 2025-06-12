@@ -112,13 +112,13 @@ class EventController extends Controller
         operationId: 'Events@store',
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersUpdateEventRequest')
         ),
         responses: [
             new OA\Response(
                 response: 201,
                 description: 'Evento criado com sucesso',
-                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
+                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
             )
         ]
     )]
@@ -330,7 +330,7 @@ class EventController extends Controller
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
+            // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreEvent')
         ),
         responses: [
             new OA\Response(
