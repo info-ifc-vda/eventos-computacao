@@ -35,28 +35,7 @@ use OpenApi\Generator;
     security: [["bearerAuth" => []]]
 )]
 
-class GenerateDocs extends Command
-{
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'generate:docs';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Gera os arquivos openapi.json';
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    #[OA\Parameter(
+#[OA\Parameter(
         parameter: 'per_page',
         name: 'per_page',
         description: 'Quantidade de registros por página',
@@ -78,7 +57,29 @@ class GenerateDocs extends Command
             default: 1,
         )
     )
-    ]
+]
+
+class GenerateDocs extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'generate:docs';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Gera os arquivos openapi.json';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
     public function handle()
     {
         $generator = new Generator();

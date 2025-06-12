@@ -21,6 +21,7 @@ class IndexeOrganizerRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
+    //TODO fazer documentacao
     public function rules()
     {
         return [

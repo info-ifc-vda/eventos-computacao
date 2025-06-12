@@ -41,9 +41,16 @@ class StoreOrganizerRequest extends FormRequest
     #[OA\Schema(
         schema: 'OrganizersStoreOrganizerRequest',
         type: 'object',
-        description: 'Nenhum campo definido.'
+        required: ['user_id'],
+        properties: [
+            new OA\Property(
+                property: 'user_id',
+                type: 'string',
+                format: 'uuid',
+                example: 'a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6'
+            ),
+        ]
     )]
-
     public function rules()
     {
         return [
