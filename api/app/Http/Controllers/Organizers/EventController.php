@@ -352,7 +352,6 @@ class EventController extends Controller
         return new EventOrganizerResource($this->eventRepository->storeOrganizer($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
     }
 
-    //TODO back here
     #[OA\Delete(
         path: '/api/v1/events/{event_id}/organizers/{organizer_id}',
         operationId: 'Events@deleteOrganizer',
