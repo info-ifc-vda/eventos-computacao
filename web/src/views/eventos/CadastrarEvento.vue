@@ -175,7 +175,7 @@
         <v-col cols="12" md="12">
           <v-text-field
             v-model="evento.location.maps_link"
-            label="Link do Google Maps"
+            label="Link do OpenStreetMap"
             :rules="[(v) => !!v || 'Este campo é obrigatório']"
             required
           />
@@ -270,39 +270,38 @@ export default {
     return {
       valid: false,
       evento: {
-        title: "1° Confraternidade da Turma",
+        title: "",
         banner: {
           data: null,
         },
-        tipo: "Privado",
-        description: "Evento de confraternização da turma",
-        subscription_deadline: "2025-06-11",
-        payment_deadline: "2025-06-20",
-        estimated_value: "500",
+        tipo: "",
+        description: "",
+        subscription_deadline: "",
+        payment_deadline: "",
+        estimated_value: "",
         location: {
-          maps_link:
-            "https://www.openstreetmap.org/search?lat=-27.027374&lon=-51.145196&zoom=19#map=19/-27.027374/-51.145196",
+          maps_link: "",
           address: {
-            state: "SC",
-            city: "Videira",
-            neighborhood: "Campo Experimental",
-            zip_code: "89560000",
-            street: "Rod. SC 135",
-            number: "135",
-            complement: "Copa do IFC Campus Videira",
+            state: "",
+            city: "",
+            neighborhood: "",
+            zip_code: "",
+            street: "",
+            number: "",
+            complement: "",
           },
         },
         event_periods: [
           {
-            date: "2025-06-13",
-            opening_time: "09:00:00",
-            closing_time: "15:00:00",
+            date: "",
+            opening_time: "",
+            closing_time: "",
           },
         ],
         bank_details: {
-          bank: "Nubank",
-          holder: "Fabricio Bizotto",
-          pix_key: "fabricio.bizotto@gmail.com",
+          bank: "",
+          holder: "",
+          pix_key: "",
         },
       },
       tipoOptions: ["Privado", "Público"],
@@ -544,7 +543,7 @@ export default {
     },
   },
 };
-</script> 
+</script>
 <style scoped>
 .container {
   max-width: 400px;

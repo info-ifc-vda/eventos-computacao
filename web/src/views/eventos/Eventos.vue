@@ -1,25 +1,24 @@
 <template>
   <v-container fluid class="pa-4 pt-0">
-    <v-row justify="center" class="mb-8">
+    <v-row justify="center" class="mb-0 mt-0">
       <v-col cols="12" sm="10" md="8" class="text-center">
-        <h2 class="text-h3 font-weight-black gradient-text animate-header">
+        <h2 class="text-h5 font-weight-black gradient-text animate-header ma-0">
           Eventos
         </h2>
         <v-divider
-          class="mx-auto my-3 gradient-divider"
-          style="max-width: 120px"
+          class="mx-auto my-1 gradient-divider"
+          style="max-width: 100px"
         ></v-divider>
       </v-col>
     </v-row>
-
-    <v-row justify="center" v-if="carregando">
+    <v-row v-if="carregando">
       <v-col
-        v-for="n in 1"
+        v-for="n in 3"
         :key="n"
         cols="12"
-        sm="6"
-        md="4"
-        lg="3"
+        sm="10"
+        md="6"
+        lg="4"
         class="d-flex"
       >
         <v-skeleton-loader
@@ -37,9 +36,9 @@
         v-for="evento in eventos"
         :key="evento.id"
         cols="12"
-        sm="6"
-        md="4"
-        lg="3"
+        sm="10"
+        md="6"
+        lg="4"
         class="d-flex"
       >
         <v-card class="mx-auto d-flex flex-column fill-height" outlined>
@@ -57,7 +56,6 @@
                 {{ evento.title }}
               </span>
             </div>
-            <v-divider class="mb-2"></v-divider>
 
             <div
               class="mb-1 text-left"
@@ -72,20 +70,26 @@
 
             <div class="mb-1 text-left" v-if="evento.location">
               <v-icon small class="mr-1">mdi-map-marker</v-icon>
-              <a
-                :href="evento.location.maps_link"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text--secondary"
-              >
-                {{ evento.location.address.street }},
-                {{ evento.location.address.number }},
-                {{ evento.location.address.neighborhood }},
-                {{ evento.location.address.city }} -
-                {{ evento.location.address.state }}
-              </a>
+              {{ evento.location.address.street }},
+              {{ evento.location.address.number }},
+              {{ evento.location.address.neighborhood }},
+              {{ evento.location.address.city }} -
+              {{ evento.location.address.state }}
             </div>
-            {{ evento.tipo }}
+            <v-divider class="mt-4"></v-divider>
+            <div
+              v-if="evento.location && evento.location.maps_link"
+              class="mt-4"
+            >
+              <iframe
+                :src="gerarEmbedMapa(evento.location.maps_link)"
+                width="100%"
+                height="300"
+                style="border: 1px solid #ccc; border-radius: 8px"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
           </v-card-text>
           <v-card-actions>
             <template v-if="evento.inscrito">
@@ -178,7 +182,7 @@ export default {
     async carregarEventos() {
       try {
         const eventos = await EventoService.listarEventos();
-        console.log("Eventos carregados:", eventos);
+        // console.log("Eventos carregados:", eventos);
 
         // Para cada evento, verificar se o usuário está inscrito
         const eventosComStatus = await Promise.all(
@@ -298,6 +302,25 @@ export default {
           error.response?.data?.message ||
           "Erro ao cancelar inscrição no evento.";
         this.snackbar = true;
+      }
+    },
+    gerarEmbedMapa(mapsLink) {
+      try {
+        const url = new URL(mapsLink);
+        const lat = parseFloat(url.searchParams.get("lat"));
+        const lon = parseFloat(url.searchParams.get("lon"));
+        if (!lat || !lon) return "";
+
+        // Pequena área para o bbox em torno do ponto
+        const delta = 0.001;
+        const bbox = [lon - delta, lat - delta, lon + delta, lat + delta].join(
+          ","
+        );
+
+        return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+      } catch (e) {
+        console.warn("Erro ao gerar embed do mapa:", e);
+        return "";
       }
     },
   },
