@@ -18,24 +18,10 @@ class EventSummaryResource extends JsonResource
         schema: 'OrganizersEventSummary',
         type: 'object',
         properties: [
-            new OA\Property(
-                property: 'id',
-                type: 'string',
-                format: 'uuid',
-            ),
-            new OA\Property(
-                property: 'title',
-                type: 'string'
-            ),
-            new OA\Property(
-                property: 'cancelled',
-                type: 'boolean',
-            ),
-            new OA\Property(
-                property: 'event_initial_date',
-                type: 'string',
-                format: 'date'
-            )
+            new OA\Property(property: 'id', type: 'string', format: 'uuid', example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'),
+            new OA\Property(property: 'title', type: 'string', example: 'Feira de Ciências 2025'),
+            new OA\Property(property: 'cancelled', type: 'boolean', example: false),
+            new OA\Property(property: 'event_initial_date', type: 'string', format: 'date', nullable: true, example: '2025-08-12')
         ]
     )]
     public function toArray($request)

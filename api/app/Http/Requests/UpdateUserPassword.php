@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes as OA;
 
 class UpdateUserPassword extends FormRequest
 {
@@ -22,7 +23,31 @@ class UpdateUserPassword extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'UsersUpdatePassword',
+        required: ['old_password', 'password', 'password_confirmation'],
+        properties: [
+            new OA\Property(
+                property: 'old_password',
+                type: 'string',
+                format: 'password',
+                example: 'senhaAntiga123!'
+            ),
+            new OA\Property(
+                property: 'password',
+                type: 'string',
+                format: 'password',
+                example: 'NovaSenha@123'
+            ),
+            new OA\Property(
+                property: 'password_confirmation',
+                type: 'string',
+                format: 'password',
+                example: 'NovaSenha@123'
+            ),
+        ],
+        type: 'object'
+    )]
     public function rules()
     {
         return [

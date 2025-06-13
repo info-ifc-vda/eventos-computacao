@@ -37,7 +37,7 @@ class LoginRequest extends FormRequest
                 property: 'password',
                 type: 'string',
                 format: 'password',
-                example: 'Yametekudas@1'
+                example: 'Senha123$'
             )
         ]
     )]

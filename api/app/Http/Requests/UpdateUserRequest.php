@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes as OA;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -22,7 +23,23 @@ class UpdateUserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'UsersUpdate',
+        required: ['name', 'phone'],
+        properties: [
+            new OA\Property(
+                property: 'name',
+                type: 'string',
+                example: 'Maria da Silva'
+            ),
+            new OA\Property(
+                property: 'phone',
+                type: 'string',
+                example: '49912345678'
+            ),
+        ],
+        type: 'object'
+    )]
     public function rules()
     {
         return [

@@ -23,7 +23,7 @@ class StoreEventRequest extends FormRequest
      * @return array<string, mixed>
      */
     #[OA\Schema(
-        schema: 'OrganizersStoreEvent',
+        schema: 'OrganizersStoreEventRequest',
         type: 'object',
         required: [
             'title',

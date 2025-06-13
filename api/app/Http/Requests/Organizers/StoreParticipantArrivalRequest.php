@@ -25,7 +25,11 @@ class StoreParticipantArrivalRequest extends FormRequest
     #[OA\Schema(
         schema: 'OrganizersStoreParticipantArrivalRequest',
         type: 'object',
-        description: 'Nenhum campo definido.'
+        description: 'Campos ainda não definidos. Atualize com os campos reais assim que possível.',
+        properties: [
+            // Exemplo:
+            // new OA\Property(property: 'participant_id', type: 'string', format: 'uuid'),
+        ]
     )]
     // TODO: Documentação
     public function rules()

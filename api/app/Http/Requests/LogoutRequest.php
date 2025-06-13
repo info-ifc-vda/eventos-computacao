@@ -22,11 +22,6 @@ class LogoutRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[OA\Schema(
-        schema: 'AuthLogoutRequest',
-        type: 'object',
-        description: 'Nenhum campo necessário no corpo.'
-    )]
     public function rules()
     {
         return [

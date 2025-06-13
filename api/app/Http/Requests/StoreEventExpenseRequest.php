@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class StoreEventExpenseRequest extends FormRequest
 {
@@ -17,6 +18,33 @@ class StoreEventExpenseRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      */
+    #[OA\Schema(
+        schema: "StoreEventExpenseRequest",
+        type: "object",
+        required: ["proof_access_key", "title", "items_total"],
+        properties: [
+            new OA\Property(
+                property: "proof_access_key",
+                type: "string",
+                maxLength: 55,
+                example: "abc123xyz456",
+                description: "Chave de acesso para comprovação da despesa"
+            ),
+            new OA\Property(
+                property: "title",
+                type: "string",
+                example: "Despesas com alimentação",
+                description: "Título ou descrição resumida da despesa"
+            ),
+            new OA\Property(
+                property: "items_total",
+                type: "number",
+                format: "float",
+                example: 378.45,
+                description: "Valor total dos itens da despesa"
+            )
+        ]
+    )]
     public function rules(): array
     {
         return [

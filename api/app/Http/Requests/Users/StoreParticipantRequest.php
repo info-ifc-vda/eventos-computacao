@@ -21,16 +21,8 @@ class StoreParticipantRequest extends FormRequest
         schema: 'UsersStoreParticipant',
         type: 'object',
         properties: [
-            new OA\Property(
-                property: 'event_id',
-                type: 'string',
-                format: 'uuid',
-            ),
-            new OA\Property(
-                property: 'user_id',
-                type: 'string',
-                format: 'uuid'
-            ),
+            new OA\Property(property: 'event_id', type: 'string', format: 'uuid'),
+            new OA\Property(property: 'user_id', type: 'string', format: 'uuid'),
         ]
     )]
     public function rules()
