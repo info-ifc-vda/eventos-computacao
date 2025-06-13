@@ -148,6 +148,7 @@ class EventController extends Controller
      */
     public function indexExpenses(Request $request)
     {
+        \Log::info('Fetching expenses for event ID: ' . $request->route('event_id'));
         return EventExpenseSummaryResource::collection($this->eventRepository->getAllExpenses($this->eventRepository->findOrFail($request->route('event_id'))->id, $request));
     }
 
@@ -173,6 +174,16 @@ class EventController extends Controller
         $event = $this->eventRepository->findOrFail($request->route('event_id'));
 
         return new EventExpenseResource($this->eventRepository->updateExpense($event->id, $request->route('event_expense_id'), $request));
+    }
+
+    public function deleteExpense(Request $request)
+    {
+        \Log::info('Deleting expense for event ID: ' . $request->route('event_id') . ' and expense ID: ' . $request->route('event_expense_id'));
+        $event = $this->eventRepository->findOrFail($request->route('event_id'));
+
+        if ($this->eventRepository->deleteExpense($event->id, $request->route('event_expense_id'))) {
+            return response()->json([], 204);
+        }
     }
 
     public function leave(Request $request)

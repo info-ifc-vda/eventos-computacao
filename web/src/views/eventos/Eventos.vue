@@ -160,6 +160,7 @@
 <script>
 import EventoService from "@/services/EventoService";
 import UsuarioService from "@/services/UsuarioService";
+import { formatarData } from "@/util/formatUtils";
 
 export default {
   name: "ListarEventos",
@@ -179,6 +180,7 @@ export default {
     this.carregando = false;
   },
   methods: {
+    formatarData,
     async carregarEventos() {
       try {
         const eventos = await EventoService.listarEventos();
@@ -230,18 +232,6 @@ export default {
     //   limite.setHours(23, 59, 59, 999);
     //   return limite >= hoje;
     // },
-
-    formatarData(isoDate) {
-      if (!isoDate) return "";
-      const [year, month, day] = isoDate.split("-");
-      const dt = new Date(year, month - 1, day);
-
-      return dt.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
-    },
 
     async carregarUsuarioLogado() {
       try {

@@ -114,6 +114,7 @@
 <script>
 import EventoService from "@/services/EventoService";
 import UsuarioService from "@/services/UsuarioService";
+import { gerarEmbedMapa, formatarData } from "@/util/formatUtils";
 
 export default {
   name: "VisualizarParticipantes",
@@ -141,48 +142,32 @@ export default {
   },
 
   methods: {
+    gerarEmbedMapa,
+    formatarData,
     async carregarDados() {
       try {
         const response = await EventoService.getEventParticipants(
           this.eventoId
         );
-        this.participantes = response.participantes;
         this.evento = response.evento;
+        this.participantes = response.participantes || [];
+
+        // sort participants by name and capitalize names
+        this.participantes.sort((a, b) =>
+          a.user.name.localeCompare(b.user.name)
+        );
+        this.participantes.forEach((p) => {
+          p.user.name = p.user.name
+            .split(" ")
+            .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
+            .join(" ");
+        });
       } catch (error) {
         console.error("Erro ao carregar dados do evento:", error);
         this.snackbarMessage = "Erro ao carregar dados do evento.";
         this.snackbar = true;
       } finally {
         this.carregando = false; // finaliza o loading
-      }
-    },
-    formatarData(isoDate) {
-      if (!isoDate) return "";
-      const [year, month, day] = isoDate.split("-");
-      const dt = new Date(year, month - 1, day);
-      return dt.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
-    },
-    gerarEmbedMapa(mapsLink) {
-      try {
-        const url = new URL(mapsLink);
-        const lat = parseFloat(url.searchParams.get("lat"));
-        const lon = parseFloat(url.searchParams.get("lon"));
-        if (!lat || !lon) return "";
-
-        // Pequena área para o bbox em torno do ponto
-        const delta = 0.001;
-        const bbox = [lon - delta, lat - delta, lon + delta, lat + delta].join(
-          ","
-        );
-
-        return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
-      } catch (e) {
-        console.warn("Erro ao gerar embed do mapa:", e);
-        return "";
       }
     },
   },

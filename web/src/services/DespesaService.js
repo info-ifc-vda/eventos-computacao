@@ -1,50 +1,58 @@
-import axios from 'axios';
+import api from './api';
 
 const API_URL = '/api/v1';
+const PER_PAGE = 100;
 
 export default {
   async criarDespesa(idEvento, despesa) {
     try {
-      const response = await axios.post(`${API_URL}/eventos/${idEvento}/despesas`, despesa);
+      const response = await api.post(`${API_URL}/events/${idEvento}/expenses`, despesa);
       return response.data;
     } catch (error) {
-      console.error('Erro ao criar despesa:', error);
+      console.error('Erro ao criar despesa:', error.response?.data || error);
       throw error;
     }
   },
 
-  async listarDespesas() {
+  async listarDespesas(idEvento) {
     try {
-      const response = await axios.get(API_URL);
-      return response.data;
+      const response = await api.get(`${API_URL}/events/${idEvento}/expenses?per_page=${PER_PAGE}`);
+      return response.data.data || []; // Garantir que sempre retorne um array
     } catch (error) {
-      console.error('Erro ao listar despesas:', error);
-      return [];
-    }
-  },
- 
-  async listarDespesasPorFiltro(nome, preco) {
-    try {
-      const params = {};
-      if (nome) params.nome = nome;
-      if (preco) params.preco = preco;
-
-      const response = await axios.get(`${API_URL}/filtro`, { params });
-      return response.data;
-    } catch (error) {
-      console.error('Erro ao listar despesas por filtro:', error);
+      console.error('Erro ao listar despesas:', error.response?.data || error);
       return [];
     }
   },
 
-  async atualizarDespesa(id, despesa) {
+  async listarDespesasPorFiltro(idEvento, filtros = {}) {
     try {
-      const response = await axios.put(`${API_URL}/${id}`, despesa);
+      const response = await api.get(`${API_URL}/events/${idEvento}/expenses?per_page=${PER_PAGE}`, {
+        params: filtros,
+      });
       return response.data;
     } catch (error) {
-      console.error('Erro ao atualizar despesa:', error);
+      console.error('Erro ao filtrar despesas:', error.response?.data || error);
+      return [];
+    }
+  },
+
+  async atualizarDespesa(idEvento, idDespesa, despesa) {
+    try {
+      const response = await api.put(`${API_URL}/events/${idEvento}/expenses/${idDespesa}`, despesa);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao atualizar despesa:', error.response?.data || error);
+      throw error;
+    }
+  },
+
+  async deletarDespesa(eventId, despesaId) {
+    try {
+      const response = await api.delete(`${API_URL}/events/${eventId}/expenses/${despesaId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao deletar despesa:', error);
       throw error;
     }
   }
-
 };

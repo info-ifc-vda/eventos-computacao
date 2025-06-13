@@ -143,7 +143,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/cadastro-despesa-individual" v-if="isAdmin">
+        <!-- <v-list-item to="/cadastro-despesa-individual" v-if="isAdmin">
           <v-list-item-icon>
             <v-icon>mdi-cart-plus</v-icon>
           </v-list-item-icon>
@@ -152,7 +152,7 @@
               >Cadastrar Despesa</v-list-item-title
             >
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
 
         <v-divider></v-divider>
         <v-list-item

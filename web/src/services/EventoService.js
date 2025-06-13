@@ -3,6 +3,9 @@ import api from './api';
 const API_URL = '/api/v1';
 const PER_PAGE = 100;
 
+
+import DespesaService from './DespesaService';
+
 export default {
 
   async inscreverEvento(eventId, userId) {
@@ -38,6 +41,15 @@ export default {
       }
 
       // console.log('Eventos recebidos:', response.data.data);
+
+      const eventoId = response.data.data[0]?.id;
+      if (eventoId) {
+        // Listar despesas do primeiro evento
+        const despesas = await DespesaService.listarDespesas(eventoId);
+        console.log('Despesas do primeiro evento:', despesas);
+      } else {
+        console.warn('Nenhum evento encontrado na resposta.');
+      }
 
       return response.data.data;
     } catch (error) {

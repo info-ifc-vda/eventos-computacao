@@ -3,10 +3,19 @@
     <h2 class="title">Lista de Eventos</h2>
     <v-row>
       <v-col>
-        <v-text-field v-model="filtro.nome" class="text" label="Filtrar por Nome" />
+        <v-text-field
+          v-model="filtro.nome"
+          class="text"
+          label="Filtrar por Nome"
+        />
       </v-col>
       <v-col>
-        <v-text-field v-model="filtro.data" class="text" type="date" label="Filtrar por Data" />
+        <v-text-field
+          v-model="filtro.data"
+          class="text"
+          type="date"
+          label="Filtrar por Data"
+        />
       </v-col>
       <v-col cols="12" md="2" class="d-flex align-center">
         <v-btn class="botao" @click="buscarEventos">Buscar</v-btn>
@@ -23,11 +32,17 @@
       <template v-slot:item="{ item }">
         <tr :key="item.id">
           <td>{{ item.title }}</td>
-          <td>{{ item.event_initial_date || '—' }}</td>
+          <td>{{ item.event_initial_date || "—" }}</td>
           <td>
-            <v-btn color="botao-opcao" small @click="irParaDetalhes(item.id)">Detalhes</v-btn>
-            <v-btn color="botao-opcao" small @click="irParaEditar(item.id)">Editar</v-btn>
-            <v-btn color="botao-opcao" small @click="abrirDialog(item.id)">Excluir</v-btn>
+            <v-btn color="botao-opcao" small @click="irParaDetalhes(item.id)"
+              >Detalhes</v-btn
+            >
+            <v-btn color="botao-opcao" small @click="irParaEditar(item.id)"
+              >Editar</v-btn
+            >
+            <v-btn color="botao-opcao" small @click="abrirDialog(item.id)"
+              >Excluir</v-btn
+            >
           </td>
         </tr>
       </template>
@@ -41,7 +56,7 @@
       <v-card>
         <div class="verde"></div>
         <h3>Cancelar Evento</h3>
-        <p style="text-align: center;">Deseja realmente excluir este evento?</p>
+        <p style="text-align: center">Deseja realmente excluir este evento?</p>
         <v-card-actions class="justify-center">
           <v-btn class="botao-opcao1" @click="confirmarRemocao">Sim</v-btn>
           <v-btn class="botao-opcao1" @click="dialog = false">Não</v-btn>
@@ -52,38 +67,38 @@
 </template>
 
 <script>
-import EventoService from '@/services/EventoService';
+import EventoService from "@/services/EventoService";
 
 export default {
-  name: 'ListaEventos',
+  name: "ListaEventos",
   data() {
     return {
       eventos: [],
       filtro: {
-        nome: '',
-        data: ''
+        nome: "",
+        data: "",
       },
       headers: [
-        { text: 'Nome do Evento', value: 'title' },
-        { text: 'Data do Evento', value: 'event_initial_date' },
-        { text: 'Opções', value: 'actions', sortable: false }
+        { text: "Nome do Evento", value: "title" },
+        { text: "Data do Evento", value: "event_initial_date" },
+        { text: "Opções", value: "actions", sortable: false },
       ],
       snackbar: false,
-      snackbarMessage: '',
+      snackbarMessage: "",
       dialog: false,
-      eventoSelecionado: null
+      eventoSelecionado: null,
     };
   },
   methods: {
-  async carregarEventos() {
-    try {
-      const eventosUsuario = await EventoService.listarEventosDoUsuario();
-      this.eventos = eventosUsuario;
-    } catch (error) {
-      this.snackbarMessage = "Erro ao carregar eventos do usuário.";
-      this.snackbar = true;
-    }
-  },
+    async carregarEventos() {
+      try {
+        const eventosUsuario = await EventoService.listarEventosDoUsuario();
+        this.eventos = eventosUsuario;
+      } catch (error) {
+        this.snackbarMessage = "Erro ao carregar eventos do usuário.";
+        this.snackbar = true;
+      }
+    },
 
     async buscarEventos() {
       try {
@@ -93,7 +108,7 @@ export default {
         );
         this.eventos = response?.data || response || [];
       } catch (error) {
-        this.snackbarMessage = 'Erro ao buscar eventos.';
+        this.snackbarMessage = "Erro ao buscar eventos.";
         this.snackbar = true;
       }
     },
@@ -105,13 +120,15 @@ export default {
 
     async confirmarRemocao() {
       try {
-        const dataAtual = new Date().toISOString().split('T')[0];
-        await EventoService.cancelarEvento(this.eventoSelecionado, { data: dataAtual });
-        this.snackbarMessage = 'Evento deletado com sucesso!';
+        const dataAtual = new Date().toISOString().split("T")[0];
+        await EventoService.cancelarEvento(this.eventoSelecionado, {
+          data: dataAtual,
+        });
+        this.snackbarMessage = "Evento deletado com sucesso!";
         this.snackbar = true;
         await this.buscarEventos();
       } catch (error) {
-        this.snackbarMessage = 'Erro ao deletar evento.';
+        this.snackbarMessage = "Erro ao deletar evento.";
         this.snackbar = true;
       } finally {
         this.dialog = false;
@@ -124,12 +141,12 @@ export default {
 
     irParaEditar(id) {
       this.$router.push(`/cadastro-evento/${id}`);
-    }
+    },
   },
 
   mounted() {
     this.carregarEventos();
-  }
+  },
 };
 </script>
 

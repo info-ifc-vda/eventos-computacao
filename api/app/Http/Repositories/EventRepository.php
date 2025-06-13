@@ -320,6 +320,12 @@ class EventRepository implements EventRepositoryInterface
         return $eventExpense->refresh();
     }
 
+    public function deleteExpense(int $internalEventId, string $eventExpenseId): bool
+    {
+        $eventExpense = $this->findEventExpenseOrFail($internalEventId, $eventExpenseId);
+        return $eventExpense->delete();
+    }
+
     public function leaveEvent(string $eventId, int $userId): bool
     {
         $event = $this->findOrFail($eventId);

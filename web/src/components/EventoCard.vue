@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { formatarData } from "@/util/formatUtils";
+
 export default {
   name: "EventoCard",
   props: {
@@ -59,20 +61,12 @@ export default {
       default: false,
     },
   },
+  methods: {
+    formatarData,
+  },
   computed: {
     inscricoesAbertas() {
       return !this.evento.cancelled;
-    },
-  },
-  methods: {
-    formatarData(isoDate) {
-      if (!isoDate) return "";
-      const dt = new Date(isoDate);
-      return dt.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      });
     },
   },
 };

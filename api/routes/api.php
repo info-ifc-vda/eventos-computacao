@@ -108,6 +108,7 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::group(['prefix' => '{event_expense_id}'], function() {
                     Route::get('', [OrganizersEventController::class, 'showExpense']);
                     Route::put('', [OrganizersEventController::class, 'updateExpense']);
+                    Route::delete('', [OrganizersEventController::class, 'deleteExpense']);
                 });
             });
 

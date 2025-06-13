@@ -14,23 +14,6 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// async getToken() {
-//     return localStorage.getItem(JWT_TOKEN_KEY);
-//   },
-
-//   async setToken(token) {
-//     localStorage.setItem(JWT_TOKEN_KEY, token);
-//   }
-//   ,
-//   async removeToken() {
-//     localStorage.removeItem(JWT_TOKEN_KEY);
-//   },
-//   async isAuthenticated() {
-//     const token = localStorage.getItem(JWT_TOKEN_KEY);
-//     console.log(`Verificando autenticação, token: ${token}`);
-//     return !!token;
-//   }
-
 export default api
 
 
