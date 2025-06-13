@@ -214,7 +214,7 @@ class EventController extends Controller
 
     #[OA\Get(
         path: '/api/v1/events/{event_id}/participants',
-        tags: ['Events'],
+        tags: ['Events - Participants'],
         operationId: 'Events@indexParticipants',
         summary: 'Lista participantes de um evento',
         parameters: [
@@ -293,7 +293,7 @@ class EventController extends Controller
 
     #[OA\Get(
         path: '/api/v1/events/{event_id}/organizers',
-        tags: ['Events'],
+        tags: ['Events - Organizers'],
         operationId: 'Events@indexOrganizers',
         summary: 'Lista organizadores de um evento',
         parameters: [
@@ -323,7 +323,7 @@ class EventController extends Controller
 
     #[OA\Post(
         path: '/api/v1/events/{event_id}/organizers',
-        tags: ['Events'],
+        tags: ['Events - Organizers'],
         operationId: 'Events@storeOrganizer',
         summary: 'Adiciona um organizador ao evento',
         parameters: [
@@ -355,7 +355,7 @@ class EventController extends Controller
     #[OA\Delete(
         path: '/api/v1/events/{event_id}/organizers/{organizer_id}',
         operationId: 'Events@deleteOrganizer',
-        tags: ['Events'],
+        tags: ['Events - Organizers'],
         summary: 'Remove um organizador de um evento',
         description: 'Remove o organizador especificado do evento. O organizador atual não pode remover a si mesmo.',
         parameters: [
@@ -404,7 +404,7 @@ class EventController extends Controller
  */
     #[OA\Get(
         path: '/api/v1/events/{event_id}/expenses',
-        tags: ['Events'],
+        tags: ['Events - Expenses'],
         operationId: 'Events@indexExpenses',
         summary: 'Lista despesas de um evento',
         parameters: [
@@ -442,7 +442,7 @@ class EventController extends Controller
      */
     #[OA\Post(
         path: '/api/v1/events/{event_id}/expenses',
-        tags: ['Events'],
+        tags: ['Events - Expenses'],
         operationId: 'Events@storeExpense',
         summary: 'Cria uma nova despesa associada a um evento',
         parameters: [
@@ -482,7 +482,7 @@ class EventController extends Controller
 
     #[OA\Get(
         path: '/api/v1/events/{event_id}/expenses/{event_expense_id}',
-        tags: ['Events'],
+        tags: ['Events - Expenses'],
         operationId: 'Events@showExpense',
         summary: 'Retorna uma despesa de um evento',
         parameters: [
@@ -523,7 +523,7 @@ class EventController extends Controller
      */
     #[OA\Put(
         path: '/api/v1/events/{event_id}/expenses/{event_expense_id}',
-        tags: ['Events'],
+        tags: ['Events - Expenses'],
         operationId: 'Events@updateExpense',
         summary: 'Atualiza uma despesa do evento',
         parameters: [
@@ -572,7 +572,7 @@ class EventController extends Controller
      */
     #[OA\Post(
         path: '/api/v1/events/{event_id}/leave',
-        tags: ['Events'],
+        tags: ['Events - Participants'],
         operationId: 'Events@leave',
         summary: 'Usuário sai do evento',
         parameters: [
