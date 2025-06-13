@@ -39,6 +39,12 @@ class EventController extends Controller
         $this->eventRepository = $eventRepository;
     }
 
+    /**
+     * Lista todos os eventos com paginação.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     #[OA\Get(
         path: '/api/v1/events',
         tags: ['Events'],
@@ -75,6 +81,12 @@ class EventController extends Controller
         // return EventSummaryResource::collection($this->eventRepository->getAll($request));
     }
 
+    /**
+     * Cria um novo evento.
+     *
+     * @param StoreEventRequest $request
+     * @return EventResource
+     */
     #[OA\Post(
         path: '/api/v1/events',
         tags: ['Events'],
@@ -87,7 +99,6 @@ class EventController extends Controller
             new OA\Response(
                 response: 201,
                 description: 'Evento criado com sucesso',
-                // content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEvent')
             )
         ]
     )]
@@ -96,21 +107,162 @@ class EventController extends Controller
         return new EventResource($this->eventRepository->store($request));
     }
 
+    /**
+     * Exibe detalhes de um evento específico.
+     *
+     * @param Request $request
+     * @return EventResource
+     */
+    #[OA\Get(
+        path: '/api/v1/events/{event_id}',
+        tags: ['Events'],
+        operationId: 'Events@show',
+        parameters: [
+            new OA\Parameter(
+                name: 'event_id',
+                in: 'path',
+                required: true,
+                description: 'ID do evento',
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Detalhes do evento',
+                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEvent')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Evento não encontrado'
+            )
+        ]
+    )]
     public function show(Request $request)
     {
         return new EventResource($this->eventRepository->findOrFail($request->route('event_id')));
     }
 
+    /**
+     * Atualiza um evento existente.
+     *
+     * @param UpdateEventRequest $request
+     * @return EventResource
+     */
+    #[OA\Put(
+        path: '/api/v1/events/{event_id}',
+        tags: ['Events'],
+        operationId: 'Events@update',
+        parameters: [
+            new OA\Parameter(
+                name: 'event_id',
+                in: 'path',
+                required: true,
+                description: 'ID do evento',
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersUpdateEvent')
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Evento atualizado com sucesso',
+                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEvent')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Evento não encontrado'
+            )
+        ]
+    )]
     public function update(UpdateEventRequest $request)
     {
         return new EventResource($this->eventRepository->update($request->route('event_id'), $request));
     }
 
+    /**
+     * Cancela um evento.
+     *
+     * @param CancelEventRequest $request
+     * @return EventResource
+     */
+    #[OA\Post(
+        path: '/api/v1/events/{event_id}/cancel',
+        tags: ['Events'],
+        operationId: 'Events@cancel',
+        parameters: [
+            new OA\Parameter(
+                name: 'event_id',
+                in: 'path',
+                required: true,
+                description: 'ID do evento',
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersCancelEvent')
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Evento cancelado com sucesso',
+                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEvent')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Evento não encontrado'
+            )
+        ]
+    )]
     public function cancel(CancelEventRequest $request)
     {
         return new EventResource($this->eventRepository->cancel($request->route('event_id'), $request));
     }
 
+    /**
+     * Lista todos os participantes de um evento.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    #[OA\Get(
+        path: '/api/v1/events/{event_id}/participants',
+        tags: ['Events'],
+        operationId: 'Events@indexParticipants',
+        parameters: [
+            new OA\Parameter(
+                name: 'event_id',
+                in: 'path',
+                required: true,
+                description: 'ID do evento',
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Lista de participantes do evento',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/OrganizersEventParticipantArrival')
+                        )
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Evento não encontrado'
+            )
+        ]
+    )]
     public function indexParticipants(Request $request)
     {
         return EventParticipantArrivalResource::collection($this->eventRepository->indexParticipants($request->route('event_id'), $request));
@@ -121,9 +273,48 @@ class EventController extends Controller
 
     }
 
+    /**
+     * Registra a chegada de um participante em um evento.
+     *
+     * @param StoreParticipantArrivalRequest $request
+     * @return EventParticipantArrivalResource
+     */
+    #[OA\Post(
+        path: '/api/v1/events/{event_id}/participants/arrival',
+        tags: ['Events'],
+        operationId: 'Events@storeParticipantArrival',
+        parameters: [
+            new OA\Parameter(
+                name: 'event_id',
+                in: 'path',
+                required: true,
+                description: 'ID do evento',
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/OrganizersStoreParticipantArrival')
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: 'Chegada registrada com sucesso',
+                content: new OA\JsonContent(ref: '#/components/schemas/OrganizersEventParticipantArrival')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Evento ou participante não encontrado'
+            )
+        ]
+    )]
     public function storeParticipantArrival(StoreParticipantArrivalRequest $request)
     {
-        // return $this->eventService->storeParticipantArrival($request);
+        $eventId = $request->route('event_id');
+        $participantId = $request->input('participant_id');
+        // Middleware de organizador já deve proteger
+        $participant = $this->eventRepository->storeParticipantArrival($eventId, $participantId);
+        return new \App\Http\Resources\Organizers\EventParticipantArrivalResource($participant);
     }
 
     public function indexOrganizers(Request $request)

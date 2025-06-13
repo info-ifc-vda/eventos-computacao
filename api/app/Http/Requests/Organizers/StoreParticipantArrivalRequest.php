@@ -14,7 +14,7 @@ class StoreParticipantArrivalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -23,7 +23,7 @@ class StoreParticipantArrivalRequest extends FormRequest
      * @return array<string, mixed>
      */
     #[OA\Schema(
-        schema: 'OrganizersStoreParticipantArrivalRequest',
+        schema: 'OrganizersStoreParticipantArrival',
         type: 'object',
         description: 'Nenhum campo definido.'
     )]
@@ -31,7 +31,7 @@ class StoreParticipantArrivalRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'participant_id' => ['required', 'integer'],
         ];
     }
 }

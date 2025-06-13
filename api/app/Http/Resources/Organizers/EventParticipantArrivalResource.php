@@ -4,6 +4,20 @@ namespace App\Http\Resources\Organizers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'OrganizersEventParticipantArrival',
+    type: 'object',
+    required: ['id', 'event_id', 'user_id', 'arrival_date'],
+    properties: [
+        new OA\Property(property: "id", type: "string", format: "uuid", example: "17f8fbbd-4d7b-4bcb-888a-f7c23b350573"),
+        new OA\Property(property: "event_id", type: "string", format: "uuid", example: "17f8fbbd-4d7b-4bcb-888a-f7c23b350573"),
+        new OA\Property(property: "user_id", type: "string", format: "uuid", example: "17f8fbbd-4d7b-4bcb-888a-f7c23b350573"),
+        new OA\Property(property: "arrival_date", type: "string", format: "date-time", example: "2024-06-10T12:00:00Z"),
+    ]
+)]
+
 class EventParticipantArrivalResource extends JsonResource
 {
     /**

@@ -113,7 +113,7 @@ Route::group(['prefix' => 'v1'], function() {
             });
 
             Route::group(['prefix' => 'participants'], function() {
-                Route::post('arrival', [OrganizersEventController::class, 'storeParticipantArrival']);
+                Route::post('arrival', [OrganizersEventController::class, 'storeParticipantArrival'])->middleware('organizer');
 
                 Route::get('', [OrganizersEventController::class, 'indexParticipants']);
                 Route::post('', [OrganizersEventController::class, 'storeParticipant']);

@@ -2,23 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventParticipant extends Model
 {
-    use HasUuids;
+    use HasFactory;
+    protected $table = 'event_participants';
+    protected $fillable = [
+        'user_id',
+        'event_id',
+        'arrival_date',
+    ];
 
-    public $table = 'event_participants';
-    public $primaryKey = 'uuid';
+    protected $dates = [
+        'arrival_date',
+    ];
 
-    public function event()
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Event::class, 'event_id', 'id');
+        return $this->belongsTo(Event::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
-}
+} 
