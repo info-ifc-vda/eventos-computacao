@@ -26,7 +26,7 @@ class StoreUserRequest extends FormRequest
     #[OA\Schema(
         schema: 'UsersStore',
         type: 'object',
-        required: ['name', 'email', 'password'],
+        required: ['name', 'email', 'password', 'phone'],
         properties: [
             new OA\Property(
                 property: 'name',
@@ -40,11 +40,16 @@ class StoreUserRequest extends FormRequest
                 example: 'joao.silva@email.com'
             ),
             new OA\Property(
+                property: 'phone',
+                type: 'string',
+                example: '49912345678'
+            ),
+            new OA\Property(
                 property: 'password',
                 type: 'string',
                 format: 'password',
                 minLength: 8,
-                description: 'must be at least 8 characters in length, one lowercase, one digit and special character (@$!%*#?&)',
+                description: 'Deve conter ao menos 8 caracteres, incluindo letra minúscula, número e caractere especial (@$!%*#?&)',
                 example: 'Senha@12'
             )
         ]
