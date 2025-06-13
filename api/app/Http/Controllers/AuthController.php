@@ -67,7 +67,32 @@ class AuthController extends Controller
 
     }
 
-    // TODO: Documentação
+    #[OA\Post(
+        path: '/api/v1/auth/refresh',
+        tags: ['Auth'],
+        summary: 'Renovação de token',
+        description: 'Gera um novo token de acesso a partir do token de refresh.',
+        operationId: 'Auth@refresh',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AuthRefreshRequest')
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Token renovado com sucesso',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'token_type', type: 'string', example: 'Bearer'),
+                        new OA\Property(property: 'expires_in', type: 'integer', example: 31536000),
+                        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1Qi...'),
+                        new OA\Property(property: 'refresh_token', type: 'string', example: 'def50200acb123...')
+                    ]
+                )
+            )
+        ]
+    )]
     public function refresh(RefreshTokenRequest $request)
     {
         $client = Client::where('password_client', 1)->first();
@@ -93,12 +118,7 @@ class AuthController extends Controller
         responses: [
             new OA\Response(
                 response: 204,
-                description: 'Logout realizado com sucesso!',
-                content: [
-                    'application/json' => new OA\MediaType(
-                        mediaType: 'application/json'
-                    )
-                ]
+                description: 'Logout realizado com sucesso!'
             )
         ]
     )]

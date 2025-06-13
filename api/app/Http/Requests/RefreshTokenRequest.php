@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
 class RefreshTokenRequest extends FormRequest
 {
@@ -21,7 +22,13 @@ class RefreshTokenRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    // TODO: Documentação
+    #[OA\Schema(
+        schema: 'AuthRefreshRequest',
+        required: ['refresh_token'],
+        properties: [
+            new OA\Property(property: 'refresh_token', type: 'string', example: 'def50200acb123...')
+        ]
+    )]
     public function rules()
     {
         return [
